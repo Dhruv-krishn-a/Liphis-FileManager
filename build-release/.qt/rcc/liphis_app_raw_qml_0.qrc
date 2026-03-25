@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="/qt/qml/liphis/">
+    <file alias="src/qml/AppTheme.qml">/home/dhruv/Liphis/src/qml/AppTheme.qml</file>
+    <file alias="src/qml/Main.qml">/home/dhruv/Liphis/src/qml/Main.qml</file>
+    <file alias="src/qml/Icon.qml">/home/dhruv/Liphis/src/qml/Icon.qml</file>
+    <file alias="src/qml/FileIcon.qml">/home/dhruv/Liphis/src/qml/FileIcon.qml</file>
+    <file alias="src/qml/Breadcrumbs.qml">/home/dhruv/Liphis/src/qml/Breadcrumbs.qml</file>
+    <file alias="src/qml/FileView.qml">/home/dhruv/Liphis/src/qml/FileView.qml</file>
+    <file alias="src/qml/PropertiesDialog.qml">/home/dhruv/Liphis/src/qml/PropertiesDialog.qml</file>
+    <file alias="src/qml/AnalyseDialog.qml">/home/dhruv/Liphis/src/qml/AnalyseDialog.qml</file>
+    <file alias="src/qml/ToastManager.qml">/home/dhruv/Liphis/src/qml/ToastManager.qml</file>
+    <file alias="src/qml/BulkRenameDialog.qml">/home/dhruv/Liphis/src/qml/BulkRenameDialog.qml</file>
+    <file alias="src/qml/ConnectRemoteDialog.qml">/home/dhruv/Liphis/src/qml/ConnectRemoteDialog.qml</file>
+    <file alias="src/qml/FolderContextMenu.qml">/home/dhruv/Liphis/src/qml/FolderContextMenu.qml</file>
+    <file alias="src/qml/FileContextMenu.qml">/home/dhruv/Liphis/src/qml/FileContextMenu.qml</file>
+    <file alias="src/qml/MediaContextMenu.qml">/home/dhruv/Liphis/src/qml/MediaContextMenu.qml</file>
+  </qresource>
+</RCC>
+
