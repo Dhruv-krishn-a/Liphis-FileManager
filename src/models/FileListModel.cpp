@@ -205,6 +205,12 @@ QVariantMap FileListModel::metadataForPath(const QString &path) const
             m["owner"] = entry.owner ? QString::fromStdString(*entry.owner) : "";
             m["group"] = entry.group ? QString::fromStdString(*entry.group) : "";
             m["mimeType"] = entry.mimeType ? QString::fromStdString(*entry.mimeType) : "application/octet-stream";
+            if (entry.isDir) {
+                m["iconName"] = "folder";
+            } else {
+                static QMimeDatabase db;
+                m["iconName"] = db.mimeTypeForName(m["mimeType"].toString()).iconName();
+            }
 
             if (!entry.isDir && isSupportedImage(path))
                 m["thumbnail"] = QString("image://thumbs/%1").arg(path);

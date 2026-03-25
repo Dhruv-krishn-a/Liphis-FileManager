@@ -38,6 +38,12 @@ class AppController : public QObject
     Q_PROPERTY(QString viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
     Q_PROPERTY(QStringList availableExtensions READ availableExtensions NOTIFY availableExtensionsChanged)
     Q_PROPERTY(QVariantMap gitStatus READ gitStatus NOTIFY gitStatusChanged)
+    Q_PROPERTY(int bookmarksRevision READ bookmarksRevision NOTIFY bookmarksRevisionChanged)
+    Q_PROPERTY(QString searchMode READ searchMode WRITE setSearchMode NOTIFY searchModeChanged)
+    Q_PROPERTY(QString searchScope READ searchScope WRITE setSearchScope NOTIFY searchScopeChanged)
+    Q_PROPERTY(bool searchInProgress READ searchInProgress NOTIFY searchInProgressChanged)
+    Q_PROPERTY(QString activeSearchTerm READ activeSearchTerm NOTIFY activeSearchTermChanged)
+    Q_PROPERTY(QStringList recentSearches READ recentSearches NOTIFY recentSearchesChanged)
 
 public:
     explicit AppController(QObject *parent = nullptr);
@@ -65,6 +71,14 @@ public:
 
     QStringList availableExtensions() const;
     QVariantMap gitStatus() const;
+    int bookmarksRevision() const { return m_bookmarksRevision; }
+    QString searchMode() const { return m_searchMode; }
+    void setSearchMode(const QString &mode);
+    QString searchScope() const { return m_searchScope; }
+    void setSearchScope(const QString &scope);
+    bool searchInProgress() const { return m_searchInProgress; }
+    QString activeSearchTerm() const { return m_activeSearchTerm; }
+    QStringList recentSearches() const { return m_recentSearches; }
 
     // Navigation
     Q_INVOKABLE void openPath(const QString &path);
@@ -74,6 +88,9 @@ public:
     Q_INVOKABLE void refresh();
     Q_INVOKABLE void setSearchText(const QString &text);
     Q_INVOKABLE void startGlobalSearch(const QString &pattern);
+    Q_INVOKABLE void applySearchQuery(const QString &query);
+    Q_INVOKABLE void saveSearchQuery(const QString &query);
+    Q_INVOKABLE void cancelSearch();
 
     // File Operations
     Q_INVOKABLE void createFolder(const QString &name);
@@ -90,6 +107,10 @@ public:
     Q_INVOKABLE void toggleSelection(const QString &path);
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE void selectAll();
+    Q_INVOKABLE void selectRangeByIndexes(int from, int to);
+    Q_INVOKABLE QString pathAtIndex(int index) const;
+    Q_INVOKABLE QString nameAtIndex(int index) const;
+    Q_INVOKABLE int indexOfPath(const QString &path) const;
     Q_INVOKABLE void startRename(const QString &path);
     QString selectedPath() const;
     QStringList selectedPaths() const;
@@ -109,7 +130,11 @@ public:
     Q_INVOKABLE void openInCode(const QString &path);
     Q_INVOKABLE void addToBookmarks(const QString &path, const QString &name);
     Q_INVOKABLE void removeFromBookmarks(int index);
+    Q_INVOKABLE void removeBookmarkByPath(const QString &path);
+    Q_INVOKABLE bool isBookmarked(const QString &path) const;
+    Q_INVOKABLE void toggleBookmark(const QString &path, const QString &name);
     Q_INVOKABLE void openAsRoot(const QString &path);
+    Q_INVOKABLE void openInNewWindow(const QString &path);
     Q_INVOKABLE QString computeChecksum(const QString &path);
     Q_INVOKABLE void duplicateItem(const QString &path);
     Q_INVOKABLE void createSymlink(const QString &target, const QString &linkName);
@@ -135,6 +160,12 @@ signals:
     void gitStatusChanged();
     void analyseRequested(const QString &path);
     void placesModelChanged();
+    void bookmarksRevisionChanged();
+    void searchModeChanged();
+    void searchScopeChanged();
+    void searchInProgressChanged();
+    void activeSearchTermChanged();
+    void recentSearchesChanged();
     
     void operationError(const QString &message);
     void operationSuccess(const QString &message);
@@ -169,7 +200,16 @@ private:
     bool m_isCutOp{false};
 
     QVariantMap m_gitStatus;
+    int m_bookmarksRevision{0};
+    QString m_searchMode{"local"};
+    QString m_searchScope{"current"}; // current | home | mounted
+    bool m_searchInProgress{false};
+    QString m_activeSearchTerm;
+    QStringList m_recentSearches;
+    bool m_globalSearchActive{false};
     void updateGitStatus();
+    void loadRecentSearches();
+    void persistRecentSearches();
 public:
     Q_INVOKABLE void setThumbnailManager(ThumbnailManager* manager);
     Q_INVOKABLE void setPlacesModel(PlacesModel* model);

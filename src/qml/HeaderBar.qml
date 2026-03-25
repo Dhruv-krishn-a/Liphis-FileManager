@@ -1,0 +1,514 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+Rectangle {
+    id: root
+
+    property var theme
+    property var activeController: null
+    property bool detailsVisible: true
+    property bool terminalVisible: false
+
+    signal detailsToggleRequested()
+    signal terminalToggleRequested()
+
+    height: theme.headerHeight
+    color: theme.header
+
+    property bool themeAnimating: false
+    property string brandScrambleText: ""
+    readonly property string brandStableText: "L I P H I S"
+    readonly property bool narrow: width < 1260
+    readonly property bool veryNarrow: width < 1080
+
+    function focusSearchField() {
+        searchField.forceActiveFocus()
+        searchField.selectAll()
+    }
+
+    function focusPathField() {
+        pathField.forceActiveFocus()
+        pathField.selectAll()
+    }
+
+    function applySearch(immediateSave) {
+        if (!root.activeController) return
+        var q = searchField.text
+        if (typePreset.currentValue && typePreset.currentValue !== "all") {
+            q = (q.trim().length > 0 ? q + " " : "") + "kind:" + typePreset.currentValue
+        }
+        root.activeController.applySearchQuery(q)
+        if (immediateSave) root.activeController.saveSearchQuery(q)
+    }
+
+    function scrambledBrandText() {
+        var chars = ["L", "I", "P", "H", "I", "S"]
+        for (var i = chars.length - 1; i > 0; --i) {
+            var j = Math.floor(Math.random() * (i + 1))
+            var t = chars[i]
+            chars[i] = chars[j]
+            chars[j] = t
+        }
+        return chars.join(" ")
+    }
+
+    function toggleThemeWithAnimation() {
+        if (themeAnimating) return
+        themeAnimating = true
+        brandScrambleText = scrambledBrandText()
+        themeSwapAnimation.start()
+    }
+
+    Timer {
+        id: brandShuffleTimer
+        interval: 60
+        repeat: true
+        running: root.themeAnimating
+        onTriggered: root.brandScrambleText = root.scrambledBrandText()
+    }
+
+    Timer {
+        id: searchDebounce
+        interval: 240
+        repeat: false
+        onTriggered: root.applySearch(false)
+    }
+
+    SequentialAnimation {
+        id: themeSwapAnimation
+        PropertyAnimation {
+            target: logoBadge
+            property: "scale"
+            from: 1.0
+            to: 1.12
+            duration: 160
+            easing.type: Easing.OutCubic
+        }
+        PauseAnimation { duration: 80 }
+        ScriptAction { script: root.theme.isDark = !root.theme.isDark }
+        ParallelAnimation {
+            NumberAnimation {
+                target: logoBadge
+                property: "rotation"
+                from: 0
+                to: 360
+                duration: 380
+                easing.type: Easing.InOutCubic
+            }
+            PropertyAnimation {
+                target: logoBadge
+                property: "scale"
+                from: 1.12
+                to: 1.0
+                duration: 380
+                easing.type: Easing.OutBack
+            }
+        }
+        ScriptAction {
+            script: {
+                root.themeAnimating = false
+                root.brandScrambleText = ""
+            }
+        }
+    }
+
+    RowLayout {
+        anchors.fill: parent
+        anchors.leftMargin: theme ? (root.narrow ? theme.space12 : theme.space16) : 12
+        anchors.rightMargin: theme ? (root.narrow ? theme.space12 : theme.space16) : 12
+        spacing: theme ? (root.narrow ? theme.space8 : theme.space12) : 8
+
+        ToolButton {
+            id: logoButton
+            Layout.preferredHeight: theme ? theme.controlMd : 40
+            Layout.preferredWidth: root.veryNarrow ? 142 : 196
+            padding: 0
+            onClicked: root.toggleThemeWithAnimation()
+            ToolTip.visible: hovered
+            ToolTip.text: "Toggle theme"
+            background: Rectangle {
+                radius: root.theme.rSm
+                color: logoButton.hovered ? root.theme.hover : "transparent"
+                border.color: logoButton.hovered ? root.theme.border : "transparent"
+                border.width: 1
+            }
+            contentItem: RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: root.theme ? root.theme.space8 + 2 : 10
+                anchors.rightMargin: root.theme ? root.theme.space8 + 2 : 10
+                spacing: root.theme ? root.theme.space8 : 8
+
+                Image {
+                    id: logoBadge
+                    source: root.theme && root.theme.isDark ? "assets/logo-dark.png" : "assets/logo-light.png"
+                    Layout.preferredWidth: 30
+                    Layout.preferredHeight: 30
+                    fillMode: Image.PreserveAspectFit
+                    sourceSize.width: 120
+                    sourceSize.height: 120
+                    smooth: true
+                    antialiasing: true
+                    mipmap: true
+                    opacity: 0.96
+                    transformOrigin: Item.Center
+                }
+
+                Text {
+                    text: root.themeAnimating ? root.brandScrambleText : root.brandStableText
+                    visible: !root.veryNarrow
+                    color: root.theme.textPrimary
+                    font.pixelSize: 15
+                    font.bold: true
+                    font.letterSpacing: root.theme ? root.theme.letterSpacingBrand : 1.8
+                    opacity: 0.95
+                }
+            }
+        }
+
+        RowLayout {
+            spacing: theme ? theme.space4 : 4
+
+            ThemedIconButton {
+                theme: root.theme
+                iconName: "back"
+                toolTip: "Back"
+                enabled: root.activeController && root.activeController.canGoBack
+                onClicked: root.activeController.goBack()
+            }
+            ThemedIconButton {
+                theme: root.theme
+                iconName: "forward"
+                toolTip: "Forward"
+                enabled: root.activeController && root.activeController.canGoForward
+                onClicked: root.activeController.goForward()
+            }
+            ThemedIconButton {
+                theme: root.theme
+                iconName: "up"
+                toolTip: "Up"
+                enabled: !!root.activeController
+                onClicked: root.activeController.goUp()
+            }
+            ThemedIconButton {
+                theme: root.theme
+                iconName: "refresh"
+                toolTip: "Refresh"
+                enabled: !!root.activeController
+                onClicked: root.activeController.refresh()
+            }
+        }
+
+        Rectangle {
+            id: pathContainer
+            Layout.fillWidth: true
+            Layout.minimumWidth: root.veryNarrow ? 250 : 320
+            Layout.preferredHeight: theme.controlMd
+            radius: theme.rMd
+            color: theme.surfaceRaised
+            border.color: theme.border
+            border.width: 1
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: theme ? theme.space12 : 12
+                anchors.rightMargin: theme ? theme.space6 : 6
+                spacing: theme ? theme.space6 : 6
+
+                Item {
+                    Layout.preferredWidth: theme.iconSm + 4
+                    Layout.fillHeight: true
+                    Icon {
+                        anchors.centerIn: parent
+                        name: "folder"
+                        size: theme.iconSm
+                        color: theme.textSecondary
+                    }
+                }
+
+                TextField {
+                    id: pathField
+                    Layout.fillWidth: true
+                    color: theme.textPrimary
+                    font.pixelSize: theme ? theme.fontBody : 12
+                    padding: 0
+                    background: null
+                    text: root.activeController ? root.activeController.currentPath : ""
+                    selectByMouse: true
+                    selectionColor: theme.selection
+                    onAccepted: if (root.activeController) root.activeController.openPath(text)
+                }
+
+                ThemedIconButton {
+                    theme: root.theme
+                    implicitWidth: root.theme.controlSm
+                    implicitHeight: root.theme.controlSm
+                    readonly property bool bookmarked: !!(root.activeController
+                        && root.activeController.currentPath
+                        && root.activeController.bookmarksRevision >= 0
+                        && root.activeController.isBookmarked(root.activeController.currentPath))
+                    iconName: bookmarked ? "star-filled" : "star"
+                    iconSize: 15
+                    toolTip: bookmarked ? "Remove from Bookmark" : "Add to Bookmark"
+                    enabled: !!root.activeController
+                    onClicked: root.activeController.toggleBookmark(root.activeController.currentPath, root.activeController.title)
+                }
+            }
+        }
+
+        Rectangle {
+            id: searchContainer
+            Layout.preferredWidth: root.veryNarrow ? 310 : (root.narrow ? 360 : 430)
+            Layout.preferredHeight: theme.controlMd
+            radius: theme.rMd
+            color: theme.surfaceRaised
+            border.color: theme.border
+            border.width: 1
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: theme ? theme.space8 : 8
+                anchors.rightMargin: theme ? theme.space8 : 8
+                spacing: theme ? theme.space6 : 6
+
+                Rectangle {
+                    Layout.preferredWidth: 108
+                    Layout.preferredHeight: theme.controlSm
+                    radius: theme.rSm
+                    color: theme.surface
+                    border.color: theme.border
+                    border.width: 1
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 2
+                        spacing: 2
+
+                        ToolButton {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            text: "Local"
+                            font.pixelSize: theme.fontLabel
+                            onClicked: {
+                                if (!root.activeController) return
+                                root.activeController.searchMode = "local"
+                                root.applySearch(false)
+                            }
+                            background: Rectangle {
+                                radius: theme.rSm
+                                color: root.activeController && root.activeController.searchMode === "local"
+                                    ? theme.selection
+                                    : "transparent"
+                            }
+                        }
+                        ToolButton {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            text: "Global"
+                            font.pixelSize: theme.fontLabel
+                            onClicked: {
+                                if (!root.activeController) return
+                                root.activeController.searchMode = "global"
+                                root.applySearch(false)
+                            }
+                            background: Rectangle {
+                                radius: theme.rSm
+                                color: root.activeController && root.activeController.searchMode === "global"
+                                    ? theme.selection
+                                    : "transparent"
+                            }
+                        }
+                    }
+                }
+
+                ComboBox {
+                    id: scopeBox
+                    Layout.preferredWidth: 96
+                    Layout.minimumWidth: root.veryNarrow ? 78 : 92
+                    Layout.preferredHeight: theme.controlSm
+                    visible: root.activeController && root.activeController.searchMode === "global"
+                    model: [
+                        { label: "Current", value: "current" },
+                        { label: "Home", value: "home" },
+                        { label: "Mounted", value: "mounted" }
+                    ]
+                    textRole: "label"
+                    valueRole: "value"
+                    onActivated: {
+                        if (!root.activeController) return
+                        root.activeController.searchScope = currentValue
+                        root.applySearch(false)
+                    }
+                    Component.onCompleted: {
+                        if (!root.activeController) return
+                        var mode = root.activeController.searchScope
+                        for (var i = 0; i < model.length; ++i) {
+                            if (model[i].value === mode) {
+                                currentIndex = i
+                                break
+                            }
+                        }
+                    }
+                    Connections {
+                        target: root.activeController
+                        enabled: !!root.activeController
+                        function onSearchScopeChanged() {
+                            var mode = root.activeController.searchScope
+                            for (var i = 0; i < scopeBox.model.length; ++i) {
+                                if (scopeBox.model[i].value === mode) {
+                                    scopeBox.currentIndex = i
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ComboBox {
+                    id: typePreset
+                    Layout.preferredWidth: 94
+                    Layout.preferredHeight: theme.controlSm
+                    model: [
+                        { label: "All", value: "all" },
+                        { label: "Images", value: "image" },
+                        { label: "Video", value: "video" },
+                        { label: "Audio", value: "audio" },
+                        { label: "Docs", value: "document" },
+                        { label: "Code", value: "code" },
+                        { label: "Archive", value: "archive" },
+                        { label: "Folders", value: "folder" }
+                    ]
+                    textRole: "label"
+                    valueRole: "value"
+                    onActivated: root.applySearch(false)
+                }
+
+                Item {
+                    Layout.preferredWidth: theme.iconSm + 2
+                    Layout.fillHeight: true
+                    Icon {
+                        anchors.centerIn: parent
+                        name: "search"
+                        size: theme.iconSm
+                        color: theme.textSecondary
+                    }
+                }
+
+                TextField {
+                    id: searchField
+                    Layout.fillWidth: true
+                    placeholderText: root.veryNarrow
+                        ? "Search... ext:pdf"
+                        : "Search...  ext:pdf size:>10MB modified:7d"
+                    color: theme.textPrimary
+                    font.pixelSize: theme ? theme.fontBody : 12
+                    padding: 0
+                    background: null
+                    onTextChanged: searchDebounce.restart()
+                    onAccepted: {
+                        searchDebounce.stop()
+                        root.applySearch(true)
+                    }
+                }
+
+                ToolButton {
+                    id: recentButton
+                    Layout.preferredWidth: theme.controlSm
+                    Layout.preferredHeight: theme.controlSm
+                    visible: root.activeController && root.activeController.recentSearches
+                        && root.activeController.recentSearches.length > 0
+                    text: "▾"
+                    font.pixelSize: 11
+                    onClicked: recentPopup.open()
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: recentButton.hovered ? theme.hover : "transparent"
+                    }
+                }
+
+                ToolButton {
+                    id: cancelSearchButton
+                    visible: !!(root.activeController && root.activeController.searchInProgress)
+                    Layout.preferredWidth: theme.controlSm
+                    Layout.preferredHeight: theme.controlSm
+                    text: "✕"
+                    font.pixelSize: 12
+                    onClicked: if (root.activeController) root.activeController.cancelSearch()
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: cancelSearchButton.hovered ? theme.hover : "transparent"
+                    }
+                }
+            }
+        }
+
+        Popup {
+            id: recentPopup
+            readonly property point buttonPos: recentButton.mapToItem(root, 0, 0)
+            y: buttonPos.y + recentButton.height + 4
+            x: Math.max(theme ? theme.space16 : 16, buttonPos.x + recentButton.width - width)
+            width: 320
+            padding: 6
+            modal: false
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            background: Rectangle {
+                radius: theme.rSm
+                color: theme.surfaceRaised
+                border.color: theme.border
+                border.width: 1
+            }
+            contentItem: Column {
+                spacing: 2
+                Repeater {
+                    model: root.activeController ? root.activeController.recentSearches : []
+                    delegate: ToolButton {
+                        width: parent.width
+                        text: modelData
+                        horizontalPadding: 10
+                        verticalPadding: 8
+                        font.pixelSize: theme.fontBody
+                        onClicked: {
+                            searchField.text = modelData
+                            root.applySearch(true)
+                            recentPopup.close()
+                        }
+                        background: Rectangle {
+                            radius: theme.rSm
+                            color: parent.hovered ? theme.hover : "transparent"
+                        }
+                    }
+                }
+            }
+        }
+
+        RowLayout {
+            spacing: theme ? theme.space4 : 4
+
+            ThemedIconButton {
+                theme: root.theme
+                iconName: "info"
+                toolTip: "Toggle Inspector"
+                checkable: true
+                checked: root.detailsVisible
+                accentWhenChecked: true
+                onClicked: root.detailsToggleRequested()
+            }
+            ThemedIconButton {
+                theme: root.theme
+                iconName: "terminal"
+                toolTip: "Toggle Terminal"
+                checkable: true
+                checked: root.terminalVisible
+                accentWhenChecked: true
+                onClicked: root.terminalToggleRequested()
+            }
+        }
+    }
+
+    Rectangle {
+        anchors.bottom: parent.bottom
+        width: parent.width
+        height: 1
+        color: theme.border
+    }
+}

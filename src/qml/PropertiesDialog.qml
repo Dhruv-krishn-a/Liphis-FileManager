@@ -89,7 +89,7 @@ Dialog {
         radius: 16
         border.color: theme.border
         layer.enabled: true
-        layer.effect: DropShadow { radius: 20; color: Qt.rgba(0, 0, 0, 0.18); samples: 24 }
+        layer.effect: DropShadow { radius: 10; color: Qt.rgba(0, 0, 0, theme.isDark ? 0.16 : 0.09); samples: 16; verticalOffset: 2 }
     }
 
     ColumnLayout {
@@ -97,7 +97,7 @@ Dialog {
 
         RowLayout {
             spacing: 15
-            FileIcon { Layout.preferredWidth: 48; Layout.preferredHeight: 48; isDir: root.isDir }
+            FileIcon { Layout.preferredWidth: 48; Layout.preferredHeight: 48; isDir: root.isDir; theme: theme }
             ColumnLayout {
                 Text { text: root.fileName; color: theme.textPrimary; font.pixelSize: 18; font.bold: true; elide: Text.ElideRight; Layout.fillWidth: true }
                 Text { text: root.isDir ? "Folder" : "File"; color: theme.textSecondary; font.pixelSize: 12 }
@@ -186,7 +186,7 @@ Dialog {
                 Layout.fillWidth: true; Layout.preferredHeight: 40
                 onClicked: root.close()
                 background: Rectangle { radius: 8; color: theme.accent }
-                contentItem: Text { text: parent.text; color: "#ffffff"; font.bold: true; font.pixelSize: 11; font.letterSpacing: 1; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                contentItem: Text { text: parent.text; color: theme.isDark ? "#1C1C1C" : "#FFFFFF"; font.bold: true; font.pixelSize: 11; font.letterSpacing: 1; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
             }
         }
     }

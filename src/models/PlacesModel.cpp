@@ -3,6 +3,22 @@
 #include <QDir>
 #include <QStorageInfo>
 #include <QSettings>
+#include <QUrl>
+
+namespace {
+QString normalizePath(QString path) {
+    path = path.trimmed();
+    if (path.startsWith("file://")) {
+        const QUrl u(path);
+        if (u.isValid() && u.isLocalFile()) path = u.toLocalFile();
+        else path.remove(0, QString("file://").size());
+    }
+    path = QDir::fromNativeSeparators(path);
+    path = QDir::cleanPath(path);
+    if (path.length() > 1 && path.endsWith('/')) path.chop(1);
+    return path;
+}
+}
 
 PlacesModel::PlacesModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -51,14 +67,22 @@ void PlacesModel::refresh()
 
 void PlacesModel::addBookmark(const QString &path, const QString &name)
 {
+    const QString normalized = normalizePath(path);
+    if (normalized.isEmpty()) return;
     QSettings settings("Liphis", "Bookmarks");
     QVariantList list = settings.value("places").toList();
-    
+
+    for (const QVariant &entry : list) {
+        if (normalizePath(entry.toMap().value("path").toString()) == normalized) {
+            return;
+        }
+    }
+
     QVariantMap item;
     item["name"] = name;
-    item["path"] = path;
+    item["path"] = normalized;
     list.append(item);
-    
+
     settings.setValue("places", list);
     refresh();
 }
@@ -72,9 +96,9 @@ void PlacesModel::removeBookmark(int index)
     QVariantList list = settings.value("places").toList();
     
     // Find matching path in list
-    QString path = m_items[index].path;
+    const QString path = normalizePath(m_items[index].path);
     for (int i=0; i<list.size(); ++i) {
-        if (list[i].toMap()["path"].toString() == path) {
+        if (normalizePath(list[i].toMap()["path"].toString()) == path) {
             list.removeAt(i);
             break;
         }
@@ -82,6 +106,36 @@ void PlacesModel::removeBookmark(int index)
     
     settings.setValue("places", list);
     refresh();
+}
+
+void PlacesModel::removeBookmarkByPath(const QString &path)
+{
+    const QString normalized = normalizePath(path);
+    if (normalized.isEmpty()) return;
+    QSettings settings("Liphis", "Bookmarks");
+    QVariantList list = settings.value("places").toList();
+    for (int i = 0; i < list.size(); ++i) {
+        if (normalizePath(list[i].toMap().value("path").toString()) == normalized) {
+            list.removeAt(i);
+            settings.setValue("places", list);
+            refresh();
+            return;
+        }
+    }
+}
+
+bool PlacesModel::isBookmarked(const QString &path) const
+{
+    const QString normalized = normalizePath(path);
+    if (normalized.isEmpty()) return false;
+    QSettings settings("Liphis", "Bookmarks");
+    const QVariantList list = settings.value("places").toList();
+    for (const QVariant &entry : list) {
+        if (normalizePath(entry.toMap().value("path").toString()) == normalized) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void PlacesModel::addRecent(const QString &path)

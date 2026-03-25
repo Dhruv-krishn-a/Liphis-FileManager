@@ -51,9 +51,12 @@ Item {
                 
                 layer.enabled: true
                 layer.effect: DropShadow {
-                    radius: 15
-                    color: model.isError ? Qt.rgba(0.72, 0.35, 0.31, 0.22) : Qt.rgba(0.18, 0.14, 0.09, 0.16)
-                    samples: 16
+                    radius: 8
+                    color: model.isError
+                        ? Qt.rgba(theme.error.r, theme.error.g, theme.error.b, 0.20)
+                        : Qt.rgba(theme.accent.r, theme.accent.g, theme.accent.b, 0.14)
+                    samples: 12
+                    verticalOffset: 2
                 }
 
                 RowLayout {

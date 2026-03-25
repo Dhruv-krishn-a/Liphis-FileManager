@@ -11,6 +11,9 @@ class FileFilterProxyModel : public QSortFilterProxyModel
     Q_PROPERTY(qlonglong minDate READ minDate WRITE setMinDate NOTIFY minDateChanged)
     Q_PROPERTY(qlonglong maxDate READ maxDate WRITE setMaxDate NOTIFY maxDateChanged)
     Q_PROPERTY(QString extensionFilter READ extensionFilter WRITE setExtensionFilter NOTIFY extensionFilterChanged)
+    Q_PROPERTY(QString searchQuery READ searchQuery WRITE setSearchQuery NOTIFY searchQueryChanged)
+    Q_PROPERTY(QString typeFilter READ typeFilter WRITE setTypeFilter NOTIFY typeFilterChanged)
+    Q_PROPERTY(bool exactMatch READ exactMatch WRITE setExactMatch NOTIFY exactMatchChanged)
 
 public:
     explicit FileFilterProxyModel(QObject *parent = nullptr);
@@ -32,6 +35,12 @@ public:
 
     QString extensionFilter() const;
     void setExtensionFilter(const QString &filter);
+    QString searchQuery() const;
+    void setSearchQuery(const QString &query);
+    QString typeFilter() const;
+    void setTypeFilter(const QString &type);
+    bool exactMatch() const;
+    void setExactMatch(bool exact);
 
 signals:
     void showHiddenChanged();
@@ -40,6 +49,9 @@ signals:
     void minDateChanged();
     void maxDateChanged();
     void extensionFilterChanged();
+    void searchQueryChanged();
+    void typeFilterChanged();
+    void exactMatchChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow,
@@ -54,4 +66,7 @@ private:
     qlonglong m_minDate{-1};
     qlonglong m_maxDate{-1};
     QString m_extensionFilter;
+    QString m_searchQuery;
+    QString m_typeFilter{"all"}; // all | file | folder
+    bool m_exactMatch{false};
 };

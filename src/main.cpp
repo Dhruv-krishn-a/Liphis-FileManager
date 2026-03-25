@@ -20,6 +20,9 @@ int main(int argc, char **argv)
 {
     qputenv("QSG_RENDER_LOOP", "basic");
     QGuiApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("Liphis");
+    QCoreApplication::setOrganizationDomain("liphis.local");
+    QCoreApplication::setApplicationName("Liphis");
     
     // 1. Memory Optimization: Reduce image reader allocation limit (128MB is plenty for thumbs)
     QImageReader::setAllocationLimit(128);

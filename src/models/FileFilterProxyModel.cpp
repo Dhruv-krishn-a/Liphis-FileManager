@@ -1,5 +1,6 @@
 #include "FileFilterProxyModel.hpp"
 #include "FileListModel.hpp"
+#include <QFileInfo>
 
 FileFilterProxyModel::FileFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
@@ -65,19 +66,53 @@ void FileFilterProxyModel::setExtensionFilter(const QString &filter) {
     endFilterChange();
 }
 
+QString FileFilterProxyModel::searchQuery() const { return m_searchQuery; }
+void FileFilterProxyModel::setSearchQuery(const QString &query) {
+    if (m_searchQuery == query) return;
+    m_searchQuery = query;
+    emit searchQueryChanged();
+    beginFilterChange();
+    endFilterChange();
+    sort(0);
+}
+
+QString FileFilterProxyModel::typeFilter() const { return m_typeFilter; }
+void FileFilterProxyModel::setTypeFilter(const QString &type) {
+    QString normalized = type.trimmed().toLower();
+    if (normalized != "file" && normalized != "folder") normalized = "all";
+    if (m_typeFilter == normalized) return;
+    m_typeFilter = normalized;
+    emit typeFilterChanged();
+    beginFilterChange();
+    endFilterChange();
+}
+
+bool FileFilterProxyModel::exactMatch() const { return m_exactMatch; }
+void FileFilterProxyModel::setExactMatch(bool exact) {
+    if (m_exactMatch == exact) return;
+    m_exactMatch = exact;
+    emit exactMatchChanged();
+    beginFilterChange();
+    endFilterChange();
+    sort(0);
+}
+
 bool FileFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+    const QString name = sourceModel()->data(index, FileListModel::NameRole).toString();
+    const bool isDir = sourceModel()->data(index, FileListModel::IsDirRole).toBool();
     
     // Hidden file check
     if (!m_showHidden) {
-        QString name = sourceModel()->data(index, FileListModel::NameRole).toString();
         if (name.startsWith(".")) return false;
     }
 
+    if (m_typeFilter == "file" && isDir) return false;
+    if (m_typeFilter == "folder" && !isDir) return false;
+
     // Size filter
     if (m_minSize >= 0 || m_maxSize >= 0) {
-        bool isDir = sourceModel()->data(index, FileListModel::IsDirRole).toBool();
         if (!isDir) {
             qlonglong size = sourceModel()->data(index, FileListModel::SizeRole).toLongLong();
             if (m_minSize >= 0 && size < m_minSize) return false;
@@ -94,19 +129,27 @@ bool FileFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &so
 
     // Extension filter
     if (!m_extensionFilter.isEmpty()) {
-        bool isDir = sourceModel()->data(index, FileListModel::IsDirRole).toBool();
         if (isDir) return false; // Hide folders if we are filtering by extension
         
-        QString name = sourceModel()->data(index, FileListModel::NameRole).toString().toLower();
+        QString lowerName = name.toLower();
         if (m_extensionFilter == "no extension") {
-            if (name.contains(".")) return false;
+            if (lowerName.contains(".")) return false;
         } else {
-            if (!name.endsWith("." + m_extensionFilter.toLower())) return false;
+            if (!lowerName.endsWith("." + m_extensionFilter.toLower())) return false;
         }
     }
 
-    // Regex filter
-    return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+    if (!m_searchQuery.trimmed().isEmpty()) {
+        const QString q = m_searchQuery.trimmed().toLower();
+        const QString lowerName = name.toLower();
+        if (m_exactMatch) {
+            if (lowerName != q) return false;
+        } else if (!lowerName.contains(q)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool FileFilterProxyModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
@@ -116,6 +159,23 @@ bool FileFilterProxyModel::lessThan(const QModelIndex &source_left, const QModel
 
     if (leftIsDir != rightIsDir) {
         return leftIsDir && !rightIsDir;
+    }
+
+    const QString q = m_searchQuery.trimmed().toLower();
+    if (!q.isEmpty()) {
+        const QString leftName = sourceModel()->data(source_left, FileListModel::NameRole).toString().toLower();
+        const QString rightName = sourceModel()->data(source_right, FileListModel::NameRole).toString().toLower();
+
+        auto rank = [&](const QString &name) {
+            if (m_exactMatch) return name == q ? 0 : 3;
+            if (name.startsWith(q)) return 0;
+            if (name == q) return 1;
+            if (name.contains(q)) return 2;
+            return 3;
+        };
+        const int lr = rank(leftName);
+        const int rr = rank(rightName);
+        if (lr != rr) return lr < rr;
     }
 
     return QSortFilterProxyModel::lessThan(source_left, source_right);

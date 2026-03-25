@@ -31,6 +31,8 @@ public:
     Q_INVOKABLE void refresh();
     Q_INVOKABLE void addBookmark(const QString &path, const QString &name);
     Q_INVOKABLE void removeBookmark(int index);
+    Q_INVOKABLE void removeBookmarkByPath(const QString &path);
+    Q_INVOKABLE bool isBookmarked(const QString &path) const;
     Q_INVOKABLE void addRecent(const QString &path);
 
 private:

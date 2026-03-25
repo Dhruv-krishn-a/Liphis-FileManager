@@ -63,7 +63,7 @@ Dialog {
         radius: theme.radiusLarge
         border.color: theme.border
         layer.enabled: true
-        layer.effect: DropShadow { radius: 20; color: Qt.rgba(0, 0, 0, 0.4); samples: 24; verticalOffset: 4 }
+        layer.effect: DropShadow { radius: 10; color: Qt.rgba(0, 0, 0, theme.isDark ? 0.18 : 0.10); samples: 16; verticalOffset: 2 }
     }
 
     ColumnLayout {
@@ -131,7 +131,7 @@ Dialog {
                 width: listView.width; height: 48; radius: theme.radiusSmall; color: theme.surfaceElevated; border.color: theme.border
                 RowLayout {
                     anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 12
-                    FileIcon { Layout.preferredWidth: 20; Layout.preferredHeight: 20; isDir: model.isDir }
+                    FileIcon { Layout.preferredWidth: 20; Layout.preferredHeight: 20; isDir: model.isDir; theme: theme }
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: 4
                         Text { text: model.name; elide: Text.ElideRight; font.pixelSize: 12; color: theme.textPrimary }

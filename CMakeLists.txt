@@ -64,8 +64,19 @@ qt_add_qml_module(liphis_app
     VERSION 1.0
     QML_FILES
         src/qml/AppTheme.qml
+        src/qml/AppShell.qml
         src/qml/Main.qml
         src/qml/Icon.qml
+        src/qml/ThemedIconButton.qml
+        src/qml/FilterChip.qml
+        src/qml/SidebarItem.qml
+        src/qml/PanelSection.qml
+        src/qml/HeaderBar.qml
+        src/qml/LeftSidebar.qml
+        src/qml/TabStrip.qml
+        src/qml/CenterWorkspace.qml
+        src/qml/InspectorPanel.qml
+        src/qml/StatusBar.qml
         src/qml/FileIcon.qml
         src/qml/Breadcrumbs.qml
         src/qml/FileView.qml
@@ -81,6 +92,34 @@ qt_add_qml_module(liphis_app
         LiphisApp-Logo.png
         src/qml/assets/logo-light.png
         src/qml/assets/logo-dark.png
+        src/qml/assets/icons/outline/arrow-left.svg
+        src/qml/assets/icons/outline/arrow-right.svg
+        src/qml/assets/icons/outline/arrow-up.svg
+        src/qml/assets/icons/outline/refresh.svg
+        src/qml/assets/icons/outline/search.svg
+        src/qml/assets/icons/outline/home.svg
+        src/qml/assets/icons/outline/bookmark.svg
+        src/qml/assets/icons/outline/star.svg
+        src/qml/assets/icons/outline/x.svg
+        src/qml/assets/icons/outline/folder.svg
+        src/qml/assets/icons/outline/folder-open.svg
+        src/qml/assets/icons/outline/info-circle.svg
+        src/qml/assets/icons/outline/terminal.svg
+        src/qml/assets/icons/outline/copy.svg
+        src/qml/assets/icons/outline/scissors.svg
+        src/qml/assets/icons/outline/pencil.svg
+        src/qml/assets/icons/outline/trash.svg
+        src/qml/assets/icons/outline/list-details.svg
+        src/qml/assets/icons/outline/square-plus.svg
+        src/qml/assets/icons/outline/app-window.svg
+        src/qml/assets/icons/outline/layout-board-split.svg
+        src/qml/assets/icons/outline/password.svg
+        src/qml/assets/icons/outline/brand-vscode.svg
+        src/qml/assets/icons/outline/player-play.svg
+        src/qml/assets/icons/outline/background.svg
+        src/qml/assets/icons/outline/tag.svg
+        src/qml/assets/icons/outline/window.svg
+        src/qml/assets/icons/filled/star.svg
 )
 
 target_link_libraries(liphis_app
