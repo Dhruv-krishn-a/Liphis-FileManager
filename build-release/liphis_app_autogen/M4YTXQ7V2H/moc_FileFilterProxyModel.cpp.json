@@ -1,0 +1,160 @@
+{
+    "classes": [
+        {
+            "className": "FileFilterProxyModel",
+            "lineNumber": 5,
+            "object": true,
+            "properties": [
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 0,
+                    "lineNumber": 8,
+                    "name": "showHidden",
+                    "notify": "showHiddenChanged",
+                    "read": "showHidden",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "bool",
+                    "user": false,
+                    "write": "setShowHidden"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 1,
+                    "lineNumber": 9,
+                    "name": "minSize",
+                    "notify": "minSizeChanged",
+                    "read": "minSize",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "qlonglong",
+                    "user": false,
+                    "write": "setMinSize"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 2,
+                    "lineNumber": 10,
+                    "name": "maxSize",
+                    "notify": "maxSizeChanged",
+                    "read": "maxSize",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "qlonglong",
+                    "user": false,
+                    "write": "setMaxSize"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 3,
+                    "lineNumber": 11,
+                    "name": "minDate",
+                    "notify": "minDateChanged",
+                    "read": "minDate",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "qlonglong",
+                    "user": false,
+                    "write": "setMinDate"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 4,
+                    "lineNumber": 12,
+                    "name": "maxDate",
+                    "notify": "maxDateChanged",
+                    "read": "maxDate",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "qlonglong",
+                    "user": false,
+                    "write": "setMaxDate"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 5,
+                    "lineNumber": 13,
+                    "name": "extensionFilter",
+                    "notify": "extensionFilterChanged",
+                    "read": "extensionFilter",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "QString",
+                    "user": false,
+                    "write": "setExtensionFilter"
+                }
+            ],
+            "qualifiedClassName": "FileFilterProxyModel",
+            "signals": [
+                {
+                    "access": "public",
+                    "index": 0,
+                    "lineNumber": 37,
+                    "name": "showHiddenChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 1,
+                    "lineNumber": 38,
+                    "name": "minSizeChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 2,
+                    "lineNumber": 39,
+                    "name": "maxSizeChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 3,
+                    "lineNumber": 40,
+                    "name": "minDateChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 4,
+                    "lineNumber": 41,
+                    "name": "maxDateChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 5,
+                    "lineNumber": 42,
+                    "name": "extensionFilterChanged",
+                    "returnType": "void"
+                }
+            ],
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QSortFilterProxyModel"
+                }
+            ]
+        }
+    ],
+    "inputFile": "FileFilterProxyModel.hpp",
+    "outputRevision": 69
+}

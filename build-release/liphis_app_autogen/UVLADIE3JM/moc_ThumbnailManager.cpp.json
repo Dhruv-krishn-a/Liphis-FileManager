@@ -1,0 +1,46 @@
+{
+    "classes": [
+        {
+            "className": "ThumbnailManager",
+            "lineNumber": 10,
+            "methods": [
+                {
+                    "access": "private",
+                    "index": 1,
+                    "lineNumber": 31,
+                    "name": "processQueue",
+                    "returnType": "void"
+                }
+            ],
+            "object": true,
+            "qualifiedClassName": "ThumbnailManager",
+            "signals": [
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "filePath",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "thumbnailUrl",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 0,
+                    "lineNumber": 24,
+                    "name": "thumbnailReady",
+                    "returnType": "void"
+                }
+            ],
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QObject"
+                }
+            ]
+        }
+    ],
+    "inputFile": "ThumbnailManager.hpp",
+    "outputRevision": 69
+}

@@ -1,0 +1,6 @@
+set(__QT_DEPLOY_TARGET_liphis_core_FILE /home/dhruv/Liphis/build-release/libliphis_core.a)
+set(__QT_DEPLOY_TARGET_liphis_core_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_liphis_app_FILE /home/dhruv/Liphis/build-release/liphis_app)
+set(__QT_DEPLOY_TARGET_liphis_app_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_fs_test_FILE /home/dhruv/Liphis/build-release/fs_test)
+set(__QT_DEPLOY_TARGET_fs_test_TYPE EXECUTABLE)

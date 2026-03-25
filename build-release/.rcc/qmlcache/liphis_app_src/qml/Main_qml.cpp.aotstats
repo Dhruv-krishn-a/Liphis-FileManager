@@ -1,0 +1,1943 @@
+{
+    "formatRevision": 1,
+    "modules": [
+        {
+            "moduleFiles": [
+                {
+                    "entries": [
+                        {
+                            "codegenResult": 2,
+                            "column": 12,
+                            "durationMicroseconds": 0,
+                            "functionName": "title",
+                            "line": 14,
+                            "message": "Could not find property \"title\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "addTab",
+                            "line": 23,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "isMediaFile",
+                            "line": 27,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "showItemMenu",
+                            "line": 34,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "updateActiveController",
+                            "line": 60,
+                            "message": "Cannot load property controller from call to method itemAt, returning QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onActiveControllerChanged",
+                            "line": 73,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 20,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 80,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 81,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOperationSuccess",
+                            "line": 82,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOperationError",
+                            "line": 83,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAnalyseRequested",
+                            "line": 84,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onNodeFound",
+                            "line": 92,
+                            "message": "Could not find signal \"nodeFound\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onNodeFound",
+                            "line": 92,
+                            "message": "Could not find signal \"nodeFound\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAnalysisProgress",
+                            "line": 93,
+                            "message": "Could not find signal \"analysisProgress\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAnalysisProgress",
+                            "line": 93,
+                            "message": "Could not find signal \"analysisProgress\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAnalysisFinished",
+                            "line": 94,
+                            "message": "Could not find signal \"analysisFinished\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAnalysisFinished",
+                            "line": 94,
+                            "message": "Could not find signal \"analysisFinished\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 99,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 127,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacing",
+                            "line": 101,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 101,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "leftMargin",
+                            "line": 101,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 97,
+                            "durationMicroseconds": 0,
+                            "functionName": "rightMargin",
+                            "line": 101,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacing",
+                            "line": 105,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 107,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 110,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 117,
+                            "message": "Could not find property \"enabled\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 119,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 72,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 118,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 120,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 120,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 124,
+                            "message": "Could not find property \"enabled\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 126,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 75,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 125,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 127,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 127,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 132,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 70,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 131,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 133,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 133,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 138,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 75,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 137,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 139,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 139,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 77,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 145,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 98,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 145,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 135,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 145,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 147,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 148,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 150,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 114,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 150,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 151,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAccepted",
+                            "line": 152,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 62,
+                            "durationMicroseconds": 0,
+                            "functionName": "selectionColor",
+                            "line": 153,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 158,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 76,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 157,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 159,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 159,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 81,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 166,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 102,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 166,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 139,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 166,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 168,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 169,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 171,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTextChanged",
+                            "line": 173,
+                            "message": "Could not find signal \"textChanged\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAccepted",
+                            "line": 174,
+                            "message": "Could not find signal \"accepted\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 184,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 186,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 72,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 185,
+                            "message": "Cannot load property checked from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 187,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 187,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 191,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 193,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 76,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 192,
+                            "message": "Cannot load property checked from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 194,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 194,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 59,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 198,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 91,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 198,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 198,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 202,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 90,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 209,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 211,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 60,
+                            "durationMicroseconds": 0,
+                            "functionName": "margins",
+                            "line": 211,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 213,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 95,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 217,
+                            "message": "Cannot access value for name globalPlacesModel"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "homePath",
+                            "line": 218,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 220,
+                            "message": "Could not find property \"width\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 230,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 223,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 67,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 223,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 222,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 226,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "name",
+                            "line": 227,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 75,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 227,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 228,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 65,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 228,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 194,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 228,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 76,
+                            "durationMicroseconds": 0,
+                            "functionName": "height",
+                            "line": 234,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 98,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 234,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "right",
+                            "line": 234,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "orientation",
+                            "line": 238,
+                            "message": "Could not find property \"orientation\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 62,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 239,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "orientation",
+                            "line": 242,
+                            "message": "Could not find property \"orientation\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 67,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 243,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 72,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 249,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 251,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 112,
+                            "durationMicroseconds": 0,
+                            "functionName": "orientation",
+                            "line": 253,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 140,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 253,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 255,
+                            "message": "Cannot access value for name tabList"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 256,
+                            "message": "Cannot access value for name tabView"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 257,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 91,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 258,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 123,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 258,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 146,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 258,
+                            "message": "Cannot access value for name tabView"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 69,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 258,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 80,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 259,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 100,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 259,
+                            "message": "Cannot access value for name tabView"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 201,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 259,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 225,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 259,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 66,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 259,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 86,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 260,
+                            "message": "Cannot access value for name tabView"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 67,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 260,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 264,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 60,
+                            "durationMicroseconds": 0,
+                            "functionName": "right",
+                            "line": 262,
+                            "message": "Could not find property \"right\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 98,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalCenter",
+                            "line": 262,
+                            "message": "Could not find property \"verticalCenter\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 97,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 263,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 77,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 265,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 265,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 272,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 88,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 271,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 69,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 273,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 95,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 273,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 276,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 111,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 276,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 276,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCurrentIndexChanged",
+                            "line": 281,
+                            "message": "method updateActiveController cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "onChildrenChanged",
+                            "line": 282,
+                            "message": "method updateActiveController cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "addTab",
+                            "line": 283,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 285,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 50,
+                            "durationMicroseconds": 0,
+                            "functionName": "initialPath",
+                            "line": 287,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 69,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 287,
+                            "message": "Cannot access value for name appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "onRequestedActive",
+                            "line": 288,
+                            "message": "Cannot access value for name tabView"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 74,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCompleted",
+                            "line": 292,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 93,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 297,
+                            "message": "Cannot access value for name terminalVisible"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 117,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 297,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 299,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 76,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 301,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 163,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 302,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 54,
+                            "durationMicroseconds": 0,
+                            "functionName": "left",
+                            "line": 302,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 115,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalCenter",
+                            "line": 302,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 303,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 115,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 303,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 303,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 140,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 307,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 135,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 315,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 167,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 315,
+                            "message": "Cannot access value for name detailsVisible"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "meta",
+                            "line": 316,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "formatSize",
+                            "line": 317,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "formatDate",
+                            "line": 318,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "contentWidth",
+                            "line": 321,
+                            "message": "Could not find property \"contentWidth\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 321,
+                            "message": "Could not find property \"fill\"."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 323,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 99,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 323,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 124,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 326,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 150,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 326,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 81,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredHeight",
+                            "line": 326,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 188,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 326,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 69,
+                            "durationMicroseconds": 0,
+                            "functionName": "fillMode",
+                            "line": 328,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 123,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 328,
+                            "message": "Cannot load property thumbnail from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 328,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 104,
+                            "durationMicroseconds": 0,
+                            "functionName": "isDir",
+                            "line": 329,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 163,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 329,
+                            "message": "Cannot load property status from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 66,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 329,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 335,
+                            "message": "Cannot load property name from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 102,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 335,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 165,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 335,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 228,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 335,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 336,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 145,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 336,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 193,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 336,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 255,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 336,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 339,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 343,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 344,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 166,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 344,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 212,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 344,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 65,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 346,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 347,
+                            "message": "Cannot load property mtime from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 128,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 347,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 174,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 347,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 68,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 349,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 350,
+                            "message": "Cannot load property permissions from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 109,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 350,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 181,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 350,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 62,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 352,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 353,
+                            "message": "Cannot load property owner from (component in /home/dhruv/Liphis/src/qml/Main.qml)::meta with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 139,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 353,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 185,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 353,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 58,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 357,
+                            "message": "Could not find property \"visible\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 358,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 65,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 359,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 91,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 359,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 164,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 359,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 361,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 75,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 362,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 50,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 363,
+                            "message": "Cannot access value for name analyseBtn"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 74,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 363,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 126,
+                            "durationMicroseconds": 0,
+                            "functionName": "weight",
+                            "line": 363,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 374,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 93,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 374,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 375,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 89,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 375,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "top",
+                            "line": 375,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 377,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 378,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 111,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 378,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 99,
+                            "durationMicroseconds": 0,
+                            "functionName": "orientation",
+                            "line": 381,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 151,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 381,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 99,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 383,
+                            "message": "Could not find property \"text\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 384,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalCenter",
+                            "line": 383,
+                            "message": "Could not find property \"verticalCenter\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 385,
+                            "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 71,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 385,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 131,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 385,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 386,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 386,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/Main.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "onChangePermissionsRequested",
+                            "line": 394,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "onChangePermissionsRequested",
+                            "line": 394,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "analysisController",
+                            "line": 401,
+                            "message": "Cannot retrieve a non-object type by ID: analysisController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "toastManager",
+                            "line": 402,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "propsDialog",
+                            "line": 407,
+                            "message": "Cannot retrieve a non-object type by ID: propsDialog"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "toastManager",
+                            "line": 408,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "propsDialog",
+                            "line": 413,
+                            "message": "Cannot retrieve a non-object type by ID: propsDialog"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInNewTab",
+                            "line": 414,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInNewTab",
+                            "line": 414,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInNewWindow",
+                            "line": 415,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInNewWindow",
+                            "line": 415,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInSplitView",
+                            "line": 416,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInSplitView",
+                            "line": 416,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "propsDialog",
+                            "line": 421,
+                            "message": "Cannot retrieve a non-object type by ID: propsDialog"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "toastManager",
+                            "line": 422,
+                            "message": ""
+                        }
+                    ],
+                    "filePath": "/home/dhruv/Liphis/src/qml/Main.qml"
+                }
+            ],
+            "moduleId": "liphis(liphis_app)"
+        }
+    ]
+}

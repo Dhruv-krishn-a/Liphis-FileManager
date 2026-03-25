@@ -1,0 +1,19 @@
+module liphis
+typeinfo liphis_app.qmltypes
+prefer :/qt/qml/liphis/
+AppTheme 1.0 src/qml/AppTheme.qml
+Main 1.0 src/qml/Main.qml
+Icon 1.0 src/qml/Icon.qml
+FileIcon 1.0 src/qml/FileIcon.qml
+Breadcrumbs 1.0 src/qml/Breadcrumbs.qml
+FileView 1.0 src/qml/FileView.qml
+PropertiesDialog 1.0 src/qml/PropertiesDialog.qml
+AnalyseDialog 1.0 src/qml/AnalyseDialog.qml
+ToastManager 1.0 src/qml/ToastManager.qml
+BulkRenameDialog 1.0 src/qml/BulkRenameDialog.qml
+ConnectRemoteDialog 1.0 src/qml/ConnectRemoteDialog.qml
+FolderContextMenu 1.0 src/qml/FolderContextMenu.qml
+FileContextMenu 1.0 src/qml/FileContextMenu.qml
+MediaContextMenu 1.0 src/qml/MediaContextMenu.qml
+depends QtQuick
+

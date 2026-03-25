@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/liphis/">
+    <file alias="src/qml/qmldir">/home/dhruv/Liphis/build-release/liphis/src/qml/qmldir</file>
+  </qresource>
+</RCC>
+

@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/liphis/">
+    <file alias="LiphisApp-Logo.png">/home/dhruv/Liphis/LiphisApp-Logo.png</file>
+  </qresource>
+</RCC>
+

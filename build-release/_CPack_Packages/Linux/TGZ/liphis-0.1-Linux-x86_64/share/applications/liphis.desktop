@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Liphis
+Comment=Liphis file manager
+Exec=liphis_app
+Icon=liphis
+Terminal=false
+Categories=Utility;FileManager;
+StartupNotify=true

@@ -1,0 +1,9 @@
+Checks: >
+  -*,
+  modernize-*,
+  performance-*,
+  readability-*
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*'
+AnalyzeTemporaryDtors: false
+FormatStyle: none
