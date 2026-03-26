@@ -136,6 +136,32 @@ Item {
         return String(name || "")
     }
 
+    function requestVisibleThumbnails() {
+        if (!controller || !controller.fileModel) return
+        var count = currentRowCount()
+        if (count <= 0) return
+
+        var first = 0
+        var last = Math.min(count - 1, 30)
+
+        if (controller.viewMode === "grid") {
+            first = gv.indexAt(6, gv.contentY + 6)
+            if (first < 0) first = 0
+            last = gv.indexAt(Math.max(6, gv.width - 10), gv.contentY + gv.height - 10)
+            if (last < first) {
+                var cols = Math.max(1, Math.floor(gv.width / gv.cellWidth))
+                last = Math.min(count - 1, first + (cols * 5))
+            }
+        } else {
+            first = lv.indexAt(6, lv.contentY + 6)
+            if (first < 0) first = 0
+            last = lv.indexAt(6, lv.contentY + lv.height - 10)
+            if (last < first) last = Math.min(count - 1, first + 28)
+        }
+
+        controller.requestThumbnailsForRange(first, last)
+    }
+
     Timer {
         id: typeResetTimer
         interval: 900
@@ -144,6 +170,21 @@ Item {
             root.typeBuffer = ""
             root.cycleMatchIndex = -1
         }
+    }
+
+    Timer {
+        id: thumbsDebounce
+        interval: 140
+        repeat: false
+        onTriggered: root.requestVisibleThumbnails()
+    }
+
+    Timer {
+        id: thumbsDuringSearch
+        interval: 260
+        repeat: true
+        running: !!(controller && controller.searchInProgress)
+        onTriggered: root.requestVisibleThumbnails()
     }
 
     Keys.onPressed: (event) => {
@@ -425,14 +466,24 @@ Item {
         ListView {
             id: lv; model: controller.fileModel; clip: true; delegate: listDelegate
             cacheBuffer: 0 // Absolute minimum memory
+            onContentYChanged: thumbsDebounce.restart()
+            onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
         }
 
         GridView {
             id: gv; model: controller.fileModel; clip: true; delegate: gridDelegate
             cellWidth: 100; cellHeight: 100; cacheBuffer: 0
+            onContentYChanged: thumbsDebounce.restart()
+            onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
         }
+    }
+
+    Connections {
+        target: controller
+        function onViewModeChanged() { thumbsDebounce.restart() }
+        function onCurrentPathChanged() { thumbsDebounce.restart() }
     }
 
     MouseArea {

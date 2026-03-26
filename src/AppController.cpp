@@ -23,6 +23,7 @@
 #include <QSettings>
 #include <QDateTime>
 #include <QFileInfo>
+#include <QSet>
 #include <QRegularExpression>
 #include <QStorageInfo>
 #include <unistd.h>
@@ -192,7 +193,12 @@ bool matchesStructuredFilters(const FileMeta &m, const SearchQuery &q) {
 
     if (!q.term.isEmpty()) {
         const QString term = q.term.toLower();
-        if (q.exact) {
+        const bool looksLikeFullFilename = !q.exact
+            && term.contains('.')
+            && !term.contains(' ')
+            && !term.contains('*')
+            && !term.contains('?');
+        if (q.exact || looksLikeFullFilename) {
             if (lowerName != term) return false;
         } else if (!lowerName.contains(term)) {
             return false;
@@ -308,6 +314,27 @@ bool runFdSearch(const QString &rootPath,
         }
     }
     return true;
+}
+
+QStringList prunedRoots(QStringList roots)
+{
+    roots.removeAll("");
+    roots.removeDuplicates();
+    std::sort(roots.begin(), roots.end(), [](const QString &a, const QString &b) {
+        return a.length() < b.length();
+    });
+    QStringList pruned;
+    for (const QString &r : roots) {
+        bool nested = false;
+        const QString normalized = QDir::cleanPath(r);
+        for (const QString &k : pruned) {
+            const QString keep = QDir::cleanPath(k);
+            if (normalized == keep) { nested = true; break; }
+            if (normalized.startsWith(keep + "/")) { nested = true; break; }
+        }
+        if (!nested) pruned << normalized;
+    }
+    return pruned;
 }
 }
 
@@ -590,16 +617,27 @@ void AppController::startGlobalSearch(const QString &pattern)
                 if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev")) continue;
                 roots << root;
             }
-            roots.removeDuplicates();
+            roots = prunedRoots(roots);
         } else {
             roots << safeThis->m_currentPath;
         }
 
+        QSet<QString> seenPaths;
         for (const QString &rootPath : roots) {
             if (shouldCancel()) break;
-            const auto publishBatch = [safeThis, generation](std::vector<FileMeta>&& filtered) {
+            const auto publishBatch = [safeThis, generation, &seenPaths](std::vector<FileMeta>&& filtered) {
                 if (filtered.empty() || !safeThis) return;
-                QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(filtered)]() mutable {
+                std::vector<FileMeta> unique;
+                unique.reserve(filtered.size());
+                for (auto &entry : filtered) {
+                    const QString p = QFileInfo(QString::fromStdString(entry.path)).canonicalFilePath();
+                    const QString key = p.isEmpty() ? QString::fromStdString(entry.path) : p;
+                    if (seenPaths.contains(key)) continue;
+                    seenPaths.insert(key);
+                    unique.push_back(std::move(entry));
+                }
+                if (unique.empty()) return;
+                QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(unique)]() mutable {
                     if (!safeThis || safeThis->m_operationGeneration.load() != generation) return;
                     safeThis->m_fileModel.insertBatch(std::move(b));
                 }, Qt::QueuedConnection);

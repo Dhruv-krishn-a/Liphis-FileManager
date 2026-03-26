@@ -13,6 +13,8 @@ Rectangle {
         : null
 
     signal analyseFolderRequested(string path)
+    signal toggleExpandRequested()
+    property bool expanded: true
 
     color: theme.surface
     border.color: theme.border
@@ -47,6 +49,32 @@ Rectangle {
             anchors.topMargin: theme ? (root.compact ? theme.space12 : theme.space16) : 12
             anchors.bottomMargin: theme ? (root.compact ? theme.space12 : theme.space16) : 12
             spacing: theme ? (root.compact ? theme.space12 : theme.space16) : 12
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: theme.space8
+
+                Text {
+                    text: "Inspector"
+                    color: theme.textSecondary
+                    font.pixelSize: theme.fontLabel
+                    font.letterSpacing: 0.8
+                }
+
+                Item { Layout.fillWidth: true }
+
+                ToolButton {
+                    text: root.expanded ? "Collapse" : "Expand"
+                    font.pixelSize: theme.fontLabel
+                    onClicked: root.toggleExpandRequested()
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: parent.hovered ? theme.hover : theme.surfaceRaised
+                        border.color: theme.border
+                        border.width: 1
+                    }
+                }
+            }
 
             Rectangle {
                 Layout.fillWidth: true

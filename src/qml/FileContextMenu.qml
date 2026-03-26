@@ -33,17 +33,19 @@ Menu {
         item.height = 32;
         item.leftPadding = 10;
         item.rightPadding = 10;
+        item.icon.width = 16;
+        item.icon.height = 16;
     }
 
     function iconSource(name) {
-        if (name === "document-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-open.svg"
-        if (name === "vscode") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/brand-vscode.svg"
-        if (name === "edit-cut") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/scissors.svg"
-        if (name === "edit-copy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/copy.svg"
-        if (name === "edit-rename") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pencil.svg"
-        if (name === "user-trash") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
-        if (name === "dialog-password") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/password.svg"
-        if (name === "document-properties") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
+        if (name === "document-open") return "assets/icons/outline/folder-open.svg"
+        if (name === "vscode") return "assets/icons/outline/brand-vscode.svg"
+        if (name === "edit-cut") return "assets/icons/outline/scissors.svg"
+        if (name === "edit-copy") return "assets/icons/outline/copy.svg"
+        if (name === "edit-rename") return "assets/icons/outline/pencil.svg"
+        if (name === "user-trash") return "assets/icons/outline/trash.svg"
+        if (name === "dialog-password") return "assets/icons/outline/password.svg"
+        if (name === "document-properties") return "assets/icons/outline/list-details.svg"
         return ""
     }
 

@@ -21,6 +21,7 @@ Rectangle {
     readonly property string brandStableText: "L I P H I S"
     readonly property bool narrow: width < 1260
     readonly property bool veryNarrow: width < 1080
+    readonly property bool compactSearchControls: width < 1460
 
     function focusSearchField() {
         searchField.forceActiveFocus()
@@ -34,12 +35,36 @@ Rectangle {
 
     function applySearch(immediateSave) {
         if (!root.activeController) return
-        var q = searchField.text
-        if (typePreset.currentValue && typePreset.currentValue !== "all") {
-            q = (q.trim().length > 0 ? q + " " : "") + "kind:" + typePreset.currentValue
+        var raw = searchField.text ? searchField.text.trim() : ""
+        if (root.activeController.searchMode === "global" && !immediateSave) {
+            // Avoid heavy global scans for accidental short input.
+            if (raw.length === 0) return
+            if (raw.length < 2) return
         }
+        var q = raw
+        if (typePreset.currentValue && typePreset.currentValue !== "all")
+            q = (q.length > 0 ? q + " " : "") + "kind:" + typePreset.currentValue
         root.activeController.applySearchQuery(q)
         if (immediateSave) root.activeController.saveSearchQuery(q)
+    }
+
+    function clearSearchAndRestore() {
+        if (!root.activeController) return
+        searchDebounce.stop()
+        searchField.text = ""
+        if (typePreset) typePreset.currentIndex = 0
+        if (root.activeController.searchMode === "global") {
+            root.activeController.cancelSearch()
+            root.activeController.searchMode = "local"
+            root.activeController.searchScope = "current"
+        }
+        root.activeController.applySearchQuery("")
+    }
+
+    function hasActiveSearch() {
+        if (!root.activeController) return false
+        if (searchField && searchField.text && searchField.text.trim().length > 0) return true
+        return root.activeController.searchMode === "global" && root.activeController.searchInProgress
     }
 
     function scrambledBrandText() {
@@ -70,7 +95,7 @@ Rectangle {
 
     Timer {
         id: searchDebounce
-        interval: 240
+        interval: root.activeController && root.activeController.searchMode === "global" ? 650 : 220
         repeat: false
         onTriggered: root.applySearch(false)
     }
@@ -323,10 +348,12 @@ Rectangle {
 
                 ComboBox {
                     id: scopeBox
-                    Layout.preferredWidth: 96
+                    Layout.preferredWidth: 90
                     Layout.minimumWidth: root.veryNarrow ? 78 : 92
                     Layout.preferredHeight: theme.controlSm
-                    visible: root.activeController && root.activeController.searchMode === "global"
+                    visible: root.activeController
+                        && root.activeController.searchMode === "global"
+                        && !root.compactSearchControls
                     model: [
                         { label: "Current", value: "current" },
                         { label: "Home", value: "home" },
@@ -338,6 +365,29 @@ Rectangle {
                         if (!root.activeController) return
                         root.activeController.searchScope = currentValue
                         root.applySearch(false)
+                    }
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: scopeBox.hovered ? theme.hover : theme.surface
+                        border.color: theme.border
+                        border.width: 1
+                    }
+                    contentItem: Text {
+                        leftPadding: 10
+                        rightPadding: 20
+                        text: scopeBox.displayText
+                        color: theme.textPrimary
+                        font.pixelSize: theme.fontBody - 1
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
+                    indicator: Text {
+                        text: "▾"
+                        color: theme.textSecondary
+                        font.pixelSize: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                     Component.onCompleted: {
                         if (!root.activeController) return
@@ -366,7 +416,7 @@ Rectangle {
 
                 ComboBox {
                     id: typePreset
-                    Layout.preferredWidth: 94
+                    Layout.preferredWidth: 86
                     Layout.preferredHeight: theme.controlSm
                     model: [
                         { label: "All", value: "all" },
@@ -381,6 +431,30 @@ Rectangle {
                     textRole: "label"
                     valueRole: "value"
                     onActivated: root.applySearch(false)
+                    visible: !root.compactSearchControls
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: typePreset.hovered ? theme.hover : theme.surface
+                        border.color: theme.border
+                        border.width: 1
+                    }
+                    contentItem: Text {
+                        leftPadding: 10
+                        rightPadding: 20
+                        text: typePreset.displayText
+                        color: theme.textPrimary
+                        font.pixelSize: theme.fontBody - 1
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
+                    indicator: Text {
+                        text: "▾"
+                        color: theme.textSecondary
+                        font.pixelSize: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
 
                 Item {
@@ -401,14 +475,51 @@ Rectangle {
                         ? "Search... ext:pdf"
                         : "Search...  ext:pdf size:>10MB modified:7d"
                     color: theme.textPrimary
+                    placeholderTextColor: theme.textSecondary
+                    selectedTextColor: theme.surface
+                    selectionColor: theme.accentSoft
+                    cursorVisible: activeFocus
                     font.pixelSize: theme ? theme.fontBody : 12
-                    padding: 0
+                    leftPadding: 6
+                    rightPadding: 6
                     background: null
                     onTextChanged: searchDebounce.restart()
                     onAccepted: {
                         searchDebounce.stop()
                         root.applySearch(true)
                     }
+                    Keys.onEscapePressed: (event) => {
+                        root.clearSearchAndRestore()
+                        event.accepted = true
+                    }
+                }
+
+                ToolButton {
+                    id: compactFiltersButton
+                    visible: root.compactSearchControls
+                    Layout.preferredWidth: Math.max(theme.controlSm + 8, 52)
+                    Layout.preferredHeight: theme.controlSm
+                    text: root.activeController && root.activeController.searchMode === "global"
+                        ? (scopeBox.displayText + " • " + typePreset.displayText)
+                        : typePreset.displayText
+                    font.pixelSize: theme.fontLabel
+                    onClicked: compactFiltersPopup.open()
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: compactFiltersButton.hovered ? theme.hover : theme.surface
+                        border.color: theme.border
+                        border.width: 1
+                    }
+                    contentItem: Text {
+                        text: compactFiltersButton.text
+                        color: theme.textPrimary
+                        font.pixelSize: theme.fontLabel
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
+                    ToolTip.visible: hovered
+                    ToolTip.text: "Search filters"
                 }
 
                 ToolButton {
@@ -476,6 +587,60 @@ Rectangle {
                             radius: theme.rSm
                             color: parent.hovered ? theme.hover : "transparent"
                         }
+                    }
+                }
+            }
+        }
+
+        Popup {
+            id: compactFiltersPopup
+            readonly property point buttonPos: compactFiltersButton.mapToItem(root, 0, 0)
+            y: buttonPos.y + compactFiltersButton.height + 4
+            x: Math.max(theme ? theme.space16 : 16, buttonPos.x + compactFiltersButton.width - width)
+            width: 240
+            padding: 8
+            modal: false
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            background: Rectangle {
+                radius: theme.rSm
+                color: theme.surfaceRaised
+                border.color: theme.border
+                border.width: 1
+            }
+            contentItem: ColumnLayout {
+                spacing: 8
+
+                Text {
+                    text: "Search Filters"
+                    color: theme.textSecondary
+                    font.pixelSize: theme.fontLabel
+                    font.letterSpacing: 0.6
+                }
+
+                ComboBox {
+                    Layout.fillWidth: true
+                    visible: root.activeController && root.activeController.searchMode === "global"
+                    model: scopeBox.model
+                    textRole: "label"
+                    valueRole: "value"
+                    currentIndex: scopeBox.currentIndex
+                    onActivated: {
+                        if (!root.activeController) return
+                        scopeBox.currentIndex = currentIndex
+                        root.activeController.searchScope = currentValue
+                        root.applySearch(false)
+                    }
+                }
+
+                ComboBox {
+                    Layout.fillWidth: true
+                    model: typePreset.model
+                    textRole: "label"
+                    valueRole: "value"
+                    currentIndex: typePreset.currentIndex
+                    onActivated: {
+                        typePreset.currentIndex = currentIndex
+                        root.applySearch(false)
                     }
                 }
             }

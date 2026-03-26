@@ -19,6 +19,15 @@
 int main(int argc, char **argv)
 {
     qputenv("QSG_RENDER_LOOP", "basic");
+
+    const QByteArray lang = qgetenv("LANG");
+    const QByteArray lcAll = qgetenv("LC_ALL");
+    const QByteArray lcCtype = qgetenv("LC_CTYPE");
+    if (lang.contains("ISO8859-1") || lcAll.contains("ISO8859-1") || lcCtype.contains("ISO8859-1")) {
+        qputenv("LANG", "C.UTF-8");
+        qputenv("LC_CTYPE", "C.UTF-8");
+    }
+
     QGuiApplication app(argc, argv);
     QCoreApplication::setOrganizationName("Liphis");
     QCoreApplication::setOrganizationDomain("liphis.local");

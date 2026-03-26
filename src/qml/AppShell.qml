@@ -19,6 +19,7 @@ ApplicationWindow {
     property var activeController: null
     property bool detailsVisible: true
     property bool terminalVisible: false
+    property bool inspectorExpanded: true
     property string homePath: resolveHomePath()
 
     Settings {
@@ -27,6 +28,7 @@ ApplicationWindow {
         property bool darkMode: false
         property bool detailsPanelVisible: true
         property bool terminalPanelVisible: false
+        property bool inspectorExpanded: true
         property int windowWidth: 1200
         property int windowHeight: 800
     }
@@ -37,12 +39,14 @@ ApplicationWindow {
         appWindow.theme.isDark = uiSettings.darkMode
         appWindow.detailsVisible = uiSettings.detailsPanelVisible
         appWindow.terminalVisible = uiSettings.terminalPanelVisible
+        appWindow.inspectorExpanded = uiSettings.inspectorExpanded
     }
 
     onWidthChanged: uiSettings.windowWidth = width
     onHeightChanged: uiSettings.windowHeight = height
     onDetailsVisibleChanged: uiSettings.detailsPanelVisible = detailsVisible
     onTerminalVisibleChanged: uiSettings.terminalPanelVisible = terminalVisible
+    onInspectorExpandedChanged: uiSettings.inspectorExpanded = inspectorExpanded
     Connections {
         target: appWindow.theme
         function onIsDarkChanged() { uiSettings.darkMode = appWindow.theme.isDark }
@@ -162,6 +166,14 @@ ApplicationWindow {
         }
     }
 
+    Shortcut {
+        sequence: "Escape"
+        onActivated: {
+            if (!activeController) return
+            if (headerBar.hasActiveSearch()) headerBar.clearSearchAndRestore()
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -206,11 +218,15 @@ ApplicationWindow {
                 InspectorPanel {
                     id: inspectorPanel
                     visible: appWindow.detailsVisible
-                    SplitView.preferredWidth: theme.inspectorWidth
-                    SplitView.minimumWidth: 260
-                    SplitView.maximumWidth: 500
+                    SplitView.preferredWidth: appWindow.inspectorExpanded
+                        ? theme.inspectorWidth
+                        : 252
+                    SplitView.minimumWidth: 220
+                    SplitView.maximumWidth: 560
                     theme: appWindow.theme
                     activeController: appWindow.activeController
+                    expanded: appWindow.inspectorExpanded
+                    onToggleExpandRequested: appWindow.inspectorExpanded = !appWindow.inspectorExpanded
                     onAnalyseFolderRequested: (path) => {
                         if (activeController) activeController.analyseFolder(path)
                     }

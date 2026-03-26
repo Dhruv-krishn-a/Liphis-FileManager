@@ -36,17 +36,19 @@ Menu {
         item.height = 32;
         item.leftPadding = 10;
         item.rightPadding = 10;
+        item.icon.width = 16;
+        item.icon.height = 16;
     }
 
     function iconSource(name) {
-        if (name === "tab-new") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/square-plus.svg"
-        if (name === "window-new") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/app-window.svg"
-        if (name === "view-split-left-right") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-board-split.svg"
-        if (name === "edit-cut") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/scissors.svg"
-        if (name === "edit-copy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/copy.svg"
-        if (name === "edit-rename") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pencil.svg"
-        if (name === "user-trash") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
-        if (name === "view-list-details" || name === "document-properties") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
+        if (name === "tab-new") return "assets/icons/outline/square-plus.svg"
+        if (name === "window-new") return "assets/icons/outline/app-window.svg"
+        if (name === "view-split-left-right") return "assets/icons/outline/layout-board-split.svg"
+        if (name === "edit-cut") return "assets/icons/outline/scissors.svg"
+        if (name === "edit-copy") return "assets/icons/outline/copy.svg"
+        if (name === "edit-rename") return "assets/icons/outline/pencil.svg"
+        if (name === "user-trash") return "assets/icons/outline/trash.svg"
+        if (name === "view-list-details" || name === "document-properties") return "assets/icons/outline/list-details.svg"
         return ""
     }
 
