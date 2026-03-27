@@ -8,6 +8,7 @@
 class FileListModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
 public:
     explicit FileListModel(QObject *parent = nullptr);
@@ -44,6 +45,9 @@ public:
 
     Q_INVOKABLE QVariantMap metadataForPath(const QString &path) const;
     Q_INVOKABLE QStringList availableExtensions() const;
+
+signals:
+    void countChanged();
 
 private:
     std::vector<FileMeta> m_entries;

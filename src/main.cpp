@@ -7,6 +7,7 @@
 
 #include "AppController.hpp"
 #include "AnalysisController.hpp"
+#include "CommandManager.hpp"
 #include "src/ThumbnailManager.hpp"
 #include "ThumbnailImageProvider.hpp"
 #include "SystemIconProvider.hpp"
@@ -23,9 +24,10 @@ int main(int argc, char **argv)
     const QByteArray lang = qgetenv("LANG");
     const QByteArray lcAll = qgetenv("LC_ALL");
     const QByteArray lcCtype = qgetenv("LC_CTYPE");
-    if (lang.contains("ISO8859-1") || lcAll.contains("ISO8859-1") || lcCtype.contains("ISO8859-1")) {
-        qputenv("LANG", "C.UTF-8");
-        qputenv("LC_CTYPE", "C.UTF-8");
+    if (lang.contains("ISO8859-1") || lcAll.contains("ISO8859-1") || lcCtype.contains("ISO8859-1") || lang.contains("en_IN")) {
+        qputenv("LANG", "en_US.UTF-8");
+        qputenv("LC_ALL", "en_US.UTF-8");
+        qputenv("LC_CTYPE", "en_US.UTF-8");
     }
 
     QGuiApplication app(argc, argv);
@@ -33,8 +35,8 @@ int main(int argc, char **argv)
     QCoreApplication::setOrganizationDomain("liphis.local");
     QCoreApplication::setApplicationName("Liphis");
     
-    // 1. Memory Optimization: Reduce image reader allocation limit (128MB is plenty for thumbs)
-    QImageReader::setAllocationLimit(128);
+    // Memory Optimization: Increased limit to 512MB to handle large high-res photos.
+    QImageReader::setAllocationLimit(512);
 
     // 2. Single Instance Check (Existing logic)
     const QString serverName = "liphis_app_singleton_" + QString::number(getuid());
@@ -55,6 +57,7 @@ int main(int argc, char **argv)
     bool isRoot = (getuid() == 0);
     ThumbnailManager thumbManager(&app);
     PlacesModel placesModel(&app);
+    CommandManager commandManager(&app);
     SystemIconProvider* iconProvider = new SystemIconProvider();
     iconProvider->setParent(&app); // Avoid leak
     
@@ -67,6 +70,7 @@ int main(int argc, char **argv)
     engine.rootContext()->setContextProperty("isRootAccount", isRoot);
     engine.rootContext()->setContextProperty("globalThumbnailManager", &thumbManager);
     engine.rootContext()->setContextProperty("globalPlacesModel", &placesModel);
+    engine.rootContext()->setContextProperty("commandManager", &commandManager);
     
     engine.addImageProvider("thumbs", new ThumbnailImageProvider(&thumbManager));
     engine.addImageProvider("icon", iconProvider);

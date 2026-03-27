@@ -166,6 +166,7 @@ signals:
     void searchInProgressChanged();
     void activeSearchTermChanged();
     void recentSearchesChanged();
+    void requestSearchClear();
     
     void operationError(const QString &message);
     void operationSuccess(const QString &message);

@@ -18,7 +18,9 @@ QtObject {
 
     property color textPrimary: isDark ? "#F3F1ED" : "#2A2622"
     property color textSecondary: isDark ? "#B5B1AA" : "#6F685F"
-    property color textMuted: isDark ? "#8A867E" : "#8B847A"
+    property color textTertiary: isDark ? "#8A867E" : "#8B847A"
+    property color textMuted: isDark ? "#6A665E" : "#AFA9A0"
+    property color textPlaceholder: isDark ? "#5A564E" : "#B0AAA1"
 
     property color accent: isDark ? "#D4A373" : "#B9783E"
     property color accentSoft: isDark ? "#E6C6A4" : "#D9B38C"

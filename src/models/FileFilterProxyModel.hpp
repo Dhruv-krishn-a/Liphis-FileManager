@@ -14,9 +14,12 @@ class FileFilterProxyModel : public QSortFilterProxyModel
     Q_PROPERTY(QString searchQuery READ searchQuery WRITE setSearchQuery NOTIFY searchQueryChanged)
     Q_PROPERTY(QString typeFilter READ typeFilter WRITE setTypeFilter NOTIFY typeFilterChanged)
     Q_PROPERTY(bool exactMatch READ exactMatch WRITE setExactMatch NOTIFY exactMatchChanged)
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
 public:
     explicit FileFilterProxyModel(QObject *parent = nullptr);
+
+    Q_INVOKABLE void setSortBy(const QString &roleName);
 
     bool showHidden() const;
     void setShowHidden(bool show);
@@ -52,6 +55,7 @@ signals:
     void searchQueryChanged();
     void typeFilterChanged();
     void exactMatchChanged();
+    void countChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow,
@@ -60,6 +64,9 @@ protected:
                   const QModelIndex &source_right) const override;
 
 private:
+    void beginFilterChange();
+    void endFilterChange();
+
     bool m_showHidden{false};
     qlonglong m_minSize{-1};
     qlonglong m_maxSize{-1};

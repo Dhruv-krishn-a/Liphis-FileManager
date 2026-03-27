@@ -10,7 +10,23 @@ FileFilterProxyModel::FileFilterProxyModel(QObject *parent)
     setSortRole(FileListModel::NameRole);
     setDynamicSortFilter(true);
     sort(0); 
+
+    connect(this, &QAbstractItemModel::modelReset, this, &FileFilterProxyModel::countChanged);
+    connect(this, &QAbstractItemModel::rowsInserted, this, &FileFilterProxyModel::countChanged);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &FileFilterProxyModel::countChanged);
+    connect(this, &QAbstractItemModel::layoutChanged, this, &FileFilterProxyModel::countChanged);
 }
+
+void FileFilterProxyModel::setSortBy(const QString &roleName)
+{
+    if (roleName == "name") setSortRole(FileListModel::NameRole);
+    else if (roleName == "date") setSortRole(FileListModel::MTimeRole);
+    else if (roleName == "size") setSortRole(FileListModel::SizeRole);
+    sort(0, sortOrder());
+}
+
+void FileFilterProxyModel::beginFilterChange() { beginResetModel(); }
+void FileFilterProxyModel::endFilterChange() { endResetModel(); }
 
 bool FileFilterProxyModel::showHidden() const { return m_showHidden; }
 void FileFilterProxyModel::setShowHidden(bool show) {
@@ -19,6 +35,7 @@ void FileFilterProxyModel::setShowHidden(bool show) {
     emit showHiddenChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 qlonglong FileFilterProxyModel::minSize() const { return m_minSize; }
@@ -28,6 +45,7 @@ void FileFilterProxyModel::setMinSize(qlonglong size) {
     emit minSizeChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 qlonglong FileFilterProxyModel::maxSize() const { return m_maxSize; }
@@ -37,6 +55,7 @@ void FileFilterProxyModel::setMaxSize(qlonglong size) {
     emit maxSizeChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 qlonglong FileFilterProxyModel::minDate() const { return m_minDate; }
@@ -46,6 +65,7 @@ void FileFilterProxyModel::setMinDate(qlonglong date) {
     emit minDateChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 qlonglong FileFilterProxyModel::maxDate() const { return m_maxDate; }
@@ -55,6 +75,7 @@ void FileFilterProxyModel::setMaxDate(qlonglong date) {
     emit maxDateChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 QString FileFilterProxyModel::extensionFilter() const { return m_extensionFilter; }
@@ -64,6 +85,7 @@ void FileFilterProxyModel::setExtensionFilter(const QString &filter) {
     emit extensionFilterChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 QString FileFilterProxyModel::searchQuery() const { return m_searchQuery; }
@@ -74,6 +96,7 @@ void FileFilterProxyModel::setSearchQuery(const QString &query) {
     beginFilterChange();
     endFilterChange();
     sort(0);
+    emit countChanged();
 }
 
 QString FileFilterProxyModel::typeFilter() const { return m_typeFilter; }
@@ -85,6 +108,7 @@ void FileFilterProxyModel::setTypeFilter(const QString &type) {
     emit typeFilterChanged();
     beginFilterChange();
     endFilterChange();
+    emit countChanged();
 }
 
 bool FileFilterProxyModel::exactMatch() const { return m_exactMatch; }
@@ -95,6 +119,7 @@ void FileFilterProxyModel::setExactMatch(bool exact) {
     beginFilterChange();
     endFilterChange();
     sort(0);
+    emit countChanged();
 }
 
 bool FileFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

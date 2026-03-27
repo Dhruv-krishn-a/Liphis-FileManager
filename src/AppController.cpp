@@ -257,8 +257,7 @@ bool runFdSearch(const QString &rootPath,
         if (shouldCancel()) return true;
         QProcess proc;
         QStringList args;
-        args << "--absolute-path" << "--color" << "never" << "--type" << type;
-        if (parsed.showHidden) args << "-u";
+        args << "--absolute-path" << "--color" << "never" << "--type" << type << "--hidden" << "--no-ignore";
         if (parsed.exact) args << "--fixed-strings";
         if (!parsed.extension.isEmpty() && parsed.extension != "no extension" && type == "f") {
             args << "-e" << parsed.extension;
@@ -487,8 +486,20 @@ void AppController::loadPathInternal(const QString &path)
     const std::uint64_t generation = ++m_operationGeneration;
     m_loading = true;
     m_searchInProgress = false;
-    emit loadingChanged();
+    m_activeSearchTerm = "";
+    m_proxyModel.setSearchQuery("");
+    m_proxyModel.setExtensionFilter("");
+    m_proxyModel.setTypeFilter("all");
+    m_proxyModel.setMinSize(-1);
+    m_proxyModel.setMaxSize(-1);
+    m_proxyModel.setMinDate(-1);
+    m_proxyModel.setMaxDate(-1);
+    m_searchMode = "local";
+    emit searchModeChanged();
+    emit activeSearchTermChanged();
     emit searchInProgressChanged();
+    emit requestSearchClear();
+    emit loadingChanged();
     m_cancelRequested = true;
     if (!m_currentPath.isEmpty()) m_watcher.removePath(m_currentPath);
     m_currentPath = path;
@@ -608,19 +619,16 @@ void AppController::startGlobalSearch(const QString &pattern)
     ThreadPool::instance().submit([safeThis, parsed, shouldCancel, generation]() {
         QStringList roots;
         if (!safeThis) return;
-        if (safeThis->m_searchScope == "home") {
-            roots << QDir::homePath();
-        } else if (safeThis->m_searchScope == "mounted") {
-            for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
-                if (!storage.isValid() || !storage.isReady()) continue;
-                const QString root = storage.rootPath();
-                if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev")) continue;
-                roots << root;
-            }
-            roots = prunedRoots(roots);
-        } else {
-            roots << safeThis->m_currentPath;
+        
+        // Comprehensive search: Home + Mounted volumes
+        roots << QDir::homePath();
+        for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
+            if (!storage.isValid() || !storage.isReady()) continue;
+            const QString root = storage.rootPath();
+            if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev") || root.startsWith("/run/user")) continue;
+            roots << root;
         }
+        roots = prunedRoots(roots);
 
         QSet<QString> seenPaths;
         for (const QString &rootPath : roots) {
@@ -629,17 +637,23 @@ void AppController::startGlobalSearch(const QString &pattern)
                 if (filtered.empty() || !safeThis) return;
                 std::vector<FileMeta> unique;
                 unique.reserve(filtered.size());
+                QStringList thumbBatch;
                 for (auto &entry : filtered) {
                     const QString p = QFileInfo(QString::fromStdString(entry.path)).canonicalFilePath();
                     const QString key = p.isEmpty() ? QString::fromStdString(entry.path) : p;
                     if (seenPaths.contains(key)) continue;
                     seenPaths.insert(key);
+                    thumbBatch << key;
                     unique.push_back(std::move(entry));
                 }
                 if (unique.empty()) return;
-                QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(unique)]() mutable {
+                QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(unique), thumbBatch]() mutable {
                     if (!safeThis || safeThis->m_operationGeneration.load() != generation) return;
                     safeThis->m_fileModel.insertBatch(std::move(b));
+                    // Request thumbnails for the batch
+                    for (const QString& tPath : thumbBatch) {
+                        if (safeThis->m_thumbnailManager) safeThis->m_thumbnailManager->requestThumbnail(tPath);
+                    }
                 }, Qt::QueuedConnection);
             };
 
@@ -952,7 +966,13 @@ void AppController::extractItem(const QString &path)
     else emit operationError("Failed to start " + cmd);
 }
 
-void AppController::openInCode(const QString &path) { if (!QProcess::startDetached("code", {path})) emit operationError("VS Code not found"); }
+void AppController::openInCode(const QString &path) { 
+    QString target = path;
+    if (!m_selectedPath.isEmpty()) target = m_selectedPath;
+    else if (target.isEmpty()) target = m_currentPath;
+
+    if (!QProcess::startDetached("code", {target})) emit operationError("VS Code not found"); 
+}
 
 void AppController::addToBookmarks(const QString &path, const QString &name) {
     if (!m_placesModel) return;

@@ -22,6 +22,15 @@ Item {
     property int rangeAnchorIndex: -1
     property string typeBuffer: ""
     property int cycleMatchIndex: -1
+    
+    property int zoomLevel: 100 // Percentage
+    readonly property int baseCellSize: 100
+    readonly property int baseIconSize: 56
+    readonly property int baseListHeight: 44
+
+    function zoomIn() { zoomLevel = Math.min(300, zoomLevel + 10) }
+    function zoomOut() { zoomLevel = Math.max(50, zoomLevel - 10) }
+    function resetZoom() { zoomLevel = 100 }
 
     function focusFileArea() {
         root.forceActiveFocus()
@@ -350,7 +359,7 @@ Item {
         id: listDelegate
         Item {
             id: listRoot
-            width: lv.width; height: 44 // A bit more breathing room
+            width: lv.width; height: baseListHeight * (zoomLevel / 100.0)
             readonly property bool isActuallySelected: controller.selectedPaths.indexOf(model.path) !== -1
 
             Rectangle {
@@ -361,21 +370,20 @@ Item {
 
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 16
-                FileIcon { Layout.preferredWidth: 22; Layout.preferredHeight: 22; isDir: model.isDir; iconName: model.iconName; theme: root.theme }
+                FileIcon { Layout.preferredWidth: 22 * (zoomLevel / 100.0); Layout.preferredHeight: 22 * (zoomLevel / 100.0); isDir: model.isDir; iconName: model.iconName; theme: root.theme }
                 Text {
                     text: root.displayName(model.name)
                     textFormat: Text.PlainText
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 18
                     elide: Text.ElideRight
                     wrapMode: Text.NoWrap
                     clip: true
                     color: root.colTextPrimary
-                    font.pixelSize: 13
+                    font.pixelSize: Math.max(8, 13 * (zoomLevel / 100.0))
                     font.weight: listRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
-                Text { text: model.formattedSize; Layout.preferredWidth: 80; horizontalAlignment: Text.AlignRight; color: root.colTextSecondary; font.pixelSize: 12 }
-                Text { text: model.formattedDate; Layout.preferredWidth: 140; horizontalAlignment: Text.AlignRight; color: root.colTextSecondary; font.pixelSize: 12 }
+                Text { text: model.formattedSize; Layout.preferredWidth: 80 * (zoomLevel / 100.0); horizontalAlignment: Text.AlignRight; color: root.colTextSecondary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)) }
+                Text { text: model.formattedDate; Layout.preferredWidth: 140 * (zoomLevel / 100.0); horizontalAlignment: Text.AlignRight; color: root.colTextSecondary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)) }
             }
 
             MouseArea {
@@ -413,10 +421,10 @@ Item {
             }
 
             ColumnLayout {
-                anchors.fill: parent; anchors.margins: 12; spacing: 8
+                anchors.fill: parent; anchors.margins: 12 * (zoomLevel / 100.0); spacing: 8 * (zoomLevel / 100.0)
                 Item {
                     Layout.fillWidth: true; Layout.fillHeight: true
-                    FileIcon { anchors.centerIn: parent; width: 56; height: 56; isDir: model.isDir; iconName: model.iconName; theme: root.theme; visible: !gridThumb.visible }
+                    FileIcon { anchors.centerIn: parent; width: baseIconSize * (zoomLevel / 100.0); height: baseIconSize * (zoomLevel / 100.0); isDir: model.isDir; iconName: model.iconName; theme: root.theme; visible: !gridThumb.visible }
                     Image { 
                         id: gridThumb; anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: model.thumbnail ? model.thumbnail : ""
                         visible: status === Image.Ready; asynchronous: false; cache: true // Sync for memory predictability
@@ -426,13 +434,13 @@ Item {
                     text: root.displayName(model.name)
                     textFormat: Text.PlainText
                     Layout.fillWidth: true
-                    Layout.preferredHeight: gridRoot.isActuallySelected ? 30 : 16
+                    Layout.preferredHeight: gridRoot.isActuallySelected ? (30 * (zoomLevel / 100.0)) : (16 * (zoomLevel / 100.0))
                     horizontalAlignment: Text.AlignHCenter
                     elide: Text.ElideRight
                     wrapMode: gridRoot.isActuallySelected ? Text.WrapAnywhere : Text.NoWrap
                     maximumLineCount: gridRoot.isActuallySelected ? 2 : 1
                     clip: true
-                    color: root.colTextPrimary; font.pixelSize: 12; font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
+                    color: root.colTextPrimary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)); font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
             }
 
@@ -460,12 +468,14 @@ Item {
     // --- MAIN VIEW ---
 
     StackLayout {
+        id: viewStack
         anchors.fill: parent
         currentIndex: controller.viewMode === "grid" ? 1 : 0
 
         ListView {
             id: lv; model: controller.fileModel; clip: true; delegate: listDelegate
-            cacheBuffer: 0 // Absolute minimum memory
+            visible: controller.fileModel.count > 0
+            cacheBuffer: 0
             onContentYChanged: thumbsDebounce.restart()
             onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
@@ -473,10 +483,77 @@ Item {
 
         GridView {
             id: gv; model: controller.fileModel; clip: true; delegate: gridDelegate
-            cellWidth: 100; cellHeight: 100; cacheBuffer: 0
+            visible: controller.fileModel.count > 0
+            cellWidth: baseCellSize * (zoomLevel / 100.0)
+            cellHeight: baseCellSize * (zoomLevel / 100.0)
+            cacheBuffer: 0
             onContentYChanged: thumbsDebounce.restart()
             onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+        }
+    }
+
+    // Loading Overlay
+    Rectangle {
+        anchors.fill: parent
+        color: theme.bg
+        visible: controller.loading || controller.searchInProgress
+        opacity: 0.6
+        z: 5
+
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 12
+            BusyIndicator {
+                Layout.alignment: Qt.AlignHCenter
+                running: parent.parent.visible
+            }
+            Text {
+                text: controller.searchInProgress ? "Searching..." : "Loading..."
+                color: theme.textSecondary
+                font.pixelSize: 13
+            }
+        }
+    }
+
+    // Empty State
+    Item {
+        id: emptyState
+        anchors.fill: parent
+        visible: !controller.loading && !controller.searchInProgress && controller.fileModel.count === 0
+        z: 4
+
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 20
+            
+            Icon {
+                Layout.alignment: Qt.AlignHCenter
+                name: "search"
+                size: 64
+                color: theme.textMuted
+                opacity: 0.4
+            }
+            
+            Column {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: 4
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: controller.activeSearchTerm ? "No results found" : "Folder is empty"
+                    color: theme.textPrimary
+                    font.pixelSize: 18
+                    font.weight: Font.Medium
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: controller.activeSearchTerm 
+                        ? "Try different keywords or filters" 
+                        : "This directory contains no files"
+                    color: theme.textSecondary
+                    font.pixelSize: 13
+                }
+            }
         }
     }
 
@@ -484,6 +561,11 @@ Item {
         target: controller
         function onViewModeChanged() { thumbsDebounce.restart() }
         function onCurrentPathChanged() { thumbsDebounce.restart() }
+    }
+
+    Connections {
+        target: controller ? controller.fileModel : null
+        function onCountChanged() { thumbsDebounce.restart() }
     }
 
     MouseArea {
@@ -494,6 +576,13 @@ Item {
             else if (mouse.button === Qt.BackButton) controller.goBack()
             else if (mouse.button === Qt.ForwardButton) controller.goForward()
             else if (mouse.button === Qt.LeftButton) controller.clearSelection()
+        }
+        onWheel: (wheel) => {
+            if (wheel.modifiers & Qt.ControlModifier) {
+                if (wheel.angleDelta.y > 0) zoomIn()
+                else zoomOut()
+                wheel.accepted = true
+            }
         }
     }
 }

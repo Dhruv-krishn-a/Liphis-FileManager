@@ -6,6 +6,8 @@ Item {
     property string name: ""
     property color color: "white"
     property int size: 24
+    property bool useVector: true
+    property bool filled: false
 
     implicitWidth: size
     implicitHeight: size
@@ -70,9 +72,45 @@ Item {
         if (n === "tag") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/tag.svg"
         if (n === "document-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-open.svg"
         if (n === "document-properties") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
+        if (n === "layout-grid") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-grid.svg"
+        if (n === "layout-list") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-list.svg"
+        if (n === "layout-tree") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-tree.svg"
+        if (n === "layout-sidebar") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-sidebar.svg"
+        if (n === "layout-sidebar-left-collapse") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-sidebar-left-collapse.svg"
+        if (n === "layout-sidebar-left-expand") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-sidebar-left-expand.svg"
+        if (n === "alphabet-latin") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/alphabet-latin.svg"
+        if (n === "calendar") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/calendar.svg"
+        if (n === "database") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/database.svg"
+        if (n === "eye") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/eye.svg"
+        if (n === "zoom-in") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-in.svg"
+        if (n === "zoom-out") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-out.svg"
+        if (n === "zoom-reset") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-reset.svg"
+        if (n === "clipboard") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/clipboard.svg"
+        if (n === "logout") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/logout.svg"
+        if (n === "chart-pie") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/chart-pie.svg"
+        if (n === "folder-code") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-code.svg"
+        if (n === "folder-heart") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-heart.svg"
+        if (n === "folder-star") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-star.svg"
+        if (n === "folder-plus") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-plus.svg"
+        if (n === "folder-root") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-root.svg"
+        if (n === "device-desktop") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-desktop.svg"
+        if (n === "device-floppy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-floppy.svg"
+        if (n === "device-sd-card") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-sd-card.svg"
+        if (n === "device-usb") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-usb.svg"
+        if (n === "music") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/music.svg"
+        if (n === "photo") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/photo.svg"
+        if (n === "video") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/video.svg"
         return ""
     }
-    readonly property string assetSource: localAsset(root.name)
+
+    function filledAsset(iconName) {
+        var n = iconName || ""
+        if (n === "folder" || n === "folder-open" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/folder.svg"
+        if (n === "star") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/star.svg"
+        return ""
+    }
+
+    readonly property string assetSource: root.filled ? (filledAsset(root.name) || localAsset(root.name)) : localAsset(root.name)
 
     Image {
         id: sourceIcon
@@ -80,8 +118,8 @@ Item {
         source: root.assetSource.length > 0
             ? root.assetSource
             : "image://icon/" + root.mappedIconName(root.name)
-        sourceSize.width: Math.max(48, Math.round(root.width * 3))
-        sourceSize.height: Math.max(48, Math.round(root.height * 3))
+        sourceSize.width: Math.max(64, Math.round(root.width * 4))
+        sourceSize.height: Math.max(64, Math.round(root.height * 4))
         fillMode: Image.PreserveAspectFit
         smooth: true
         mipmap: true

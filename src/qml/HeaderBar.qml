@@ -100,6 +100,14 @@ Rectangle {
         onTriggered: root.applySearch(false)
     }
 
+    Connections {
+        target: root.activeController
+        function onRequestSearchClear() {
+            searchField.text = ""
+            if (typePreset) typePreset.currentIndex = 0
+        }
+    }
+
     SequentialAnimation {
         id: themeSwapAnimation
         PropertyAnimation {
@@ -283,7 +291,16 @@ Rectangle {
 
         Rectangle {
             id: searchContainer
-            Layout.preferredWidth: root.veryNarrow ? 310 : (root.narrow ? 360 : 430)
+            Layout.preferredWidth: {
+                let base = root.veryNarrow ? 310 : (root.narrow ? 360 : 430)
+                if (searchField.activeFocus || (searchField.text && searchField.text.trim().length > 0)) {
+                    return root.veryNarrow ? 400 : (root.narrow ? 500 : 620)
+                }
+                return base
+            }
+            Behavior on Layout.preferredWidth {
+                NumberAnimation { duration: 250; easing.type: Easing.OutCubic }
+            }
             Layout.preferredHeight: theme.controlMd
             radius: theme.rMd
             color: theme.surfaceRaised
@@ -341,74 +358,6 @@ Rectangle {
                                 color: root.activeController && root.activeController.searchMode === "global"
                                     ? theme.selection
                                     : "transparent"
-                            }
-                        }
-                    }
-                }
-
-                ComboBox {
-                    id: scopeBox
-                    Layout.preferredWidth: 90
-                    Layout.minimumWidth: root.veryNarrow ? 78 : 92
-                    Layout.preferredHeight: theme.controlSm
-                    visible: root.activeController
-                        && root.activeController.searchMode === "global"
-                        && !root.compactSearchControls
-                    model: [
-                        { label: "Current", value: "current" },
-                        { label: "Home", value: "home" },
-                        { label: "Mounted", value: "mounted" }
-                    ]
-                    textRole: "label"
-                    valueRole: "value"
-                    onActivated: {
-                        if (!root.activeController) return
-                        root.activeController.searchScope = currentValue
-                        root.applySearch(false)
-                    }
-                    background: Rectangle {
-                        radius: theme.rSm
-                        color: scopeBox.hovered ? theme.hover : theme.surface
-                        border.color: theme.border
-                        border.width: 1
-                    }
-                    contentItem: Text {
-                        leftPadding: 10
-                        rightPadding: 20
-                        text: scopeBox.displayText
-                        color: theme.textPrimary
-                        font.pixelSize: theme.fontBody - 1
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                    }
-                    indicator: Text {
-                        text: "▾"
-                        color: theme.textSecondary
-                        font.pixelSize: 10
-                        anchors.right: parent.right
-                        anchors.rightMargin: 8
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                    Component.onCompleted: {
-                        if (!root.activeController) return
-                        var mode = root.activeController.searchScope
-                        for (var i = 0; i < model.length; ++i) {
-                            if (model[i].value === mode) {
-                                currentIndex = i
-                                break
-                            }
-                        }
-                    }
-                    Connections {
-                        target: root.activeController
-                        enabled: !!root.activeController
-                        function onSearchScopeChanged() {
-                            var mode = root.activeController.searchScope
-                            for (var i = 0; i < scopeBox.model.length; ++i) {
-                                if (scopeBox.model[i].value === mode) {
-                                    scopeBox.currentIndex = i
-                                    break
-                                }
                             }
                         }
                     }
@@ -499,9 +448,7 @@ Rectangle {
                     visible: root.compactSearchControls
                     Layout.preferredWidth: Math.max(theme.controlSm + 8, 52)
                     Layout.preferredHeight: theme.controlSm
-                    text: root.activeController && root.activeController.searchMode === "global"
-                        ? (scopeBox.displayText + " • " + typePreset.displayText)
-                        : typePreset.displayText
+                    text: typePreset.displayText
                     font.pixelSize: theme.fontLabel
                     onClicked: compactFiltersPopup.open()
                     background: Rectangle {
@@ -615,21 +562,6 @@ Rectangle {
                     color: theme.textSecondary
                     font.pixelSize: theme.fontLabel
                     font.letterSpacing: 0.6
-                }
-
-                ComboBox {
-                    Layout.fillWidth: true
-                    visible: root.activeController && root.activeController.searchMode === "global"
-                    model: scopeBox.model
-                    textRole: "label"
-                    valueRole: "value"
-                    currentIndex: scopeBox.currentIndex
-                    onActivated: {
-                        if (!root.activeController) return
-                        scopeBox.currentIndex = currentIndex
-                        root.activeController.searchScope = currentValue
-                        root.applySearch(false)
-                    }
                 }
 
                 ComboBox {

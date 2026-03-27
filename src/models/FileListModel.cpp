@@ -95,7 +95,7 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const
     case GroupRole:
         return entry.group ? QString::fromStdString(*entry.group) : "";
     case ThumbnailRole: {
-        if (!entry.isDir && isSupportedImage(path)) {
+        if (isSupportedImage(path)) {
              return QString("image://thumbs/%1").arg(path);
         }
         return QString();
@@ -136,6 +136,7 @@ void FileListModel::clear()
     beginResetModel();
     m_entries.clear();
     endResetModel();
+    emit countChanged();
 }
 
 void FileListModel::setEntries(std::vector<FileMeta> &&entries)
@@ -148,6 +149,7 @@ void FileListModel::setEntries(std::vector<FileMeta> &&entries)
     beginResetModel();
     m_entries = std::move(entries);
     endResetModel();
+    emit countChanged();
 }
 
 void FileListModel::insertBatch(std::vector<FileMeta> &&batch)
@@ -173,6 +175,7 @@ void FileListModel::insertBatch(std::vector<FileMeta> &&batch)
         m_entries.emplace_back(std::move(item));
 
     endInsertRows();
+    emit countChanged();
 }
 
 void FileListModel::updateThumbnail(const QString &filePath,

@@ -19,7 +19,7 @@ ApplicationWindow {
     property var activeController: null
     property bool detailsVisible: true
     property bool terminalVisible: false
-    property bool inspectorExpanded: true
+    property bool sidebarExpanded: true
     property string homePath: resolveHomePath()
 
     Settings {
@@ -28,7 +28,7 @@ ApplicationWindow {
         property bool darkMode: false
         property bool detailsPanelVisible: true
         property bool terminalPanelVisible: false
-        property bool inspectorExpanded: true
+        property bool sidebarExpanded: true
         property int windowWidth: 1200
         property int windowHeight: 800
     }
@@ -39,14 +39,59 @@ ApplicationWindow {
         appWindow.theme.isDark = uiSettings.darkMode
         appWindow.detailsVisible = uiSettings.detailsPanelVisible
         appWindow.terminalVisible = uiSettings.terminalPanelVisible
-        appWindow.inspectorExpanded = uiSettings.inspectorExpanded
+        appWindow.sidebarExpanded = uiSettings.sidebarExpanded
+
+        // Register Commands
+        // View & Navigation
+        commandManager.registerCommand("view.grid", "View", "Switch to Grid View", "layout-grid", "Ctrl+1", function() { if (activeController) activeController.setViewMode("grid") })
+        commandManager.registerCommand("view.list", "View", "Switch to List View", "layout-list", "Ctrl+2", function() { if (activeController) activeController.setViewMode("list") })
+        commandManager.registerCommand("view.tree", "View", "Switch to Tree View", "layout-tree", "Ctrl+3", function() { if (activeController) activeController.setViewMode("tree") })
+        commandManager.registerCommand("view.zoom_in", "View", "Zoom In", "zoom-in", "Ctrl++", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.zoomIn() })
+        commandManager.registerCommand("view.zoom_out", "View", "Zoom Out", "zoom-out", "Ctrl+-", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.zoomOut() })
+        commandManager.registerCommand("view.zoom_reset", "View", "Reset Zoom", "zoom-reset", "Ctrl+0", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.resetZoom() })
+        commandManager.registerCommand("view.toggle_hidden", "View", "Toggle Hidden Files", "eye", "Ctrl+H", function() { if (activeController) activeController.showHiddenFiles = !activeController.showHiddenFiles })
+        
+        // Sorting (New)
+        commandManager.registerCommand("sort.name", "Sort", "Sort by Name", "alphabet-latin", "", function() { if (activeController) activeController.fileModel.setSortBy("name") })
+        commandManager.registerCommand("sort.date", "Sort", "Sort by Date Modified", "calendar", "", function() { if (activeController) activeController.fileModel.setSortBy("date") })
+        commandManager.registerCommand("sort.size", "Sort", "Sort by Size", "database", "", function() { if (activeController) activeController.fileModel.setSortBy("size") })
+
+        // UI Customization
+        commandManager.registerCommand("ui.toggle_sidebar", "UI", "Toggle Sidebar", "layout-sidebar", "Ctrl+B", function() { appWindow.sidebarExpanded = !appWindow.sidebarExpanded })
+        commandManager.registerCommand("ui.toggle_inspector", "UI", "Toggle Inspector Panel", "info-circle", "Ctrl+I", function() { appWindow.detailsVisible = !appWindow.detailsVisible })
+        commandManager.registerCommand("ui.toggle_terminal", "UI", "Toggle Terminal", "terminal", "Ctrl+`", function() { appWindow.terminalVisible = !appWindow.terminalVisible })
+        commandManager.registerCommand("ui.toggle_theme", "UI", "Toggle Dark/Light Mode", "background", "", function() { appWindow.theme.isDark = !appWindow.theme.isDark })
+        commandManager.registerCommand("ui.zen_mode", "UI", "Toggle Zen Mode", "app-window", "", function() { 
+            appWindow.sidebarExpanded = !appWindow.sidebarExpanded;
+            appWindow.detailsVisible = !appWindow.detailsVisible;
+            appWindow.terminalVisible = false;
+        })
+
+        // File Operations
+        commandManager.registerCommand("file.new_folder", "File", "Create New Folder", "folder-plus", "Ctrl+Shift+N", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.openCreateFolderDialog() })
+        commandManager.registerCommand("file.refresh", "File", "Refresh Current Folder", "refresh", "Ctrl+R", function() { if (activeController) activeController.refresh() })
+        commandManager.registerCommand("file.terminal", "File", "Open Terminal Here", "terminal", "", function() { if (activeController) activeController.openInTerminal(activeController.currentPath) })
+        commandManager.registerCommand("file.code", "File", "Open in VS Code", "brand-vscode", "", function() { if (activeController) activeController.openInCode(activeController.currentPath) })
+        commandManager.registerCommand("file.copy_path", "File", "Copy Path to Clipboard", "copy", "", function() { if (activeController) activeController.copyToClipboard(activeController.currentPath) })
+        commandManager.registerCommand("file.select_all", "File", "Select All", "select-all", "Ctrl+A", function() { if (activeController) activeController.selectAll() })
+        commandManager.registerCommand("file.paste", "File", "Paste from Clipboard", "clipboard", "Ctrl+V", function() { if (activeController) activeController.pasteItem() })
+        
+        // Navigation & Go
+        commandManager.registerCommand("go.home", "Go", "Go to Home Directory", "home", "Alt+Home", function() { if (activeController) activeController.openPath(homePath) })
+        commandManager.registerCommand("go.parent", "Go", "Go to Parent Directory", "arrow-up", "Alt+Up", function() { if (activeController) activeController.goUp() })
+        commandManager.registerCommand("go.back", "Go", "Go Back", "arrow-left", "Alt+Left", function() { if (activeController) activeController.goBack() })
+        commandManager.registerCommand("go.forward", "Go", "Go Forward", "arrow-right", "Alt+Right", function() { if (activeController) activeController.goForward() })
+        
+        // System
+        commandManager.registerCommand("system.analyze", "System", "Analyze Disk Space", "chart-pie", "", function() { if (activeController) activeController.analyseFolder(activeController.currentPath) })
+        commandManager.registerCommand("system.quit", "System", "Quit Liphis", "logout", "Ctrl+Q", function() { Qt.quit() })
     }
 
     onWidthChanged: uiSettings.windowWidth = width
     onHeightChanged: uiSettings.windowHeight = height
     onDetailsVisibleChanged: uiSettings.detailsPanelVisible = detailsVisible
     onTerminalVisibleChanged: uiSettings.terminalPanelVisible = terminalVisible
-    onInspectorExpandedChanged: uiSettings.inspectorExpanded = inspectorExpanded
+    onSidebarExpandedChanged: uiSettings.sidebarExpanded = sidebarExpanded
     Connections {
         target: appWindow.theme
         function onIsDarkChanged() { uiSettings.darkMode = appWindow.theme.isDark }
@@ -158,17 +203,19 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Ctrl+K"
+        sequence: "Ctrl+P"
         onActivated: {
-            commandQuery.text = ""
             commandPalette.open()
-            commandQuery.forceActiveFocus()
         }
     }
 
     Shortcut {
         sequence: "Escape"
         onActivated: {
+            if (commandPalette.opened) {
+                commandPalette.close()
+                return
+            }
             if (!activeController) return
             if (headerBar.hasActiveSearch()) headerBar.clearSearchAndRestore()
         }
@@ -185,12 +232,17 @@ ApplicationWindow {
 
             LeftSidebar {
                 id: leftSidebar
-                Layout.preferredWidth: theme.sidebarWidth
+                Layout.preferredWidth: appWindow.sidebarExpanded ? theme.sidebarWidth : 64
+                Behavior on Layout.preferredWidth {
+                    NumberAnimation { duration: 250; easing.type: Easing.InOutQuad }
+                }
                 Layout.fillHeight: true
                 theme: appWindow.theme
                 placesModel: globalPlacesModel
                 activePath: activeController ? activeController.currentPath : ""
                 homePath: appWindow.homePath
+                expanded: appWindow.sidebarExpanded
+                onToggleExpanded: appWindow.sidebarExpanded = !appWindow.sidebarExpanded
                 onPathActivated: (path) => {
                     if (activeController) activeController.openPath(path)
                 }
@@ -218,15 +270,11 @@ ApplicationWindow {
                 InspectorPanel {
                     id: inspectorPanel
                     visible: appWindow.detailsVisible
-                    SplitView.preferredWidth: appWindow.inspectorExpanded
-                        ? theme.inspectorWidth
-                        : 252
+                    SplitView.preferredWidth: theme.inspectorWidth
                     SplitView.minimumWidth: 220
                     SplitView.maximumWidth: 560
                     theme: appWindow.theme
                     activeController: appWindow.activeController
-                    expanded: appWindow.inspectorExpanded
-                    onToggleExpandRequested: appWindow.inspectorExpanded = !appWindow.inspectorExpanded
                     onAnalyseFolderRequested: (path) => {
                         if (activeController) activeController.analyseFolder(path)
                     }
@@ -284,107 +332,8 @@ ApplicationWindow {
         darkMode: theme.isDark
     }
 
-    Popup {
+    CommandPalette {
         id: commandPalette
-        modal: true
-        focus: true
-        width: Math.min(520, appWindow.width - 40)
-        padding: 0
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-        x: Math.round((appWindow.width - width) / 2)
-        y: Math.round((appWindow.height - implicitHeight) / 2)
-        background: Rectangle {
-            radius: theme.rMd
-            color: theme.surfaceRaised
-            border.color: theme.border
-            border.width: 1
-        }
-        contentItem: ColumnLayout {
-            spacing: 0
-            Rectangle {
-                Layout.fillWidth: true
-                height: 46
-                color: "transparent"
-                border.color: theme.border
-                border.width: 0
-                TextField {
-                    id: commandQuery
-                    anchors.fill: parent
-                    anchors.margins: 8
-                    placeholderText: "Type a command..."
-                    onAccepted: {
-                        for (var i = 0; i < commandModel.count; ++i) {
-                            var item = commandModel.get(i)
-                            if (item.label.toLowerCase().indexOf(commandQuery.text.trim().toLowerCase()) >= 0) {
-                                if (item.key === "home" && activeController) activeController.openPath(homePath)
-                                else if (item.key === "inspector") detailsVisible = !detailsVisible
-                                else if (item.key === "terminal") terminalVisible = !terminalVisible
-                                else if (item.key === "search") headerBar.focusSearchField()
-                                else if (item.key === "refresh" && activeController) activeController.refresh()
-                                else if (item.key === "new_folder" && centerWorkspace.activeView) centerWorkspace.activeView.openCreateFolderDialog()
-                                else if (item.key === "new_tab_home") addTab(homePath)
-                                commandPalette.close()
-                                break
-                            }
-                        }
-                    }
-                    background: Rectangle {
-                        radius: theme.rSm
-                        color: theme.surface
-                        border.color: theme.border
-                        border.width: 1
-                    }
-                }
-            }
-            ListView {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 260
-                clip: true
-                model: ListModel {
-                    id: commandModel
-                    ListElement { label: "Go Home"; key: "home" }
-                    ListElement { label: "Toggle Inspector"; key: "inspector" }
-                    ListElement { label: "Toggle Terminal"; key: "terminal" }
-                    ListElement { label: "Focus Search"; key: "search" }
-                    ListElement { label: "Refresh Current Folder"; key: "refresh" }
-                    ListElement { label: "New Folder"; key: "new_folder" }
-                    ListElement { label: "New Tab (Home)"; key: "new_tab_home" }
-                }
-                delegate: Item {
-                    width: parent.width
-                    readonly property bool matches: commandQuery.text.trim().length === 0
-                        || label.toLowerCase().indexOf(commandQuery.text.trim().toLowerCase()) >= 0
-                    height: matches ? 36 : 0
-                    visible: matches
-                    Rectangle {
-                        anchors.fill: parent
-                        color: area.containsMouse ? theme.hover : "transparent"
-                    }
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 12
-                        text: label
-                        color: theme.textPrimary
-                        font.pixelSize: theme.fontBody
-                    }
-                    MouseArea {
-                        id: area
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            if (key === "home" && activeController) activeController.openPath(homePath)
-                            else if (key === "inspector") detailsVisible = !detailsVisible
-                            else if (key === "terminal") terminalVisible = !terminalVisible
-                            else if (key === "search") headerBar.focusSearchField()
-                            else if (key === "refresh" && activeController) activeController.refresh()
-                            else if (key === "new_folder" && centerWorkspace.activeView) centerWorkspace.activeView.openCreateFolderDialog()
-                            else if (key === "new_tab_home") addTab(homePath)
-                            commandPalette.close()
-                        }
-                    }
-                }
-            }
-        }
+        theme: appWindow.theme
     }
 }

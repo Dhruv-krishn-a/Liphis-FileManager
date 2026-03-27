@@ -11,11 +11,14 @@ ItemDelegate {
     property bool showAction: false
     property string actionIconName: "close"
     property string actionToolTip: ""
+    property bool expanded: true
 
     signal actionClicked()
 
     height: 32
     padding: 0
+    ToolTip.visible: hovered && !expanded
+    ToolTip.text: root.text
 
     background: Rectangle {
         anchors.fill: parent
@@ -31,19 +34,24 @@ ItemDelegate {
 
     contentItem: RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: root.theme ? root.theme.space12 : 12
-        anchors.rightMargin: root.theme ? root.theme.space10 : 10
+        anchors.leftMargin: root.expanded ? (root.theme ? root.theme.space12 : 12) : 0
+        anchors.rightMargin: root.expanded ? (root.theme ? root.theme.space10 : 10) : 0
         spacing: root.theme ? root.theme.space8 : 8
 
-        Icon {
-            Layout.preferredWidth: root.theme ? root.theme.iconMd : 16
+        Item {
+            Layout.fillWidth: !root.expanded
+            Layout.preferredWidth: root.expanded ? (root.theme ? root.theme.iconMd : 16) : -1
             Layout.preferredHeight: root.theme ? root.theme.iconMd : 16
-            name: root.iconName
-            size: root.theme ? root.theme.iconMd : 16
-            color: root.active ? root.theme.accent : root.theme.textSecondary
+            Icon {
+                anchors.centerIn: parent
+                name: root.iconName
+                size: root.theme ? root.theme.iconMd : 16
+                color: root.active ? root.theme.accent : root.theme.textSecondary
+            }
         }
 
         Text {
+            visible: root.expanded
             text: root.text
             Layout.fillWidth: true
             elide: Text.ElideRight
@@ -53,7 +61,7 @@ ItemDelegate {
         }
 
         ThemedIconButton {
-            visible: root.showAction
+            visible: root.showAction && root.expanded
             theme: root.theme
             iconName: root.actionIconName
             iconSize: 12

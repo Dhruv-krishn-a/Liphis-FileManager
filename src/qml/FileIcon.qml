@@ -11,21 +11,19 @@ Item {
         return isDir ? "folder" : "text-x-generic"
     }
 
-    Image {
+    Icon {
         id: themedIcon
         anchors.fill: parent
-        fillMode: Image.PreserveAspectFit
-        source: "image://icon/" + root.resolvedIconName
-        sourceSize.width: Math.max(64, Math.round(root.width * 3))
-        sourceSize.height: Math.max(64, Math.round(root.height * 3))
-        smooth: true
-        mipmap: true
-        antialiasing: true
+        name: root.resolvedIconName
+        filled: root.isDir
+        color: isDir
+            ? (theme ? theme.accent : "#4A473E")
+            : (theme ? theme.textSecondary : "#8A867E")
     }
 
     Rectangle {
         anchors.fill: parent
-        visible: themedIcon.status !== Image.Ready
+        visible: false // Icon component handles loading/fallback better or we can use a placeholder
         radius: Math.max(3, Math.round(width * 0.16))
         color: isDir
             ? (theme ? theme.accentSoft : "#C4B28A")

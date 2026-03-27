@@ -9,21 +9,49 @@ Rectangle {
     property var placesModel
     property string activePath: ""
     property string homePath: ""
+    property bool expanded: true
 
     signal pathActivated(string path)
     signal removeBookmarkRequested(string path)
+    signal toggleExpanded()
 
     color: theme.sidebar
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: theme ? theme.space12 : 12
-        spacing: theme ? theme.space6 : 6
+        anchors.margins: 0
+        spacing: 0
+
+        // Sidebar Header / Toggle
+        Rectangle {
+            Layout.fillWidth: true
+            height: theme.headerHeight
+            color: "transparent"
+
+            ThemedIconButton {
+                anchors.centerIn: parent
+                theme: root.theme
+                iconName: root.expanded ? "layout-sidebar-left-collapse" : "layout-sidebar-left-expand"
+                toolTip: root.expanded ? "Collapse Sidebar" : "Expand Sidebar"
+                onClicked: root.toggleExpanded()
+            }
+
+            Rectangle {
+                anchors.bottom: parent.bottom
+                width: parent.width
+                height: 1
+                color: theme.border
+                opacity: 0.3
+            }
+        }
 
         ListView {
             id: sideList
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.topMargin: theme ? theme.space8 : 8
+            Layout.leftMargin: root.expanded ? (theme ? theme.space12 : 12) : (theme ? theme.space8 : 8)
+            Layout.rightMargin: root.expanded ? (theme ? theme.space12 : 12) : (theme ? theme.space8 : 8)
             model: root.placesModel
             spacing: theme ? theme.space4 : 4
             clip: true
@@ -33,7 +61,7 @@ Rectangle {
             section.delegate: Rectangle {
                 required property string section
                 width: sideList.width
-                height: 24
+                height: root.expanded ? 24 : 16
                 color: "transparent"
 
                 readonly property string sectionTitle: {
@@ -45,6 +73,7 @@ Rectangle {
                 }
 
                 Text {
+                    visible: root.expanded
                     anchors.left: parent.left
                     anchors.leftMargin: theme ? theme.space10 : 10
                     anchors.verticalCenter: parent.verticalCenter
@@ -53,6 +82,15 @@ Rectangle {
                     font.pixelSize: theme ? theme.fontLabel : 10
                     font.bold: true
                     font.letterSpacing: theme ? theme.letterSpacingLabel : 1.0
+                }
+
+                Rectangle {
+                    visible: !root.expanded
+                    anchors.centerIn: parent
+                    width: parent.width * 0.6
+                    height: 1
+                    color: theme.border
+                    opacity: 0.5
                 }
             }
 
@@ -65,6 +103,7 @@ Rectangle {
                 showAction: model.category === 1
                 actionIconName: "close"
                 actionToolTip: "Remove bookmark"
+                expanded: root.expanded
                 onClicked: root.pathActivated(model.path)
                 onActionClicked: root.removeBookmarkRequested(model.path)
             }

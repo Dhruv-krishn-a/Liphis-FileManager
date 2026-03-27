@@ -161,16 +161,23 @@ void PlacesModel::setupDefaultPlaces()
         QString p = QStandardPaths::writableLocation(loc);
         if (QDir(p).exists()) m_items.push_back({name, p, icon, 0});
     };
-    addLoc(QStandardPaths::DocumentsLocation, "Documents", "folder-documents");
+    addLoc(QStandardPaths::DocumentsLocation, "Documents", "folder");
     addLoc(QStandardPaths::DownloadLocation, "Downloads", "folder-download");
-    addLoc(QStandardPaths::PicturesLocation, "Pictures", "folder-pictures");
+    addLoc(QStandardPaths::PicturesLocation, "Pictures", "photo");
+    addLoc(QStandardPaths::MoviesLocation, "Videos", "video");
+    addLoc(QStandardPaths::MusicLocation, "Music", "music");
 
     // 1. BOOKMARKS
     QSettings bSettings("Liphis", "Bookmarks");
     QVariantList bList = bSettings.value("places").toList();
     for (const auto& v : bList) {
         QVariantMap m = v.toMap();
-        m_items.push_back({m["name"].toString(), m["path"].toString(), "user-bookmarks", 1});
+        QString name = m["name"].toString();
+        QString icon = "folder-star";
+        if (name.contains("Code", Qt::CaseInsensitive) || name.contains("Dev", Qt::CaseInsensitive) || name.contains("Project", Qt::CaseInsensitive)) {
+            icon = "folder-code";
+        }
+        m_items.push_back({name, m["path"].toString(), icon, 1});
     }
 
     // 2. DEVICES
@@ -180,7 +187,7 @@ void PlacesModel::setupDefaultPlaces()
             if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev") || root.startsWith("/run/user")) continue;
             QString name = storage.displayName();
             if (name.isEmpty() || name == "/") name = "System Root";
-            QString icon = root == "/" ? "drive-harddisk-system" : "drive-removable-media";
+            QString icon = root == "/" ? "folder-root" : "device-usb";
             m_items.push_back({name, root, icon, 2});
         }
     }
@@ -189,6 +196,8 @@ void PlacesModel::setupDefaultPlaces()
     QSettings rSettings("Liphis", "Recent");
     QStringList rList = rSettings.value("history").toStringList();
     for (const auto& path : rList) {
-        m_items.push_back({QFileInfo(path).fileName(), path, "document-open-recent", 3});
+        QFileInfo fi(path);
+        QString icon = fi.isDir() ? "folder-heart" : "doc";
+        m_items.push_back({fi.fileName(), path, icon, 3});
     }
 }

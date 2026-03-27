@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(GNUInstallDirs)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Core5Compat)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGIT2 libgit2)
 pkg_check_modules(LIBARCHIVE libarchive)
@@ -51,6 +51,8 @@ qt_add_executable(liphis_app
     src/ThumbnailManager.hpp
     src/ThumbnailImageProvider.cpp
     src/ThumbnailImageProvider.hpp
+    src/CommandManager.cpp
+    src/CommandManager.hpp
 )
 
 # Expose include directories to GUI target
@@ -67,6 +69,7 @@ qt_add_qml_module(liphis_app
         src/qml/AppShell.qml
         src/qml/Main.qml
         src/qml/Icon.qml
+        src/qml/CommandPalette.qml
         src/qml/ThemedIconButton.qml
         src/qml/FilterChip.qml
         src/qml/SidebarItem.qml
@@ -113,13 +116,43 @@ qt_add_qml_module(liphis_app
         src/qml/assets/icons/outline/square-plus.svg
         src/qml/assets/icons/outline/app-window.svg
         src/qml/assets/icons/outline/layout-board-split.svg
+        src/qml/assets/icons/outline/layout-grid.svg
+        src/qml/assets/icons/outline/layout-list.svg
+        src/qml/assets/icons/outline/layout-sidebar.svg
+        src/qml/assets/icons/outline/layout-tree.svg
         src/qml/assets/icons/outline/password.svg
+        src/qml/assets/icons/outline/alphabet-latin.svg
+        src/qml/assets/icons/outline/calendar.svg
+        src/qml/assets/icons/outline/database.svg
+        src/qml/assets/icons/outline/eye.svg
+        src/qml/assets/icons/outline/zoom-in.svg
+        src/qml/assets/icons/outline/zoom-out.svg
+        src/qml/assets/icons/outline/zoom-reset.svg
+        src/qml/assets/icons/outline/clipboard.svg
+        src/qml/assets/icons/outline/logout.svg
+        src/qml/assets/icons/outline/chart-pie.svg
         src/qml/assets/icons/outline/brand-vscode.svg
         src/qml/assets/icons/outline/player-play.svg
         src/qml/assets/icons/outline/background.svg
         src/qml/assets/icons/outline/tag.svg
         src/qml/assets/icons/outline/window.svg
+        src/qml/assets/icons/outline/layout-sidebar-left-collapse.svg
+        src/qml/assets/icons/outline/layout-sidebar-left-expand.svg
+        src/qml/assets/icons/outline/folder-code.svg
+        src/qml/assets/icons/outline/folder-heart.svg
+        src/qml/assets/icons/outline/folder-star.svg
+        src/qml/assets/icons/outline/folder-plus.svg
+        src/qml/assets/icons/outline/folder-root.svg
+        src/qml/assets/icons/outline/device-desktop.svg
+        src/qml/assets/icons/outline/device-floppy.svg
+        src/qml/assets/icons/outline/device-sd-card.svg
+        src/qml/assets/icons/outline/device-usb.svg
+        src/qml/assets/icons/outline/music.svg
+        src/qml/assets/icons/outline/photo.svg
+        src/qml/assets/icons/outline/video.svg
         src/qml/assets/icons/filled/star.svg
+        src/qml/assets/icons/filled/folder.svg
+        src/qml/assets/icons/filled/folder-open.svg
 )
 
 target_link_libraries(liphis_app
@@ -127,6 +160,7 @@ target_link_libraries(liphis_app
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Concurrent
     PRIVATE Qt6::Gui
+    PRIVATE Qt6::Core5Compat
     PRIVATE liphis_core
 )
 
