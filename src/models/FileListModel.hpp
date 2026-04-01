@@ -3,12 +3,15 @@
 #include <QAbstractListModel>
 #include <QVariantMap>
 #include <vector>
+#include <unordered_map>
 #include "FileMeta.hpp"
 
 class FileListModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(QString sortField READ sortField NOTIFY sortFieldChanged)
+    Q_PROPERTY(bool sortAscending READ sortAscending NOTIFY sortAscendingChanged)
 
 public:
     explicit FileListModel(QObject *parent = nullptr);
@@ -22,13 +25,17 @@ public:
         MTimeRole,
         FormattedDateRole,
         CTimeRole,
+        FormattedCTimeRole,
         ATimeRole,
+        FormattedATimeRole,
         PermissionsRole,
         ModeRole,
         OwnerRole,
         GroupRole,
         ThumbnailRole,
-        IconNameRole
+        IconNameRole,
+        MimeTypeRole,
+        TypeRole
     };
 
     // Required overrides
@@ -45,10 +52,21 @@ public:
 
     Q_INVOKABLE QVariantMap metadataForPath(const QString &path) const;
     Q_INVOKABLE QStringList availableExtensions() const;
+    Q_INVOKABLE void setSortBy(const QString &field, bool ascending = true);
+
+    QString sortField() const { return m_sortField; }
+    bool sortAscending() const { return m_sortAscending; }
 
 signals:
     void countChanged();
+    void sortFieldChanged();
+    void sortAscendingChanged();
 
 private:
     std::vector<FileMeta> m_entries;
+    std::unordered_map<std::string, size_t> m_pathToIndex;
+    QString m_sortField = "name";
+    bool m_sortAscending = true;
+    void applySort();
+    void rebuildPathMap();
 };

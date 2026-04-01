@@ -7,6 +7,7 @@ Dialog {
     title: "Connect to Server"
     width: 400; height: 200
     modal: true
+    closePolicy: Popup.CloseOnEscape
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     signal connectRequested(string url)

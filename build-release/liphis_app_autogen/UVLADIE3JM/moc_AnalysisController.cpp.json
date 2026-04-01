@@ -55,12 +55,14 @@
                     "lineNumber": 14,
                     "name": "busy",
                     "notify": "busyChanged",
+                    "override": false,
                     "read": "busy",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "bool",
-                    "user": false
+                    "user": false,
+                    "virtual": false
                 }
             ],
             "qualifiedClassName": "AnalysisController",

@@ -5,6 +5,7 @@ Item {
     property bool isDir: false
     property string iconName: ""
     property var theme: null
+    property string gitStatus: ""
 
     readonly property string resolvedIconName: {
         if (iconName && iconName.length > 0) return iconName
@@ -21,14 +22,29 @@ Item {
             : (theme ? theme.textSecondary : "#8A867E")
     }
 
+    // Git Status Badge
     Rectangle {
-        anchors.fill: parent
-        visible: false // Icon component handles loading/fallback better or we can use a placeholder
-        radius: Math.max(3, Math.round(width * 0.16))
-        color: isDir
-            ? (theme ? theme.accentSoft : "#C4B28A")
-            : (theme ? theme.surfaceMuted : "#5E5E66")
-        border.width: isDir ? 0 : 1
-        border.color: theme ? theme.borderStrong : "#7B7B85"
+        id: badge
+        visible: root.gitStatus !== "" && root.gitStatus !== "  "
+        width: Math.max(6, parent.width * 0.35)
+        height: width
+        radius: width / 2
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: -width * 0.1
+        anchors.bottomMargin: -width * 0.1
+        border.width: 1.5
+        border.color: theme ? theme.bg : "white"
+        
+        color: {
+            if (!root.gitStatus) return "transparent"
+            let s = root.gitStatus
+            if (s.includes("??") || s.includes("A")) return theme ? theme.success : "green"
+            if (s.includes("M")) return theme ? theme.warning : "orange"
+            if (s.includes("D") || s.includes("U")) return theme ? theme.error : "red"
+            return theme ? theme.textTertiary : "gray"
+        }
+
+        // Tooltip or small indicator for the exact letter could go here
     }
 }

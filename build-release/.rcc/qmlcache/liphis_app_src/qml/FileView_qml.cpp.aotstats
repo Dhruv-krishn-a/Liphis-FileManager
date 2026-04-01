@@ -7,10 +7,194 @@
                     "entries": [
                         {
                             "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "zoomLevel",
+                            "line": 65,
+                            "message": "Cannot load property defaultZoom from (component in /home/dhruv/Liphis/src/qml/FileView.qml)::generalSettings with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "zoomScale",
+                            "line": 70,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "zoomIn",
+                            "line": 72,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 5,
+                            "durationMicroseconds": 1000,
+                            "functionName": "zoomOut",
+                            "line": 73,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "resetZoom",
+                            "line": 74,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "focusFileArea",
+                            "line": 76,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "openCreateFolderDialog",
+                            "line": 80,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "currentRowCount",
+                            "line": 84,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "ensureKeyboardIndex",
+                            "line": 88,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "ensureVisible",
+                            "line": 101,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "applySelection",
+                            "line": 107,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "moveCursor",
+                            "line": 127,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "toggleSort",
+                            "line": 137,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "gridStepForUpDown",
+                            "line": 149,
+                            "message": "function without return type annotation returns call to method max, returning double. This may prevent proper compilation to Cpp."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 4000,
+                            "functionName": "openBulkRename",
+                            "line": 154,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 1000,
+                            "functionName": "openCurrentSelection",
+                            "line": 169,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "selectByTyping",
+                            "line": 178,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "displayName",
+                            "line": 212,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 1000,
+                            "functionName": "requestVisibleThumbnails",
+                            "line": 216,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "normalizePath",
+                            "line": 338,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "viewSettings",
+                            "line": 397,
+                            "message": "Cannot access value for name appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "generalSettings",
+                            "line": 398,
+                            "message": "Cannot access value for name appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "homePath",
+                            "line": 404,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 45,
                             "durationMicroseconds": 0,
                             "functionName": "colTextPrimary",
-                            "line": 41,
+                            "line": 406,
                             "message": "Cannot load property textPrimary from (component in /home/dhruv/Liphis/src/qml/FileView.qml)::theme with type QVariant."
                         },
                         {
@@ -18,15 +202,143 @@
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "colTextSecondary",
-                            "line": 42,
+                            "line": 407,
                             "message": "Cannot load property textSecondary from (component in /home/dhruv/Liphis/src/qml/FileView.qml)::theme with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onActiveChanged",
+                            "line": 18,
+                            "message": "Cannot access value for name zoomLevel"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "onScaleChanged",
+                            "line": 19,
+                            "message": "Cannot access value for name zoomLevel"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "acceptedModifiers",
+                            "line": 28,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 29,
+                            "message": "method zoomIn cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 29,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDropped",
+                            "line": 37,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDropped",
+                            "line": 37,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 36,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 46,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 46,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 22,
+                            "durationMicroseconds": 1000,
+                            "functionName": "onTriggered",
+                            "line": 246,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 256,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "running",
+                            "line": 263,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 264,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 2000,
+                            "functionName": "onPressed",
+                            "line": 267,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "onPressed",
+                            "line": 267,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 19,
+                            "line": 351,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -34,15 +346,47 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 18,
+                            "line": 350,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 359,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 355,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 357,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 358,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onRenameRequested",
-                            "line": 30,
+                            "line": 375,
                             "message": "Could not find signal \"renameRequested\"."
                         },
                         {
@@ -50,7 +394,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onRenameRequested",
-                            "line": 30,
+                            "line": 375,
                             "message": "Could not find signal \"renameRequested\"."
                         },
                         {
@@ -58,15 +402,47 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "onCurrentPathChanged",
-                            "line": 31,
+                            "line": 376,
                             "message": "Could not find signal \"currentPathChanged\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOperationSuccess",
+                            "line": 381,
+                            "message": "Could not find signal \"operationSuccess\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOperationSuccess",
+                            "line": 381,
+                            "message": "Could not find signal \"operationSuccess\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOperationError",
+                            "line": 391,
+                            "message": "Could not find signal \"operationError\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOperationError",
+                            "line": 391,
+                            "message": "Could not find signal \"operationError\"."
                         },
                         {
                             "codegenResult": 2,
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 24,
+                            "line": 365,
                             "message": "Cannot access value for name globalThumbnailManager"
                         },
                         {
@@ -74,39 +450,79 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 37,
+                            "line": 400,
                             "message": "method updateActiveController cannot be resolved."
                         },
                         {
                             "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "standardButtons",
+                            "line": 414,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 19,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpened",
+                            "line": 431,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "onAccepted",
+                            "line": 435,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 416,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 422,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 48,
-                            "message": ""
+                            "line": 443,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "background",
-                            "line": 49,
+                            "line": 444,
                             "message": "Cannot access value for name theme"
                         },
                         {
-                            "codegenResult": 2,
+                            "codegenResult": 0,
                             "column": 53,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 50,
-                            "message": "Cannot access value for name createFolderDialog"
+                            "line": 445,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 67,
                             "durationMicroseconds": 0,
                             "functionName": "checked",
-                            "line": 51,
+                            "line": 446,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -114,7 +530,7 @@
                             "column": 108,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 51,
+                            "line": 446,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -122,7 +538,7 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "enabled",
-                            "line": 52,
+                            "line": 447,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -130,7 +546,15 @@
                             "column": 82,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 52,
+                            "line": 447,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 448,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -138,31 +562,63 @@
                             "column": 50,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 53,
+                            "line": 449,
                             "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 453,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 62,
+                            "line": 463,
                             "message": "Cannot access value for name lv"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "height",
+                            "line": 463,
+                            "message": "Cannot access value for name baseListHeight"
                         },
                         {
                             "codegenResult": 2,
                             "column": 56,
                             "durationMicroseconds": 0,
                             "functionName": "isActuallySelected",
-                            "line": 63,
+                            "line": 464,
                             "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "isHidden",
+                            "line": 465,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 22,
+                            "durationMicroseconds": 1000,
+                            "functionName": "opacity",
+                            "line": 466,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 67,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 66,
+                            "line": 469,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -170,7 +626,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 67,
+                            "line": 470,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -178,7 +634,7 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 68,
+                            "line": 471,
                             "message": ""
                         },
                         {
@@ -186,7 +642,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 66,
+                            "line": 469,
                             "message": ""
                         },
                         {
@@ -194,95 +650,687 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 72,
+                            "line": 475,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 90,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 478,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 481,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "isDir",
-                            "line": 73,
+                            "line": 485,
                             "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 30,
+                            "column": 39,
                             "durationMicroseconds": 0,
+                            "functionName": "iconName",
+                            "line": 486,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 487,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "gitStatus",
+                            "line": 488,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 483,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredHeight",
+                            "line": 484,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 1000,
                             "functionName": "text",
-                            "line": 74,
+                            "line": 491,
                             "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 73,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "textFormat",
+                            "line": 492,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 74,
+                            "line": 494,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 97,
+                            "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 74,
+                            "line": 495,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 496,
                             "message": "Cannot access value for name root"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 151,
+                            "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "weight",
-                            "line": 74,
+                            "line": 497,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 30,
                             "durationMicroseconds": 0,
-                            "functionName": "text",
-                            "line": 75,
-                            "message": "Cannot access value for name model"
+                            "functionName": "visible",
+                            "line": 503,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 504,
+                            "message": "Cannot access value for name viewSettings"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 99,
+                            "column": 84,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 507,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 124,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 75,
+                            "line": 507,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 123,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 508,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 75,
+                            "line": 509,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 507,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 510,
                             "message": "Cannot access value for name root"
                         },
                         {
                             "codegenResult": 2,
                             "column": 30,
                             "durationMicroseconds": 0,
-                            "functionName": "text",
-                            "line": 76,
-                            "message": "Cannot access value for name model"
+                            "functionName": "visible",
+                            "line": 515,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 516,
+                            "message": "Cannot access value for name viewSettings"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 100,
+                            "column": 83,
                             "durationMicroseconds": 0,
-                            "functionName": "horizontalAlignment",
-                            "line": 76,
+                            "functionName": "verticalAlignment",
+                            "line": 519,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 520,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 521,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 1000,
+                            "functionName": "color",
+                            "line": 522,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 519,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 523,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 528,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 529,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 84,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 532,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
                             "column": 124,
                             "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 532,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 533,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 76,
+                            "line": 534,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 532,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 535,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 540,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 541,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 84,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 544,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 124,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 544,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 545,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 546,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 544,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 547,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 552,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 553,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 84,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 556,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 124,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 556,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 1000,
+                            "functionName": "text",
+                            "line": 557,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 558,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 556,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 559,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 564,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 565,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 568,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 569,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 571,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 568,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 572,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 577,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 578,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 581,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 582,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 583,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 584,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 581,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 585,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 590,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 591,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 594,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 595,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 596,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 597,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 594,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 598,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 603,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 604,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 83,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 607,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 608,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 609,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 610,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 607,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 611,
                             "message": "Cannot access value for name root"
                         },
                         {
@@ -290,23 +1338,39 @@
                             "column": 88,
                             "durationMicroseconds": 0,
                             "functionName": "acceptedButtons",
-                            "line": 80,
+                            "line": 618,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 28,
-                            "durationMicroseconds": 1000,
+                            "durationMicroseconds": 3000,
                             "functionName": "onClicked",
-                            "line": 81,
-                            "message": "Cannot access value for name controller"
+                            "line": 623,
+                            "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 0,
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 81,
+                            "line": 623,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 642,
+                            "message": "method zoomIn cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 642,
                             "message": ""
                         },
                         {
@@ -314,15 +1378,95 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "onDoubleClicked",
-                            "line": 88,
-                            "message": "Cannot access value for name controller"
+                            "line": 651,
+                            "message": "Cannot access value for name generalSettings"
                         },
                         {
                             "codegenResult": 0,
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 80,
+                            "line": 618,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 619,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "active",
+                            "line": 621,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 85,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 621,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 118,
+                            "durationMicroseconds": 0,
+                            "functionName": "supportedActions",
+                            "line": 621,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 160,
+                            "durationMicroseconds": 0,
+                            "functionName": "keys",
+                            "line": 621,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 194,
+                            "durationMicroseconds": 0,
+                            "functionName": "mimeData",
+                            "line": 621,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 1000,
+                            "functionName": "enabled",
+                            "line": 656,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDropped",
+                            "line": 657,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDropped",
+                            "line": 657,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 655,
                             "message": ""
                         },
                         {
@@ -330,7 +1474,7 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 97,
+                            "line": 671,
                             "message": "Cannot access value for name gv"
                         },
                         {
@@ -338,7 +1482,7 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "height",
-                            "line": 97,
+                            "line": 671,
                             "message": "Cannot access value for name gv"
                         },
                         {
@@ -346,15 +1490,31 @@
                             "column": 56,
                             "durationMicroseconds": 0,
                             "functionName": "isActuallySelected",
-                            "line": 98,
+                            "line": 672,
                             "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "isHidden",
+                            "line": 673,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "opacity",
+                            "line": 674,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 67,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 101,
+                            "line": 677,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -362,7 +1522,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 102,
+                            "line": 678,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -370,7 +1530,7 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 103,
+                            "line": 679,
                             "message": ""
                         },
                         {
@@ -378,39 +1538,95 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 101,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 31,
-                            "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 107,
+                            "line": 677,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 88,
+                            "column": 91,
                             "durationMicroseconds": 0,
-                            "functionName": "isDir",
-                            "line": 110,
-                            "message": "Cannot access value for name model"
+                            "functionName": "spacing",
+                            "line": 683,
+                            "message": "Cannot access value for name zoomLevel"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 110,
+                            "column": 31,
                             "durationMicroseconds": 0,
-                            "functionName": "visible",
-                            "line": 110,
+                            "functionName": "fill",
+                            "line": 683,
                             "message": ""
                         },
                         {
+                            "codegenResult": 2,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "margins",
+                            "line": 683,
+                            "message": "Cannot access value for name zoomLevel"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 688,
+                            "message": "Cannot access value for name baseIconSize"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 33,
+                            "durationMicroseconds": 0,
+                            "functionName": "height",
+                            "line": 689,
+                            "message": "Cannot access value for name baseIconSize"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "isDir",
+                            "line": 690,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "iconName",
+                            "line": 691,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 692,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
                             "codegenResult": 0,
-                            "column": 50,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 693,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "gitStatus",
+                            "line": 694,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 110,
+                            "line": 687,
                             "message": ""
                         },
                         {
@@ -418,7 +1634,7 @@
                             "column": 72,
                             "durationMicroseconds": 0,
                             "functionName": "fillMode",
-                            "line": 112,
+                            "line": 697,
                             "message": ""
                         },
                         {
@@ -426,7 +1642,7 @@
                             "column": 105,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 112,
+                            "line": 697,
                             "message": "Cannot access value for name model"
                         },
                         {
@@ -434,7 +1650,7 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 113,
+                            "line": 698,
                             "message": ""
                         },
                         {
@@ -442,31 +1658,55 @@
                             "column": 54,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 112,
+                            "line": 697,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 27,
-                            "durationMicroseconds": 0,
+                            "durationMicroseconds": 1000,
                             "functionName": "text",
-                            "line": 117,
+                            "line": 702,
                             "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 84,
+                            "column": 33,
                             "durationMicroseconds": 0,
-                            "functionName": "horizontalAlignment",
-                            "line": 117,
+                            "functionName": "textFormat",
+                            "line": 703,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 110,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 706,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 117,
+                            "line": 707,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "wrapMode",
+                            "line": 708,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "maximumLineCount",
+                            "line": 709,
                             "message": ""
                         },
                         {
@@ -474,15 +1714,31 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 118,
+                            "line": 711,
                             "message": "Cannot access value for name root"
                         },
                         {
-                            "codegenResult": 0,
-                            "column": 82,
+                            "codegenResult": 2,
+                            "column": 45,
                             "durationMicroseconds": 0,
+                            "functionName": "preferredHeight",
+                            "line": 705,
+                            "message": "Cannot access value for name zoomLevel"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 65,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 711,
+                            "message": "Cannot access value for name zoomLevel"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 117,
+                            "durationMicroseconds": 1000,
                             "functionName": "weight",
-                            "line": 118,
+                            "line": 711,
                             "message": ""
                         },
                         {
@@ -490,23 +1746,39 @@
                             "column": 88,
                             "durationMicroseconds": 0,
                             "functionName": "acceptedButtons",
-                            "line": 123,
+                            "line": 716,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 28,
-                            "durationMicroseconds": 1000,
+                            "durationMicroseconds": 4000,
                             "functionName": "onClicked",
-                            "line": 124,
-                            "message": "Cannot access value for name controller"
+                            "line": 721,
+                            "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 0,
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 124,
+                            "line": 721,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 1000,
+                            "functionName": "onWheel",
+                            "line": 740,
+                            "message": "method zoomIn cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 740,
                             "message": ""
                         },
                         {
@@ -514,15 +1786,95 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "onDoubleClicked",
-                            "line": 131,
-                            "message": "Cannot access value for name controller"
+                            "line": 749,
+                            "message": "Cannot access value for name generalSettings"
                         },
                         {
                             "codegenResult": 0,
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 123,
+                            "line": 716,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 717,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "active",
+                            "line": 719,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 89,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 719,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 122,
+                            "durationMicroseconds": 0,
+                            "functionName": "supportedActions",
+                            "line": 719,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 164,
+                            "durationMicroseconds": 0,
+                            "functionName": "keys",
+                            "line": 719,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 198,
+                            "durationMicroseconds": 0,
+                            "functionName": "mimeData",
+                            "line": 719,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 754,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDropped",
+                            "line": 755,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDropped",
+                            "line": 755,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 753,
                             "message": ""
                         },
                         {
@@ -530,7 +1882,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "currentIndex",
-                            "line": 140,
+                            "line": 770,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -538,7 +1890,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 139,
+                            "line": 769,
                             "message": ""
                         },
                         {
@@ -546,7 +1898,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 143,
+                            "line": 773,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -554,7 +1906,47 @@
                             "column": 72,
                             "durationMicroseconds": 0,
                             "functionName": "delegate",
-                            "line": 143,
+                            "line": 773,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onContentYChanged",
+                            "line": 783,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCountChanged",
+                            "line": 784,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "headerPositioning",
+                            "line": 787,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "onEscapePressed",
+                            "line": 775,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "onEscapePressed",
+                            "line": 775,
                             "message": ""
                         },
                         {
@@ -562,7 +1954,727 @@
                             "column": 53,
                             "durationMicroseconds": 0,
                             "functionName": "policy",
-                            "line": 145,
+                            "line": 785,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 789,
+                            "message": "Cannot access value for name lv"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 60,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 789,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 792,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 62,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 795,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 796,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "paddingLeft",
+                            "line": 797,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 798,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 799,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 800,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 801,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 801,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 804,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 94,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 804,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 805,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 806,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 808,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 809,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 810,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 811,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 811,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 814,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 94,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 814,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 815,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 817,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 818,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 819,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 820,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 820,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 823,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 823,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 824,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 825,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 827,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 828,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 829,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 830,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 830,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 833,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 106,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 833,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 834,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 835,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 837,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 838,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 839,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 840,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 840,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 843,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 108,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 843,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 844,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 845,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 847,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 848,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 849,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 850,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 850,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 853,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 115,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 853,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 854,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 856,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 857,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 858,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 859,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 859,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 862,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 97,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 862,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 863,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 865,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 866,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 867,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 868,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 868,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 871,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 97,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 871,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 872,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 874,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 875,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 876,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 877,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 877,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 880,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 880,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnWidth",
+                            "line": 881,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "isSortActive",
+                            "line": 884,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "sortAscending",
+                            "line": 885,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 886,
+                            "message": "method toggleSort cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 887,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWidthChangedByHandle",
+                            "line": 887,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 67,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 893,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 99,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 893,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 893,
                             "message": ""
                         },
                         {
@@ -570,7 +2682,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 149,
+                            "line": 898,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -578,7 +2690,55 @@
                             "column": 72,
                             "durationMicroseconds": 0,
                             "functionName": "delegate",
-                            "line": 149,
+                            "line": 898,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "cellWidth",
+                            "line": 907,
+                            "message": "Cannot access value for name baseCellSize"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "cellHeight",
+                            "line": 908,
+                            "message": "Cannot access value for name baseCellSize"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onContentYChanged",
+                            "line": 910,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCountChanged",
+                            "line": 911,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "onEscapePressed",
+                            "line": 900,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "onEscapePressed",
+                            "line": 900,
                             "message": ""
                         },
                         {
@@ -586,7 +2746,415 @@
                             "column": 53,
                             "durationMicroseconds": 0,
                             "functionName": "policy",
-                            "line": 151,
+                            "line": 912,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 918,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "boundsBehavior",
+                            "line": 921,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitWidth",
+                            "line": 925,
+                            "message": "Cannot access value for name treeView"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 60,
+                            "durationMicroseconds": 0,
+                            "functionName": "isActuallySelected",
+                            "line": 928,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 932,
+                            "message": "Cannot access value for name isActuallySelected"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 933,
+                            "message": "Cannot access value for name isActuallySelected"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 931,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 937,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "leftMargin",
+                            "line": 938,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "name",
+                            "line": 942,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 944,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 945,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 948,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 947,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "isDir",
+                            "line": 958,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "iconName",
+                            "line": 959,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 960,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "gitStatus",
+                            "line": 961,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 965,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 967,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 968,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 977,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDoubleClicked",
+                            "line": 981,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 975,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "policy",
+                            "line": 985,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 992,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 993,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 991,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 998,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "running",
+                            "line": 1002,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "alignment",
+                            "line": 1001,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 1005,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 1006,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 1016,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 1015,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 1020,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 1027,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "alignment",
+                            "line": 1024,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "alignment",
+                            "line": 1032,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 1036,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 1037,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalCenter",
+                            "line": 1035,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "weight",
+                            "line": 1039,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 1043,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 1046,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalCenter",
+                            "line": 1042,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 1054,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onViewModeChanged",
+                            "line": 1055,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCurrentPathChanged",
+                            "line": 1056,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 1060,
+                            "message": "Cannot retrieve a non-object type by ID: controller"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCountChanged",
+                            "line": 1061,
                             "message": ""
                         },
                         {
@@ -594,7 +3162,7 @@
                             "column": 55,
                             "durationMicroseconds": 0,
                             "functionName": "acceptedButtons",
-                            "line": 156,
+                            "line": 1065,
                             "message": ""
                         },
                         {
@@ -602,7 +3170,7 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 157,
+                            "line": 1066,
                             "message": "Cannot retrieve a non-object type by ID: controller"
                         },
                         {
@@ -610,7 +3178,23 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 157,
+                            "line": 1066,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 1075,
+                            "message": "method zoomIn cannot be resolved."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 1075,
                             "message": ""
                         },
                         {
@@ -618,7 +3202,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 156,
+                            "line": 1065,
                             "message": ""
                         }
                     ],

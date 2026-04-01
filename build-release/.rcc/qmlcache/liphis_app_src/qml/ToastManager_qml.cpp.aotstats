@@ -10,7 +10,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "show",
-                            "line": 15,
+                            "line": 19,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -18,7 +18,15 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 9,
+                            "line": 10,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "isDark",
+                            "line": 15,
                             "message": ""
                         },
                         {
@@ -26,7 +34,7 @@
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "running",
-                            "line": 24,
+                            "line": 28,
                             "message": ""
                         },
                         {
@@ -34,7 +42,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 25,
+                            "line": 29,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -42,7 +50,7 @@
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "bottom",
-                            "line": 32,
+                            "line": 36,
                             "message": ""
                         },
                         {
@@ -50,7 +58,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalCenter",
-                            "line": 33,
+                            "line": 37,
                             "message": ""
                         },
                         {
@@ -58,7 +66,7 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 38,
+                            "line": 42,
                             "message": ""
                         },
                         {
@@ -66,7 +74,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 41,
+                            "line": 45,
                             "message": ""
                         },
                         {
@@ -74,23 +82,23 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 44,
-                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                            "line": 48,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 45,
+                            "line": 49,
                             "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 63,
+                            "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 49,
+                            "line": 55,
                             "message": "Cannot access value for name model"
                         },
                         {
@@ -98,7 +106,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 52,
+                            "line": 63,
                             "message": ""
                         },
                         {
@@ -106,15 +114,15 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "name",
-                            "line": 54,
+                            "line": 65,
                             "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 42,
+                            "column": 46,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 55,
+                            "line": 66,
                             "message": "Cannot access value for name model"
                         },
                         {
@@ -122,15 +130,23 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 59,
+                            "line": 70,
                             "message": "Cannot access value for name model"
                         },
                         {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 71,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
                             "codegenResult": 0,
-                            "column": 76,
+                            "column": 84,
                             "durationMicroseconds": 0,
                             "functionName": "weight",
-                            "line": 60,
+                            "line": 71,
                             "message": ""
                         },
                         {
@@ -138,7 +154,7 @@
                             "column": 40,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 65,
+                            "line": 76,
                             "message": ""
                         }
                     ],

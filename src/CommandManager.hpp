@@ -65,6 +65,10 @@ public:
 
     Q_INVOKABLE void executeCommand(int index);
     Q_INVOKABLE void executeCommandById(const QString &id);
+    Q_INVOKABLE void updateCommandShortcut(const QString &id, const QString &shortcut);
+    Q_INVOKABLE void clearCommands();
+    Q_INVOKABLE bool isValidShortcut(const QString &shortcut) const;
+    Q_INVOKABLE QString normalizeShortcut(const QString &shortcut) const;
 
 signals:
     void filterChanged();

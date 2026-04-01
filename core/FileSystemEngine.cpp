@@ -1,6 +1,10 @@
 #include "FileSystemEngine.hpp"
 #include "FileMeta.hpp"
 
+#include <QMimeDatabase>
+#include <QMimeType>
+#include <QString>
+
 #include <algorithm>
 #include <cctype>
 #include <filesystem>
@@ -66,18 +70,26 @@ std::vector<FileMeta> FileSystemEngine::listDirectorySync(const std::string& pat
     for (auto const& entry : fs::directory_iterator(dir, fs::directory_options::skip_permission_denied, ec)) {
         if (ec) break;
         
-        std::error_code st_ec;
-        auto st = entry.symlink_status(st_ec);
-        if (st_ec) continue;
+        std::error_code entry_st_ec;
+        auto st = entry.status(entry_st_ec); // follow symlink to get target status
+        if (entry_st_ec) {
+            st = entry.symlink_status(entry_st_ec); // fallback to symlink status
+        }
+        if (entry_st_ec) continue;
 
         FileMeta m;
         m.name = entry.path().filename().string();
         m.path = fs::absolute(entry.path()).string();
+        
         m.isDir = fs::is_directory(st);
         
-        if (fs::is_regular_file(st)) {
+        if (m.isDir) {
+            m.itemCount = 0; // Removed expensive counting for performance
+            m.size = 0;
+        } else if (fs::is_regular_file(st)) {
             std::error_code sz_ec;
             m.size = fs::file_size(entry.path(), sz_ec);
+            m.itemCount = 0;
         }
 
         struct stat info;
@@ -87,12 +99,53 @@ std::vector<FileMeta> FileSystemEngine::listDirectorySync(const std::string& pat
             m.owner = internString(std::to_string(info.st_uid));
             m.group = internString(std::to_string(info.st_gid));
             m.mtime = static_cast<std::uint64_t>(info.st_mtime);
+            m.ctime = static_cast<std::uint64_t>(info.st_ctime);
+            m.atime = static_cast<std::uint64_t>(info.st_atime);
         }
         
         results.push_back(std::move(m));
         if (limit > 0 && results.size() >= limit) break;
     }
     return results;
+}
+
+FileMeta FileSystemEngine::getFileMeta(const std::string& path)
+{
+    FileMeta m;
+    fs::path p(path);
+    m.name = p.filename().string();
+    m.path = path;
+
+    std::error_code ec;
+    auto st = fs::symlink_status(p, ec);
+    if (ec) return m;
+
+    m.isDir = fs::is_directory(st);
+    if (m.isDir) {
+        m.size = 0;
+        m.itemCount = 0;
+        static const std::string inodeDir = "inode/directory";
+        m.mimeType = std::make_shared<const std::string>(inodeDir);
+    } else {
+        std::error_code sz_ec;
+        m.size = fs::file_size(p, sz_ec);
+        m.itemCount = 0;
+        static QMimeDatabase db;
+        std::string mimeStr = db.mimeTypeForFile(QString::fromStdString(path)).name().toStdString();
+        m.mimeType = std::make_shared<const std::string>(std::move(mimeStr));
+    }
+
+    struct stat info;
+    if (stat(path.c_str(), &info) == 0) {
+        m.mode = static_cast<std::uint32_t>(info.st_mode);
+        m.permissions = get_perms_shared(info.st_mode);
+        m.owner = internString(std::to_string(info.st_uid));
+        m.group = internString(std::to_string(info.st_gid));
+        m.mtime = static_cast<std::uint64_t>(info.st_mtime);
+        m.atime = static_cast<std::uint64_t>(info.st_atime);
+        m.ctime = static_cast<std::uint64_t>(info.st_ctime);
+    }
+    return m;
 }
 
 void FileSystemEngine::listDirectoryStream(
@@ -119,29 +172,37 @@ void FileSystemEngine::listDirectoryStream(
         if (shouldCancel()) return;
 
         const auto &entry = *it;
-        std::error_code st_ec;
-        auto st = entry.symlink_status(st_ec);
-        if (st_ec) continue;
+        std::error_code entry_st_ec;
+        auto st = entry.status(entry_st_ec); // follow symlink to get target status
+        if (entry_st_ec) {
+            st = entry.symlink_status(entry_st_ec); // fallback to symlink status
+        }
+        if (entry_st_ec) continue;
 
         FileMeta m;
         m.name = entry.path().filename().string();
-        std::error_code abs_ec;
-        m.path = fs::absolute(entry.path(), abs_ec).string();
+        // Path optimization: use the already known parent directory path
+        m.path = (fs::path(path) / m.name).string();
 
-        if (fs::is_symlink(st)) {
-             std::error_code target_ec;
-             auto target_st = fs::status(entry.path(), target_ec);
-             m.isDir = !target_ec && fs::is_directory(target_st);
-        } else {
-             m.isDir = fs::is_directory(st);
-        }
+        m.isDir = fs::is_directory(st);
 
-        if (fs::is_regular_file(st)) {
-            std::error_code size_ec;
-            m.size = fs::file_size(entry.path(), size_ec);
-            if (size_ec) m.size = 0;
+        if (m.isDir) {
+            m.itemCount = 0; // Removed expensive counting for performance
+            m.size = 0;
+            static const std::string inodeDir = "inode/directory";
+            m.mimeType = std::make_shared<const std::string>(inodeDir);
+        } else if (fs::is_regular_file(st)) {
+            std::error_code sz_ec;
+            m.size = fs::file_size(entry.path(), sz_ec);
+            if (sz_ec) m.size = 0;
+            
+            static QMimeDatabase db;
+            std::string mimeStr = db.mimeTypeForFile(QString::fromStdString(m.path)).name().toStdString();
+            m.mimeType = std::make_shared<const std::string>(std::move(mimeStr));
+            m.itemCount = 0;
         } else {
             m.size = 0;
+            m.itemCount = 0;
         }
 
         struct stat info;
@@ -151,8 +212,8 @@ void FileSystemEngine::listDirectoryStream(
             m.owner = internString(std::to_string(info.st_uid));
             m.group = internString(std::to_string(info.st_gid));
             m.mtime = static_cast<std::uint64_t>(info.st_mtime);
-            m.ctime = static_cast<std::uint64_t>(info.st_ctime);
             m.atime = static_cast<std::uint64_t>(info.st_atime);
+            m.ctime = static_cast<std::uint64_t>(info.st_ctime);
         } else {
             std::error_code time_ec;
             auto ftime = fs::last_write_time(entry.path(), time_ec);
@@ -175,56 +236,52 @@ void FileSystemEngine::listDirectoryStream(
     }
 }
 
+// Search
 void FileSystemEngine::searchRecursive(
     const std::string &rootPath,
     const std::string &pattern,
     const std::function<void(std::vector<FileMeta>&&)>& onBatch,
     const std::function<bool()>& shouldCancel
-)
-{
+) {
+    // Basic search implementation
     std::error_code ec;
-    fs::path dir(rootPath);
-    if (!fs::exists(dir, ec) || !fs::is_directory(dir, ec)) return;
+    fs::path root(rootPath);
+    if (!fs::exists(root, ec) || !fs::is_directory(root, ec)) return;
 
     std::vector<FileMeta> batch;
-    const std::size_t batchSize = 50;
-    
-    std::string lowerPattern = pattern;
-    std::transform(lowerPattern.begin(), lowerPattern.end(), lowerPattern.begin(), ::tolower);
+    batch.reserve(50);
 
-    for (auto it = fs::recursive_directory_iterator(dir, fs::directory_options::skip_permission_denied, ec);
+    for (auto it = fs::recursive_directory_iterator(root, fs::directory_options::skip_permission_denied, ec);
          it != fs::recursive_directory_iterator();
-         it.increment(ec))
+         it.increment(ec)) 
     {
         if (ec) { ec.clear(); continue; }
         if (shouldCancel()) return;
 
-        const auto &entry = *it;
+        const auto& entry = *it;
         std::string name = entry.path().filename().string();
-        std::string lowerName = name;
-        std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+        
+        // Simple case-insensitive search
+        auto it_p = std::search(
+            name.begin(), name.end(),
+            pattern.begin(), pattern.end(),
+            [](char ch1, char ch2) { return std::tolower(ch1) == std::tolower(ch2); }
+        );
 
-        if (lowerName.find(lowerPattern) != std::string::npos) {
+        if (it_p != name.end()) {
             FileMeta m;
             m.name = name;
             m.path = fs::absolute(entry.path()).string();
+            m.isDir = entry.is_directory();
             
-            std::error_code st_ec;
-            auto st = entry.symlink_status(st_ec);
-            if (st_ec) continue;
-
-            m.isDir = fs::is_directory(st);
-            if (fs::is_regular_file(st)) {
-                std::error_code sz_ec;
-                m.size = fs::file_size(entry.path(), sz_ec);
+            struct stat info;
+            if (stat(m.path.c_str(), &info) == 0) {
+                m.size = static_cast<std::uint64_t>(info.st_size);
+                m.mtime = static_cast<std::uint64_t>(info.st_mtime);
             }
-            
-            std::error_code t_ec;
-            auto ftime = fs::last_write_time(entry.path(), t_ec);
-            m.mtime = t_ec ? 0 : file_time_to_epoch_seconds(ftime);
 
             batch.push_back(std::move(m));
-            if (batch.size() >= batchSize) {
+            if (batch.size() >= 50) {
                 onBatch(std::move(batch));
                 batch.clear();
             }
@@ -259,6 +316,53 @@ FileSystemEngine::OperationResult FileSystemEngine::createDirectory(const std::s
     return {true, ""};
 }
 
+FileSystemEngine::OperationResult FileSystemEngine::createFile(const std::string &path)
+{
+    FILE* f = fopen(path.c_str(), "w");
+    if (f) {
+        fclose(f);
+        return {true, ""};
+    }
+    return {false, std::strerror(errno)};
+}
+
+static void copyRecursive(const fs::path& src, const fs::path& dest, std::uint64_t totalSize, std::uint64_t& copiedSize, const std::function<void(float)>& onProgress, std::error_code& ec) {
+    if (fs::is_directory(src, ec)) {
+        fs::create_directories(dest, ec);
+        if (ec) return;
+        for (const auto& entry : fs::directory_iterator(src, fs::directory_options::skip_permission_denied, ec)) {
+            if (ec) break;
+            copyRecursive(entry.path(), dest / entry.path().filename(), totalSize, copiedSize, onProgress, ec);
+            if (ec) return;
+        }
+    } else if (fs::is_regular_file(src, ec)) {
+        FILE* in = fopen(src.string().c_str(), "rb");
+        if (!in) { ec = std::make_error_code(std::errc::no_such_file_or_directory); return; }
+        
+        FILE* out = fopen(dest.string().c_str(), "wb");
+        if (!out) { fclose(in); ec = std::make_error_code(std::errc::permission_denied); return; }
+        
+        char buffer[8192];
+        size_t bytesRead;
+        while ((bytesRead = fread(buffer, 1, sizeof(buffer), in)) > 0) {
+            fwrite(buffer, 1, bytesRead, out);
+            copiedSize += bytesRead;
+            if (onProgress && totalSize > 0) {
+                onProgress(static_cast<float>(copiedSize) / static_cast<float>(totalSize));
+            }
+        }
+        
+        fclose(in);
+        fclose(out);
+        
+        // Copy permissions
+        std::error_code p_ec;
+        fs::permissions(dest, fs::status(src).permissions(), fs::perm_options::replace, p_ec);
+    } else {
+        fs::copy(src, dest, fs::copy_options::overwrite_existing, ec);
+    }
+}
+
 FileSystemEngine::OperationResult FileSystemEngine::copyPath(
     const std::string &src, 
     const std::string &dest, 
@@ -266,13 +370,28 @@ FileSystemEngine::OperationResult FileSystemEngine::copyPath(
 )
 {
     std::error_code ec;
-    try {
-        fs::copy(src, dest, fs::copy_options::recursive | fs::copy_options::overwrite_existing, ec);
-        if (ec) return {false, ec.message()};
-        return {true, ""};
-    } catch (const fs::filesystem_error& e) {
-        return {false, e.what()};
+    fs::path srcPath(src);
+    fs::path destPath(dest);
+    
+    if (!fs::exists(srcPath, ec)) return {false, "Source does not exist"};
+    
+    std::uint64_t totalSize = 0;
+    if (fs::is_regular_file(srcPath, ec)) {
+        totalSize = fs::file_size(srcPath, ec);
+    } else if (fs::is_directory(srcPath, ec)) {
+        for (auto const& entry : fs::recursive_directory_iterator(srcPath, fs::directory_options::skip_permission_denied, ec)) {
+            if (ec) { ec.clear(); continue; }
+            if (fs::is_regular_file(entry, ec)) totalSize += fs::file_size(entry, ec);
+        }
     }
+    
+    ec.clear();
+    std::uint64_t copiedSize = 0;
+    copyRecursive(srcPath, destPath, totalSize, copiedSize, onProgress, ec);
+    
+    if (ec) return {false, ec.message()};
+    if (onProgress) onProgress(1.0f);
+    return {true, ""};
 }
 
 FileSystemEngine::OperationResult FileSystemEngine::movePath(const std::string &src, const std::string &dest)
@@ -295,4 +414,15 @@ FileSystemEngine::OperationResult FileSystemEngine::createSymlink(const std::str
     fs::create_symlink(target, link, ec);
     if (ec) return {false, ec.message()};
     return {true, ""};
+}
+
+#include <QProcess>
+#include <QStringList>
+
+FileSystemEngine::OperationResult FileSystemEngine::moveToTrash(const std::string &path)
+{
+    // Use gio trash which handles files safely on Linux desktops
+    int ret = QProcess::execute("gio", {"trash", QString::fromStdString(path)});
+    if (ret == 0) return {true, ""};
+    return {false, "Failed to move to trash (gio error " + std::to_string(ret) + ")"};
 }

@@ -1,82 +1,50 @@
 import QtQuick
-import QtQuick.Shapes
 
 Item {
     id: root
     property bool isDir: false
     property string iconName: ""
-    
-    // Matte Folder Icon
-    Rectangle {
-        anchors.fill: parent
-        visible: isDir
-        color: "transparent"
+    property var theme: null
+    property string gitStatus: ""
 
-        // Back tab
-        Rectangle {
-            x: 0; y: parent.height * 0.15
-            width: parent.width * 0.45; height: parent.height * 0.25
-            radius: 4
-            color: "#8A867E" // Muted text/border color as base
-        }
-
-        // Main body
-        Rectangle {
-            x: 0; y: parent.height * 0.3
-            width: parent.width; height: parent.height * 0.7
-            radius: 6
-            color: "#B5B1AA" // Secondary text color as base
-            
-            // Subtle top highlight
-            Rectangle {
-                anchors.top: parent.top; width: parent.width; height: 1
-                color: Qt.rgba(1, 1, 1, 0.15); radius: 1
-            }
-        }
+    readonly property string resolvedIconName: {
+        if (iconName && iconName.length > 0) return iconName
+        return isDir ? "folder" : "text-x-generic"
     }
 
-    // Matte File Icon
-    Rectangle {
+    Icon {
+        id: themedIcon
         anchors.fill: parent
-        anchors.margins: parent.width * 0.15
-        visible: !isDir
-        color: "#2A2A2A" // elevated surface
-        border.color: "#404040" // strong border
-        border.width: 1
-        radius: 4
+        name: root.resolvedIconName
+        filled: root.isDir
+        color: isDir
+            ? (theme ? theme.accent : "#4A473E")
+            : (theme ? theme.textSecondary : "#8A867E")
+    }
 
-        // Folded corner
-        Item {
-            anchors.right: parent.right; anchors.top: parent.top
-            width: parent.width * 0.3; height: width
-            
-            // Background mask for corner
-            Rectangle {
-                anchors.fill: parent
-                color: "transparent" // Let parent's background show through
-            }
-            
-            // The fold triangle
-            Shape {
-                anchors.fill: parent
-                ShapePath {
-                    fillColor: "#404040" // border strong
-                    strokeColor: "transparent"
-                    startX: 0; startY: 0
-                    PathLine { x: parent.width; y: parent.height }
-                    PathLine { x: 0; y: parent.height }
-                    PathLine { x: 0; y: 0 }
-                }
-            }
-        }
+    // Git Status Badge
+    Rectangle {
+        id: badge
+        visible: root.gitStatus !== "" && root.gitStatus !== "  "
+        width: Math.max(6, parent.width * 0.35)
+        height: width
+        radius: width / 2
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: -width * 0.1
+        anchors.bottomMargin: -width * 0.1
+        border.width: 1.5
+        border.color: theme ? theme.bg : "white"
         
-        // Internal matte lines
-        Column {
-            anchors.centerIn: parent; anchors.verticalCenterOffset: 4; spacing: 4
-            Repeater {
-                model: 3
-                Rectangle { width: root.width * 0.35; height: 2; color: "#404040"; radius: 1 }
-            }
+        color: {
+            if (!root.gitStatus) return "transparent"
+            let s = root.gitStatus
+            if (s.includes("??") || s.includes("A")) return theme ? theme.success : "green"
+            if (s.includes("M")) return theme ? theme.warning : "orange"
+            if (s.includes("D") || s.includes("U")) return theme ? theme.error : "red"
+            return theme ? theme.textTertiary : "gray"
         }
+
+        // Tooltip or small indicator for the exact letter could go here
     }
 }

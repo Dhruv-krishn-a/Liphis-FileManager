@@ -21,6 +21,7 @@ public:
     );
 
     static std::vector<FileMeta> listDirectorySync(const std::string& path, std::size_t limit = 0);
+    static FileMeta getFileMeta(const std::string& path);
 
     // Search
     static void searchRecursive(
@@ -39,8 +40,10 @@ public:
     static OperationResult renamePath(const std::string &oldPath, const std::string &newPath);
     static OperationResult deletePath(const std::string &path);
     static OperationResult createDirectory(const std::string &path);
+    static OperationResult createFile(const std::string &path);
     static OperationResult copyPath(const std::string &src, const std::string &dest, const std::function<void(float)>& onProgress = nullptr);
     static OperationResult movePath(const std::string &src, const std::string &dest);
     static OperationResult setPermissions(const std::string &path, int perms);
     static OperationResult createSymlink(const std::string &target, const std::string &link);
+    static OperationResult moveToTrash(const std::string &path);
 };

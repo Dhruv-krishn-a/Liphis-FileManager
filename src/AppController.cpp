@@ -26,7 +26,13 @@
 #include <QSet>
 #include <QRegularExpression>
 #include <QStorageInfo>
+#include <QMimeDatabase>
+#include <QMimeType>
+#include <QDebug>
 #include <unistd.h>
+#include <git2.h>
+#include <archive.h>
+#include <archive_entry.h>
 
 namespace fs = std::filesystem;
 
@@ -207,114 +213,6 @@ bool matchesStructuredFilters(const FileMeta &m, const SearchQuery &q) {
     return true;
 }
 
-bool hasCommand(const QString &name)
-{
-    QProcess p;
-    p.start("sh", {"-lc", "command -v " + name});
-    if (!p.waitForFinished(500)) return false;
-    return p.exitCode() == 0 && !p.readAllStandardOutput().trimmed().isEmpty();
-}
-
-bool buildMeta(const QString &rawPath, bool isDirHint, FileMeta &m)
-{
-    QFileInfo fi(rawPath);
-    if (!fi.exists()) return false;
-
-    m.path = fi.absoluteFilePath().toStdString();
-    m.name = fi.fileName().toStdString();
-    m.isDir = isDirHint || fi.isDir();
-    m.size = m.isDir ? 0 : static_cast<std::uint64_t>(fi.size());
-    m.mtime = static_cast<std::uint64_t>(fi.lastModified().toSecsSinceEpoch());
-    m.ctime = m.mtime;
-    m.atime = m.mtime;
-    return true;
-}
-
-bool runFdSearch(const QString &rootPath,
-                 const SearchQuery &parsed,
-                 const std::function<bool()> &shouldCancel,
-                 const std::function<void(std::vector<FileMeta>&&)> &onBatch)
-{
-    static const bool fdAvailable = hasCommand("fd");
-    if (!fdAvailable) return false;
-
-    QStringList types;
-    if (parsed.kind == "folder") {
-        types << "d";
-    } else if (!parsed.extension.isEmpty()) {
-        if (parsed.type == "folder") return true;
-        types << "f";
-    } else if (parsed.type == "file") {
-        types << "f";
-    } else if (parsed.type == "folder") {
-        types << "d";
-    } else {
-        types << "f" << "d";
-    }
-
-    const QString termPattern = parsed.term.isEmpty() ? "." : parsed.term;
-    for (const QString &type : types) {
-        if (shouldCancel()) return true;
-        QProcess proc;
-        QStringList args;
-        args << "--absolute-path" << "--color" << "never" << "--type" << type << "--hidden" << "--no-ignore";
-        if (parsed.exact) args << "--fixed-strings";
-        if (!parsed.extension.isEmpty() && parsed.extension != "no extension" && type == "f") {
-            args << "-e" << parsed.extension;
-        }
-        args << termPattern << rootPath;
-        proc.start("fd", args);
-        if (!proc.waitForStarted(1000)) return false;
-
-        std::vector<FileMeta> batch;
-        batch.reserve(64);
-        QByteArray pending;
-
-        auto flushLines = [&]() {
-            int lineEnd = pending.indexOf('\n');
-            while (lineEnd >= 0) {
-                const QByteArray line = pending.left(lineEnd).trimmed();
-                pending.remove(0, lineEnd + 1);
-                if (!line.isEmpty()) {
-                    FileMeta meta;
-                    if (buildMeta(QString::fromUtf8(line), type == "d", meta) && matchesStructuredFilters(meta, parsed)) {
-                        batch.push_back(std::move(meta));
-                        if (batch.size() >= 64) {
-                            onBatch(std::move(batch));
-                            batch.clear();
-                            batch.reserve(64);
-                        }
-                    }
-                }
-                lineEnd = pending.indexOf('\n');
-            }
-        };
-
-        while (proc.state() != QProcess::NotRunning) {
-            if (shouldCancel()) {
-                proc.kill();
-                proc.waitForFinished(1000);
-                return true;
-            }
-            proc.waitForReadyRead(80);
-            pending += proc.readAllStandardOutput();
-            flushLines();
-        }
-        pending += proc.readAllStandardOutput();
-        flushLines();
-        if (!pending.trimmed().isEmpty()) {
-            FileMeta meta;
-            if (buildMeta(QString::fromUtf8(pending.trimmed()), type == "d", meta) && matchesStructuredFilters(meta, parsed)) {
-                batch.push_back(std::move(meta));
-            }
-        }
-        if (!batch.empty()) {
-            onBatch(std::move(batch));
-        }
-    }
-    return true;
-}
-
 QStringList prunedRoots(QStringList roots)
 {
     roots.removeAll("");
@@ -335,6 +233,32 @@ QStringList prunedRoots(QStringList roots)
     }
     return pruned;
 }
+
+QString permissionsToString(const QFile::Permissions perms) {
+    auto bit = [perms](QFile::Permission p, const char c) -> QChar {
+        return (perms & p) ? QChar(c) : QChar('-');
+    };
+    QString s;
+    s.reserve(9);
+    s.append(bit(QFile::ReadOwner, 'r'));
+    s.append(bit(QFile::WriteOwner, 'w'));
+    s.append(bit(QFile::ExeOwner, 'x'));
+    s.append(bit(QFile::ReadGroup, 'r'));
+    s.append(bit(QFile::WriteGroup, 'w'));
+    s.append(bit(QFile::ExeGroup, 'x'));
+    s.append(bit(QFile::ReadOther, 'r'));
+    s.append(bit(QFile::WriteOther, 'w'));
+    s.append(bit(QFile::ExeOther, 'x'));
+    return s;
+}
+
+bool commandExists(const QString &command)
+{
+    QProcess p;
+    p.start("sh", {"-lc", "command -v " + command});
+    if (!p.waitForFinished(600)) return false;
+    return p.exitCode() == 0 && !p.readAllStandardOutput().trimmed().isEmpty();
+}
 }
 
 AppController::AppController(QObject *parent)
@@ -342,6 +266,25 @@ AppController::AppController(QObject *parent)
 {
     m_proxyModel.setSourceModel(&m_fileModel);
     loadRecentSearches();
+
+    m_gitStatusTimer = new QTimer(this);
+    m_gitStatusTimer->setSingleShot(true);
+    m_gitStatusTimer->setInterval(500); // Debounce git status updates
+    connect(m_gitStatusTimer, &QTimer::timeout, this, [this]() {
+        this->updateGitStatus();
+    });
+
+    connect(&m_historyStack, &FileCommandHistory::canUndoChanged, this, &AppController::canUndoChanged);
+    connect(&m_historyStack, &FileCommandHistory::canRedoChanged, this, &AppController::canRedoChanged);
+
+    m_searchTimer = new QTimer(this);
+    m_searchTimer->setSingleShot(true);
+    m_searchTimer->setInterval(250); // 250ms debounce for search
+    connect(m_searchTimer, &QTimer::timeout, this, [this]() {
+        if (m_proxyModel.searchQuery() != m_activeSearchTerm) {
+            m_proxyModel.setSearchQuery(m_activeSearchTerm);
+        }
+    });
 
     // File Watcher
     connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString &path) {
@@ -374,6 +317,7 @@ void AppController::setPlacesModel(PlacesModel* model)
 
 bool AppController::loading() const { return m_loading; }
 QObject* AppController::fileModel() { return &m_proxyModel; }
+QObject* AppController::treeModel() { return &m_treeModel; }
 QObject* AppController::placesModel() { return m_placesModel; }
 QString AppController::currentPath() const { return m_currentPath; }
 QString AppController::homePath() const { return QDir::homePath(); }
@@ -386,10 +330,17 @@ QString AppController::title() const {
 
 bool AppController::canGoBack() const { return m_historyIndex > 0; }
 bool AppController::canGoForward() const { return m_historyIndex < m_history.size() - 1; }
+bool AppController::canUndo() const { return m_historyStack.canUndo(); }
+bool AppController::canRedo() const { return m_historyStack.canRedo(); }
+QString AppController::undoDescription() const { return m_historyStack.undoDescription(); }
+
+void AppController::undo() { m_historyStack.undo(); refresh(); }
+void AppController::redo() { m_historyStack.redo(); refresh(); }
+
 bool AppController::showHiddenFiles() const { return m_proxyModel.showHidden(); }
 void AppController::setShowHiddenFiles(bool show) { m_proxyModel.setShowHidden(show); }
-bool AppController::hasClipboard() const { return !m_clipboardPath.isEmpty(); }
-QString AppController::clipboardPath() const { return m_clipboardPath; }
+bool AppController::hasClipboard() const { return !m_clipboardPaths.isEmpty(); }
+QStringList AppController::clipboardPaths() const { return m_clipboardPaths; }
 bool AppController::isCutOp() const { return m_isCutOp; }
 
 int AppController::iconSize() const { return m_iconSize; }
@@ -419,29 +370,44 @@ QVariantMap AppController::gitStatus() const {
 void AppController::updateGitStatus() {
     QString path = m_currentPath;
     if (path.isEmpty()) return;
-    if (!QDir(path).exists(".git") && !QDir(path + "/..").exists(".git")) {
-        m_gitStatus.clear();
-        emit gitStatusChanged();
-        return;
-    }
+    
     QPointer<AppController> safeThis(this);
     ThreadPool::instance().submit([safeThis, path]() {
         if (!safeThis) return;
         QVariantMap statusMap;
-        QProcess proc;
-        proc.setWorkingDirectory(path);
-        proc.start("git", QStringList() << "status" << "--porcelain");
-        if (proc.waitForFinished(1000)) {
-            QString output = proc.readAllStandardOutput();
-            QStringList lines = output.split('\n', Qt::SkipEmptyParts);
-            for (const QString& line : lines) {
-                if (line.length() > 3) {
-                    QString state = line.left(2).trimmed();
-                    QString file = line.mid(3);
+        
+        git_repository *repo = nullptr;
+        if (git_repository_open_ext(&repo, path.toStdString().c_str(), 0, nullptr) == 0) {
+            git_status_options opts = GIT_STATUS_OPTIONS_INIT;
+            opts.show = GIT_STATUS_SHOW_INDEX_AND_WORKDIR;
+            opts.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+            
+            git_status_list *statuses = nullptr;
+            if (git_status_list_new(&statuses, repo, &opts) == 0) {
+                size_t count = git_status_list_entrycount(statuses);
+                for (size_t i = 0; i < count; ++i) {
+                    const git_status_entry *s = git_status_byindex(statuses, i);
+                    if (s->status == GIT_STATUS_CURRENT) continue;
+                    
+                    QString file = QString::fromUtf8(s->index_to_workdir ? s->index_to_workdir->new_file.path : s->head_to_index->new_file.path);
+                    QString state = "  ";
+                    
+                    if (s->status & GIT_STATUS_WT_NEW) state = "??";
+                    else {
+                        if (s->status & GIT_STATUS_INDEX_NEW) state[0] = 'A';
+                        else if (s->status & GIT_STATUS_INDEX_MODIFIED) state[0] = 'M';
+                        else if (s->status & GIT_STATUS_INDEX_DELETED) state[0] = 'D';
+                        
+                        if (s->status & GIT_STATUS_WT_MODIFIED) state[1] = 'M';
+                        else if (s->status & GIT_STATUS_WT_DELETED) state[1] = 'D';
+                    }
                     statusMap[file] = state;
                 }
+                git_status_list_free(statuses);
             }
+            git_repository_free(repo);
         }
+        
         if (safeThis) {
             QMetaObject::invokeMethod(safeThis, [safeThis, statusMap]() {
                 if (safeThis) {
@@ -481,6 +447,200 @@ void AppController::openPath(const QString &path)
     loadPathInternal(resolvedPath);
 }
 
+void AppController::openWith(const QString &path)
+{
+    if (path.isEmpty()) return;
+    emit openWithRequested(path);
+}
+
+QString AppController::safePath(const QString &path) const
+{
+    if (path.isEmpty()) return "";
+    QString cleaned = QDir::cleanPath(path.trimmed());
+    
+    // Convert to absolute path if it's relative
+    if (QDir::isRelativePath(cleaned)) {
+        cleaned = QDir::cleanPath(m_currentPath + "/" + cleaned);
+    }
+
+    // Basic protection against directory traversal via symbols if needed, 
+    // but cleanPath already handles "../".
+    // We also check that it doesn't try to go outside of allowed roots 
+    // if we had a "sandbox" mode, but here we are a file manager.
+    return cleaned;
+}
+
+void AppController::openWithApp(const QString &path, const QString &appCommand)
+{
+    const QString targetPath = safePath(path);
+    if (targetPath.isEmpty() || appCommand.isEmpty()) return;
+
+    QString cmdLine = appCommand;
+    // Desktop files use %f, %F, %u, %U field codes.
+    // We should split the command into arguments and replace placeholders.
+    // To do this securely without a shell, we need to parse the command string.
+    
+    QStringList args;
+    QString executable;
+    
+    // Simplified desktop-entry exec parsing (handles quotes)
+    static QRegularExpression re("([^\\s\"']+|\"[^\"]*\"|'[^']*')");
+    QRegularExpressionMatchIterator it = re.globalMatch(cmdLine);
+    
+    while (it.hasNext()) {
+        QString match = it.next().captured(1);
+        if (match.startsWith("\"") && match.endsWith("\"")) match = match.mid(1, match.size() - 2);
+        else if (match.startsWith("'") && match.endsWith("'")) match = match.mid(1, match.size() - 2);
+
+        if (executable.isEmpty()) {
+            executable = match;
+        } else {
+            if (match == "%f" || match == "%F") args << targetPath;
+            else if (match == "%u" || match == "%U") args << QUrl::fromLocalFile(targetPath).toString();
+            else if (match.startsWith("%")) { /* skip other codes */ }
+            else args << match;
+        }
+    }
+
+    // If no placeholder was found, append the path as the last argument
+    if (!cmdLine.contains("%f") && !cmdLine.contains("%F") && !cmdLine.contains("%u") && !cmdLine.contains("%U")) {
+        args << targetPath;
+    }
+
+    if (!executable.isEmpty()) {
+        QProcess::startDetached(executable, args);
+    }
+}
+
+static QVariantMap parseDesktopFile(const QString& desktopFile)
+{
+    QString fullPath = "/usr/share/applications/" + desktopFile;
+    if (!QFile::exists(fullPath)) fullPath = QDir::homePath() + "/.local/share/applications/" + desktopFile;
+    if (!QFile::exists(fullPath)) {
+        // Search in other common locations
+        QStringList paths = {"/usr/local/share/applications/", "/var/lib/flatpak/exports/share/applications/"};
+        for (const auto& p : paths) {
+            if (QFile::exists(p + desktopFile)) {
+                fullPath = p + desktopFile;
+                break;
+            }
+        }
+    }
+
+    QSettings desktop(fullPath, QSettings::IniFormat);
+    desktop.beginGroup("Desktop Entry");
+    QVariantMap app;
+    app["name"] = desktop.value("Name").toString();
+    if (app["name"].toString().isEmpty()) app["name"] = desktopFile;
+    app["icon"] = desktop.value("Icon").toString();
+    app["exec"] = desktop.value("Exec").toString();
+    app["id"] = desktopFile;
+    app["comment"] = desktop.value("Comment").toString();
+    return app;
+}
+
+QVariantList AppController::getAssociatedApps(const QString &path)
+{
+    QVariantList apps;
+    if (path.isEmpty()) return apps;
+
+    QMimeDatabase mimeDb;
+    QMimeType mime = mimeDb.mimeTypeForFile(path);
+    QString mimeName = mime.name();
+
+    QProcess gio;
+    gio.start("gio", {"mime", mimeName});
+    if (gio.waitForFinished()) {
+        QString output = gio.readAllStandardOutput();
+        QStringList lines = output.split("\n");
+        
+        QString defaultAppId;
+        QStringList registeredApps;
+        
+        bool inRegistered = false;
+        bool inRecommended = false;
+
+        for (const QString &line : lines) {
+            QString trimmed = line.trimmed();
+            if (line.startsWith("Default application for")) {
+                int colonIdx = line.lastIndexOf(':');
+                if (colonIdx != -1) defaultAppId = line.mid(colonIdx + 1).trimmed();
+            } else if (trimmed == "Registered applications:") {
+                inRegistered = true; inRecommended = false;
+            } else if (trimmed == "Recommended applications:") {
+                inRecommended = true; inRegistered = false;
+            } else if ((inRegistered || inRecommended) && trimmed.endsWith(".desktop")) {
+                if (!registeredApps.contains(trimmed)) registeredApps.append(trimmed);
+            }
+        }
+
+        // Put default app first if found
+        if (!defaultAppId.isEmpty()) {
+            QVariantMap app = parseDesktopFile(defaultAppId);
+            app["isDefault"] = true;
+            apps.append(app);
+            registeredApps.removeAll(defaultAppId);
+        }
+
+        for (const QString &appId : registeredApps) {
+            QVariantMap app = parseDesktopFile(appId);
+            app["isDefault"] = false;
+            apps.append(app);
+        }
+    }
+
+    return apps;
+}
+
+QVariantList AppController::getAllApplications()
+{
+    QVariantList apps;
+    QStringList searchPaths = {
+        "/usr/share/applications/",
+        "/usr/local/share/applications/",
+        QDir::homePath() + "/.local/share/applications/",
+        "/var/lib/flatpak/exports/share/applications/"
+    };
+
+    QStringList seenIds;
+
+    for (const QString &dirPath : searchPaths) {
+        QDir dir(dirPath);
+        if (!dir.exists()) continue;
+
+        QStringList files = dir.entryList({"*.desktop"}, QDir::Files);
+        for (const QString &file : files) {
+            if (seenIds.contains(file)) continue;
+            
+            QVariantMap app = parseDesktopFile(file);
+            if (!app["name"].toString().isEmpty() && !app["exec"].toString().isEmpty()) {
+                apps.append(app);
+                seenIds.append(file);
+            }
+        }
+    }
+
+    // Sort by name
+    std::sort(apps.begin(), apps.end(), [](const QVariant &a, const QVariant &b) {
+        return a.toMap()["name"].toString().compare(b.toMap()["name"].toString(), Qt::CaseInsensitive) < 0;
+    });
+
+    return apps;
+}
+
+void AppController::setDefaultApp(const QString &mimeType, const QString &desktopFile)
+{
+    if (mimeType.isEmpty() || desktopFile.isEmpty()) return;
+    QProcess::startDetached("gio", {"mime", mimeType, desktopFile});
+}
+
+QString AppController::getMimeType(const QString &path)
+{
+    if (path.isEmpty()) return "";
+    QMimeDatabase db;
+    return db.mimeTypeForFile(path).name();
+}
+
 void AppController::loadPathInternal(const QString &path)
 {
     const std::uint64_t generation = ++m_operationGeneration;
@@ -504,7 +664,12 @@ void AppController::loadPathInternal(const QString &path)
     if (!m_currentPath.isEmpty()) m_watcher.removePath(m_currentPath);
     m_currentPath = path;
     m_globalSearchActive = false;
-    if (!path.isEmpty()) m_watcher.addPath(path);
+    if (!path.isEmpty()) {
+        QFileInfo fi(path);
+        if (fi.isDir() && fi.isReadable()) {
+            m_watcher.addPath(path);
+        }
+    }
     emit currentPathChanged();
     emit titleChanged();
     if (m_placesModel) m_placesModel->addRecent(path);
@@ -534,7 +699,7 @@ void AppController::loadPathInternal(const QString &path)
                     safeThis->m_loading = false;
                     emit safeThis->loadingChanged();
                     emit safeThis->availableExtensionsChanged();
-                    safeThis->updateGitStatus();
+                    safeThis->m_gitStatusTimer->start();
                 }
             }, Qt::QueuedConnection);
         }
@@ -568,11 +733,9 @@ void AppController::goForward() {
 void AppController::refresh() { loadPathInternal(m_currentPath); }
 void AppController::setSearchText(const QString &text) {
     const SearchQuery parsed = parseSearchQuery(text, m_proxyModel.showHidden());
-    if (m_activeSearchTerm != parsed.term) {
-        m_activeSearchTerm = parsed.term;
-        emit activeSearchTermChanged();
-    }
-    m_proxyModel.setSearchQuery(parsed.term);
+    
+    // We update proxy filters immediately as they are fast, 
+    // but we debounce the actual text search which invalidates everything.
     m_proxyModel.setExtensionFilter(parsed.extension);
     m_proxyModel.setTypeFilter(parsed.type);
     m_proxyModel.setMinSize(parsed.minSize);
@@ -581,6 +744,17 @@ void AppController::setSearchText(const QString &text) {
     m_proxyModel.setMaxDate(parsed.maxDate);
     m_proxyModel.setShowHidden(parsed.showHidden);
     m_proxyModel.setExactMatch(parsed.exact);
+
+    if (m_activeSearchTerm != parsed.term) {
+        m_activeSearchTerm = parsed.term;
+        emit activeSearchTermChanged();
+        if (m_activeSearchTerm.isEmpty()) {
+            m_searchTimer->stop();
+            m_proxyModel.setSearchQuery("");
+        } else {
+            m_searchTimer->start();
+        }
+    }
 }
 
 void AppController::startGlobalSearch(const QString &pattern)
@@ -616,35 +790,61 @@ void AppController::startGlobalSearch(const QString &pattern)
     auto shouldCancel = [safeThis, generation]() -> bool {
         return !safeThis || safeThis->m_cancelRequested.load() || safeThis->m_operationGeneration.load() != generation;
     };
-    ThreadPool::instance().submit([safeThis, parsed, shouldCancel, generation]() {
+    const bool searchInFiles = m_searchContent && !parsed.term.isEmpty();
+
+    const QString scope = m_searchScope;
+    const QString currentPath = m_currentPath;
+    ThreadPool::instance().submit([safeThis, parsed, shouldCancel, generation, searchInFiles, scope, currentPath]() {
         QStringList roots;
         if (!safeThis) return;
-        
-        // Comprehensive search: Home + Mounted volumes
-        roots << QDir::homePath();
-        for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
-            if (!storage.isValid() || !storage.isReady()) continue;
-            const QString root = storage.rootPath();
-            if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev") || root.startsWith("/run/user")) continue;
-            roots << root;
+
+        if (scope == "current") {
+            if (!currentPath.isEmpty()) roots << currentPath;
+        } else if (scope == "home") {
+            roots << QDir::homePath();
+        } else { // mounted
+            for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
+                if (!storage.isValid() || !storage.isReady()) continue;
+                const QString root = storage.rootPath();
+                if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev") || root.startsWith("/run/user")) continue;
+                roots << root;
+            }
         }
+        if (roots.isEmpty()) roots << QDir::homePath();
         roots = prunedRoots(roots);
 
+        const bool hasFd = commandExists("fd");
+        const bool hasRg = commandExists("rg");
         QSet<QString> seenPaths;
+        int thumbnailBudget = 60;
+        static constexpr int kMaxGlobalResults = 3500;
+        int emittedCount = 0;
+        bool hitResultLimit = false;
         for (const QString &rootPath : roots) {
-            if (shouldCancel()) break;
-            const auto publishBatch = [safeThis, generation, &seenPaths](std::vector<FileMeta>&& filtered) {
+            if (shouldCancel() || hitResultLimit) break;
+            
+            const auto publishBatch = [safeThis, generation, &seenPaths, &thumbnailBudget, &emittedCount, &hitResultLimit](std::vector<FileMeta>&& filtered) {
                 if (filtered.empty() || !safeThis) return;
                 std::vector<FileMeta> unique;
                 unique.reserve(filtered.size());
                 QStringList thumbBatch;
                 for (auto &entry : filtered) {
-                    const QString p = QFileInfo(QString::fromStdString(entry.path)).canonicalFilePath();
-                    const QString key = p.isEmpty() ? QString::fromStdString(entry.path) : p;
+                    if (emittedCount >= kMaxGlobalResults) {
+                        hitResultLimit = true;
+                        break;
+                    }
+                    const QString key = QString::fromStdString(entry.path);
                     if (seenPaths.contains(key)) continue;
                     seenPaths.insert(key);
-                    thumbBatch << key;
+                    if (thumbnailBudget > 0) {
+                        thumbBatch << key;
+                        --thumbnailBudget;
+                    }
                     unique.push_back(std::move(entry));
+                    emittedCount++;
+                }
+                if (emittedCount >= kMaxGlobalResults) {
+                    hitResultLimit = true;
                 }
                 if (unique.empty()) return;
                 QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(unique), thumbBatch]() mutable {
@@ -657,17 +857,127 @@ void AppController::startGlobalSearch(const QString &pattern)
                 }, Qt::QueuedConnection);
             };
 
-            const bool usedFd = runFdSearch(rootPath, parsed, shouldCancel, publishBatch);
-            if (!usedFd) {
-                const std::string enginePattern = parsed.term.toStdString();
-                FileSystemEngine::searchRecursive(rootPath.toStdString(), enginePattern, [publishBatch, parsed](std::vector<FileMeta>&& batch) {
-                    std::vector<FileMeta> filtered;
-                    filtered.reserve(batch.size());
-                    for (auto &entry : batch) {
-                        if (matchesStructuredFilters(entry, parsed)) filtered.push_back(std::move(entry));
+            if (searchInFiles) {
+                if (hasRg) {
+                    QProcess rg;
+                    QStringList args;
+                    args << "--files-with-matches" << "--smart-case" << "--hidden"
+                         << "-g" << "!.git/*" << "-g" << "!node_modules/*" << "-g" << "!.cache/*";
+                    args << parsed.term << rootPath;
+                    rg.start("rg", args);
+                    if (rg.waitForStarted()) {
+                        std::vector<FileMeta> currentBatch;
+                        while (!rg.atEnd() || rg.state() == QProcess::Running) {
+                            if (shouldCancel()) {
+                                rg.terminate();
+                                rg.waitForFinished(800);
+                                return;
+                            }
+                            while (rg.canReadLine()) {
+                                const QString path = QString::fromUtf8(rg.readLine()).trimmed();
+                                if (path.isEmpty()) continue;
+                                FileMeta m = FileSystemEngine::getFileMeta(path.toStdString());
+                                if (matchesStructuredFilters(m, parsed)) currentBatch.push_back(std::move(m));
+                            }
+                            if (currentBatch.size() >= 40) {
+                                publishBatch(std::move(currentBatch));
+                                currentBatch.clear();
+                                if (hitResultLimit) {
+                                    rg.terminate();
+                                    rg.waitForFinished(800);
+                                    break;
+                                }
+                            }
+                            rg.waitForReadyRead(30);
+                        }
+                        if (!currentBatch.empty()) publishBatch(std::move(currentBatch));
                     }
-                    publishBatch(std::move(filtered));
-                }, shouldCancel);
+                } else {
+                    // Fallback to grep if ripgrep is unavailable
+                    std::vector<FileMeta> currentBatch;
+                    QProcess grep;
+                    QStringList args;
+                    args << "-r" << "-l" << "-i" << "--exclude-dir=.git" << "--exclude-dir=node_modules";
+                    if (!parsed.showHidden) args << "--exclude-dir=.*";
+                    args << parsed.term << rootPath;
+                    grep.start("grep", args);
+                    if (!grep.waitForStarted()) continue;
+                    while (!grep.atEnd() || grep.state() == QProcess::Running) {
+                        if (shouldCancel()) { 
+                            grep.terminate(); 
+                            grep.waitForFinished(800); 
+                            return; 
+                        }
+                        while (grep.canReadLine()) {
+                            QString path = QString::fromUtf8(grep.readLine()).trimmed();
+                            if (!path.isEmpty()) {
+                                FileMeta m = FileSystemEngine::getFileMeta(path.toStdString());
+                                if (matchesStructuredFilters(m, parsed)) currentBatch.push_back(std::move(m));
+                            }
+                        }
+                        if (currentBatch.size() >= 40) {
+                            publishBatch(std::move(currentBatch));
+                            currentBatch.clear();
+                            if (hitResultLimit) {
+                                grep.terminate();
+                                grep.waitForFinished(800);
+                                break;
+                            }
+                        }
+                        grep.waitForReadyRead(30);
+                    }
+                    if (!currentBatch.empty()) publishBatch(std::move(currentBatch));
+                }
+            } else {
+                if (hasFd) {
+                    QProcess fd;
+                    QStringList args;
+                    args << "--absolute-path" << "--color=never" << "--hidden" << "--no-ignore-vcs"
+                         << "--exclude" << ".git" << "--exclude" << "node_modules" << "--exclude" << ".cache";
+                    if (!parsed.showHidden) args << "--exclude" << ".*";
+                    if (parsed.type == "folder") args << "--type=d";
+                    else if (parsed.type == "file") args << "--type=f";
+                    args << (parsed.term.isEmpty() ? "." : parsed.term) << rootPath;
+
+                    fd.start("fd", args);
+                    if (fd.waitForStarted()) {
+                        std::vector<FileMeta> currentBatch;
+                        while (!fd.atEnd() || fd.state() == QProcess::Running) {
+                            if (shouldCancel()) {
+                                fd.terminate();
+                                fd.waitForFinished(800);
+                                return;
+                            }
+                            while (fd.canReadLine()) {
+                                const QString p = QString::fromUtf8(fd.readLine()).trimmed();
+                                if (p.isEmpty()) continue;
+                                FileMeta meta = FileSystemEngine::getFileMeta(p.toStdString());
+                                if (matchesStructuredFilters(meta, parsed)) currentBatch.push_back(std::move(meta));
+                            }
+                            if (currentBatch.size() >= 60) {
+                                publishBatch(std::move(currentBatch));
+                                currentBatch.clear();
+                                if (hitResultLimit) {
+                                    fd.terminate();
+                                    fd.waitForFinished(800);
+                                    break;
+                                }
+                            }
+                            fd.waitForReadyRead(30);
+                        }
+                        if (!currentBatch.empty()) publishBatch(std::move(currentBatch));
+                    }
+                } else {
+                    const std::string enginePattern = parsed.term.toStdString();
+                    FileSystemEngine::searchRecursive(rootPath.toStdString(), enginePattern, [publishBatch, parsed](std::vector<FileMeta>&& batch) {
+                        std::vector<FileMeta> filtered;
+                        filtered.reserve(batch.size());
+                        for (auto &entry : batch) {
+                            if (matchesStructuredFilters(entry, parsed)) filtered.push_back(std::move(entry));
+                        }
+                        publishBatch(std::move(filtered));
+                    }, shouldCancel);
+                }
             }
         }
         if (safeThis) {
@@ -704,6 +1014,13 @@ void AppController::setSearchScope(const QString &scope)
     emit searchScopeChanged();
 }
 
+void AppController::setSearchContent(bool enabled)
+{
+    if (m_searchContent == enabled) return;
+    m_searchContent = enabled;
+    emit searchContentChanged();
+}
+
 void AppController::applySearchQuery(const QString &query) {
     if (m_searchMode == "global") startGlobalSearch(query);
     else setSearchText(query);
@@ -735,9 +1052,16 @@ void AppController::createFolder(const QString &name)
 {
     if (name.isEmpty() || m_currentPath.isEmpty()) return;
     QString fullPath = m_currentPath + "/" + name;
-    auto res = FileSystemEngine::createDirectory(fullPath.toStdString());
-    if (res.success) { refresh(); emit operationSuccess("Folder created"); }
-    else emit operationError(QString::fromStdString(res.message));
+    m_historyStack.push(std::make_unique<CreateFolderCommand>(fullPath.toStdString()));
+    refresh();
+}
+
+void AppController::createFile(const QString &name)
+{
+    if (name.isEmpty() || m_currentPath.isEmpty()) return;
+    QString fullPath = m_currentPath + "/" + name;
+    m_historyStack.push(std::make_unique<CreateFileCommand>(fullPath.toStdString()));
+    refresh();
 }
 
 void AppController::renameItem(const QString &oldPath, const QString &newName)
@@ -745,9 +1069,8 @@ void AppController::renameItem(const QString &oldPath, const QString &newName)
     if (oldPath.isEmpty() || newName.isEmpty()) return;
     QFileInfo fi(oldPath);
     QString newPath = fi.absolutePath() + "/" + newName;
-    auto res = FileSystemEngine::renamePath(oldPath.toStdString(), newPath.toStdString());
-    if (res.success) { refresh(); emit operationSuccess("Renamed"); }
-    else emit operationError(QString::fromStdString(res.message));
+    m_historyStack.push(std::make_unique<RenameCommand>(oldPath.toStdString(), newPath.toStdString()));
+    refresh();
 }
 
 void AppController::bulkRename(const QStringList &paths, const QString &prefix, const QString &suffix, const QString &find, const QString &replace)
@@ -763,58 +1086,136 @@ void AppController::bulkRename(const QStringList &paths, const QString &prefix, 
 
 void AppController::deleteItem(const QString &path)
 {
-    auto res = FileSystemEngine::deletePath(path.toStdString());
+    const QString target = safePath(path);
+    if (target.isEmpty()) return;
+    auto res = FileSystemEngine::deletePath(target.toStdString());
     if (res.success) { refresh(); emit operationSuccess("Deleted"); }
     else emit operationError(QString::fromStdString(res.message));
 }
 
-void AppController::copyItem(const QString &path)
+void AppController::deleteItems(const QStringList &paths)
 {
-    m_clipboardPath = path; m_isCutOp = false;
-    emit clipboardChanged();
-    if (!path.isEmpty()) emit operationSuccess("Copied to clipboard");
-}
-
-void AppController::cutItem(const QString &path)
-{
-    m_clipboardPath = path; m_isCutOp = true;
-    emit clipboardChanged();
-    emit operationSuccess("Cut to clipboard");
-}
-
-void AppController::pasteItem()
-{
-    if (m_clipboardPath.isEmpty() || m_currentPath.isEmpty()) return;
-    QString src = m_clipboardPath; QString destDir = m_currentPath; bool isCut = m_isCutOp;
-    emit operationProgress(0.0);
+    if (paths.isEmpty()) return;
     QPointer<AppController> safeThis(this);
-    ThreadPool::instance().submit([safeThis, src, destDir, isCut]() {
-        fs::path s(src.toStdString()); fs::path d = fs::path(destDir.toStdString()) / s.filename();
-        FileSystemEngine::OperationResult res;
-        if (isCut) res = FileSystemEngine::movePath(src.toStdString(), d.string());
-        else res = FileSystemEngine::copyPath(src.toStdString(), d.string());
+    ThreadPool::instance().submit([safeThis, paths]() {
+        bool allSuccess = true;
+        QString lastError;
+        for (const QString &path : paths) {
+            const QString target = safeThis ? safeThis->safePath(path) : path;
+            auto res = FileSystemEngine::deletePath(target.toStdString());
+            if (!res.success) { allSuccess = false; lastError = QString::fromStdString(res.message); }
+        }
         if (safeThis) {
-            QMetaObject::invokeMethod(safeThis, [safeThis, isCut, res]() { 
+            QMetaObject::invokeMethod(safeThis, [safeThis, allSuccess, lastError]() {
                 if (safeThis) {
-                    emit safeThis->operationProgress(1.0);
-                    if (res.success) {
-                        safeThis->refresh();
-                        if (isCut) { safeThis->m_clipboardPath = ""; emit safeThis->clipboardChanged(); }
-                        emit safeThis->operationSuccess("Paste successful");
-                    } else emit safeThis->operationError(QString::fromStdString(res.message));
+                    safeThis->refresh();
+                    if (allSuccess) emit safeThis->operationSuccess("Deleted multiple items");
+                    else emit safeThis->operationError("Some items could not be deleted: " + lastError);
                 }
-            });
+            }, Qt::QueuedConnection);
         }
     });
 }
 
+void AppController::copyItem(const QString &path)
+{
+    m_clipboardPaths.clear();
+    if (path.isEmpty()) {
+        if (!m_selectedPaths.isEmpty()) m_clipboardPaths = m_selectedPaths;
+    } else {
+        m_clipboardPaths.append(path);
+    }
+    m_isCutOp = false;
+    emit clipboardChanged();
+    if (!m_clipboardPaths.isEmpty()) emit operationSuccess(QString("Copied %1 items").arg(m_clipboardPaths.size()));
+}
+
+void AppController::cutItem(const QString &path)
+{
+    m_clipboardPaths.clear();
+    if (path.isEmpty()) {
+        if (!m_selectedPaths.isEmpty()) m_clipboardPaths = m_selectedPaths;
+    } else {
+        m_clipboardPaths.append(path);
+    }
+    m_isCutOp = true;
+    emit clipboardChanged();
+    if (!m_clipboardPaths.isEmpty()) emit operationSuccess(QString("Cut %1 items").arg(m_clipboardPaths.size()));
+}
+
+void AppController::clearClipboard()
+{
+    m_clipboardPaths.clear();
+    emit clipboardChanged();
+}
+
+void AppController::pasteItem()
+{
+    if (m_clipboardPaths.isEmpty() || m_currentPath.isEmpty()) return;
+    QStringList srcs = m_clipboardPaths;
+    QString destDir = m_currentPath;
+    bool isCut = m_isCutOp;
+
+    if (isCut) {
+        std::vector<std::pair<std::string, std::string>> moves;
+        for (const auto& s : srcs) {
+            moves.push_back({s.toStdString(), (fs::path(destDir.toStdString()) / fs::path(s.toStdString()).filename()).string()});
+        }
+        m_historyStack.push(std::make_unique<MoveCommand>(moves));
+        m_clipboardPaths.clear();
+        emit clipboardChanged();
+        refresh();
+        return;
+    }
+
+    emit operationProgress(0.0);
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, srcs, destDir, isCut]() {
+        bool allSuccess = true;
+        QString lastError;
+        int count = 0;
+
+        for (const QString &src : srcs) {
+            fs::path s(src.toStdString());
+            fs::path d = fs::path(destDir.toStdString()) / s.filename();
+
+            FileSystemEngine::OperationResult res;
+            if (isCut) res = FileSystemEngine::movePath(src.toStdString(), d.string());
+            else res = FileSystemEngine::copyPath(src.toStdString(), d.string());
+
+            if (!res.success) {
+                allSuccess = false;
+                lastError = QString::fromStdString(res.message);
+            }
+            count++;
+            if (safeThis) QMetaObject::invokeMethod(safeThis, [safeThis, count, total = srcs.size()]() {
+                emit safeThis->operationProgress(static_cast<float>(count) / total);
+            }, Qt::QueuedConnection);
+        }
+
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, isCut, allSuccess, lastError]() {
+                if (safeThis) {
+                    emit safeThis->operationProgress(1.0);
+                    if (allSuccess) {
+                        safeThis->refresh();
+                        if (isCut) { safeThis->m_clipboardPaths.clear(); emit safeThis->clipboardChanged(); }
+                        emit safeThis->operationSuccess("Paste successful");
+                    } else emit safeThis->operationError("Paste failed: " + lastError);
+                }
+            }, Qt::QueuedConnection);
+        }
+    });
+}
 void AppController::requestThumbnail(const QString &path) { if (m_thumbnailManager) m_thumbnailManager->requestThumbnail(path); }
 
 void AppController::selectPath(const QString &path)
 {
     if (m_selectedPath == path && m_selectedPaths.size() == 1 && m_selectedPaths.contains(path)) return;
-    m_selectedPath = path; m_selectedPaths.clear();
+    m_selectedPath = path;
+    m_selectedPaths.clear();
     if (!path.isEmpty()) m_selectedPaths.append(path);
+    m_selectionRevision++;
     emit selectedPathChanged(); emit selectedPathsChanged();
 }
 
@@ -824,14 +1225,17 @@ void AppController::toggleSelection(const QString &path)
     else m_selectedPaths.append(path);
     if (m_selectedPaths.isEmpty()) m_selectedPath = "";
     else m_selectedPath = m_selectedPaths.last();
+    m_selectionRevision++;
     emit selectedPathChanged(); emit selectedPathsChanged();
 }
 
 void AppController::clearSelection()
 {
-    if (m_selectedPaths.isEmpty()) return;
-    m_selectedPath = ""; m_selectedPaths.clear();
-    emit selectedPathChanged(); emit selectedPathsChanged();
+    m_selectedPath = ""; 
+    m_selectedPaths.clear();
+    m_selectionRevision++;
+    emit selectedPathChanged(); 
+    emit selectedPathsChanged();
 }
 
 void AppController::selectAll()
@@ -845,6 +1249,7 @@ void AppController::selectAll()
     }
     if (!m_selectedPaths.isEmpty()) m_selectedPath = m_selectedPaths.last();
     else m_selectedPath = "";
+    m_selectionRevision++;
     emit selectedPathChanged();
     emit selectedPathsChanged();
 }
@@ -864,6 +1269,7 @@ void AppController::selectRangeByIndexes(int from, int to)
         if (!path.isEmpty()) m_selectedPaths.append(path);
     }
     m_selectedPath = m_selectedPaths.isEmpty() ? "" : m_selectedPaths.last();
+    m_selectionRevision++;
     emit selectedPathChanged();
     emit selectedPathsChanged();
 }
@@ -896,7 +1302,82 @@ void AppController::startRename(const QString &path) { emit renameRequested(path
 QString AppController::selectedPath() const { return m_selectedPath; }
 QStringList AppController::selectedPaths() const { return m_selectedPaths; }
 bool AppController::hasSelection() const { return !m_selectedPaths.isEmpty(); }
-QVariantMap AppController::metadataForPath(const QString &path) const { return m_fileModel.metadataForPath(path); }
+QVariantMap AppController::metadataForPath(const QString &path) const
+{
+    const QString target = safePath(path);
+    if (target.isEmpty()) return {};
+
+    QFileInfo fi(target);
+    if (!fi.exists()) return {};
+
+    QVariantMap m = m_fileModel.metadataForPath(target);
+    if (m.isEmpty()) {
+        m["name"] = fi.fileName().isEmpty() ? "Root" : fi.fileName();
+        m["path"] = fi.absoluteFilePath();
+        m["isDir"] = fi.isDir();
+        m["size"] = static_cast<qlonglong>(fi.size());
+        m["iconName"] = fi.isDir() ? "folder" : "text-x-generic";
+    }
+
+    m["name"] = fi.fileName().isEmpty() ? "Root" : fi.fileName();
+    m["path"] = fi.absoluteFilePath();
+    m["isDir"] = fi.isDir();
+    m["size"] = static_cast<qlonglong>(fi.size());
+    m["mtime"] = static_cast<qlonglong>(fi.lastModified().toSecsSinceEpoch());
+    m["ctime"] = static_cast<qlonglong>(fi.metadataChangeTime().toSecsSinceEpoch());
+    m["atime"] = static_cast<qlonglong>(fi.lastRead().toSecsSinceEpoch());
+    m["birthTime"] = static_cast<qlonglong>(fi.birthTime().toSecsSinceEpoch());
+    m["permissions"] = permissionsToString(fi.permissions());
+    m["owner"] = fi.owner();
+    m["group"] = fi.group();
+    m["suffix"] = fi.suffix().toLower();
+    m["isReadable"] = fi.isReadable();
+    m["isWritable"] = fi.isWritable();
+    m["isExecutable"] = fi.isExecutable();
+    m["parentPath"] = fi.absolutePath();
+
+    if (fi.isDir()) {
+        m["mimeType"] = "inode/directory";
+        m["iconName"] = "folder";
+
+        int files = 0;
+        int folders = 0;
+        qlonglong totalSize = 0;
+        const QDir dir(target);
+        const QFileInfoList list = dir.entryInfoList(
+            QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs | QDir::Hidden,
+            QDir::Name
+        );
+        for (const QFileInfo &entry : list) {
+            if (entry.isDir()) folders++;
+            else {
+                files++;
+                totalSize += static_cast<qlonglong>(entry.size());
+            }
+        }
+
+        m["fileCount"] = files;
+        m["folderCount"] = folders;
+        m["contentsSize"] = totalSize;
+        if (m_folderSizeCache.contains(target)) {
+            m["size"] = m_folderSizeCache.value(target);
+            m["sizeComputed"] = true;
+        } else {
+            m["size"] = totalSize;
+            m["sizeComputed"] = false;
+        }
+    } else {
+        QMimeDatabase db;
+        const QMimeType mime = db.mimeTypeForFile(fi.absoluteFilePath(), QMimeDatabase::MatchContent);
+        const QString mimeName = mime.name().isEmpty() ? QString("application/octet-stream") : mime.name();
+        m["mimeType"] = mimeName;
+        if (m.value("iconName").toString().isEmpty()) {
+            m["iconName"] = mime.iconName();
+        }
+    }
+
+    return m;
+}
 
 void AppController::requestThumbnailsForRange(int firstIndex, int lastIndex)
 {
@@ -936,34 +1417,219 @@ void AppController::trashItems(const QStringList &paths)
     if (paths.isEmpty()) return;
     QPointer<AppController> safeThis(this);
     ThreadPool::instance().submit([safeThis, paths]() {
-        for (const QString &path : paths) QProcess::execute("gio", {"trash", path});
+        for (const QString &path : paths) FileSystemEngine::moveToTrash(path.toStdString());
         if (safeThis) { QMetaObject::invokeMethod(safeThis, [safeThis]() { if (safeThis) { safeThis->refresh(); emit safeThis->operationSuccess("Moved to Trash"); } }, Qt::QueuedConnection); }
     });
 }
 
 void AppController::analyseFolder(const QString &path) { emit analyseRequested(path); }
 
+QString AppController::runGitCommand(const QString &cmd, const QString &path)
+{
+    QString target = safePath(path);
+    if (target.isEmpty()) target = m_currentPath;
+    
+    // Only allow specific safe git commands
+    QStringList allowed = {"status", "diff", "branch", "remote", "log", "show"};
+    QString baseCmd = cmd.split(" ").first();
+    if (!allowed.contains(baseCmd)) return "Command not allowed";
+
+    QProcess git;
+    git.setWorkingDirectory(target);
+    QStringList args = cmd.split(" ", Qt::SkipEmptyParts);
+    
+    git.start("git", args);
+    if (git.waitForFinished(5000)) {
+        return QString::fromUtf8(git.readAllStandardOutput() + git.readAllStandardError());
+    }
+    return "Command timed out";
+}
+
+QVariantMap AppController::getFolderMetadata(const QString &path)
+{
+    QString target = safePath(path);
+    if (target.isEmpty()) target = m_currentPath;
+
+    QFileInfo fi(target);
+    if (!fi.exists() || !fi.isDir()) return {};
+
+    QVariantMap m = metadataForPath(target);
+    return m;
+}
+
+void AppController::requestFolderSize(const QString &path)
+{
+    const QString target = safePath(path);
+    if (target.isEmpty()) return;
+
+    QFileInfo fi(target);
+    if (!fi.exists() || !fi.isDir()) return;
+
+    if (m_folderSizeCache.contains(target)) {
+        emit folderSizeResolved(target, m_folderSizeCache.value(target));
+        return;
+    }
+    if (m_pendingFolderSizeRequests.contains(target)) return;
+    m_pendingFolderSizeRequests.insert(target);
+
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, target]() {
+        if (!safeThis) return;
+
+        qlonglong totalSize = 0;
+        std::error_code ec;
+        for (auto it = fs::recursive_directory_iterator(
+                 target.toStdString(), fs::directory_options::skip_permission_denied, ec);
+             it != fs::recursive_directory_iterator();
+             it.increment(ec))
+        {
+            if (!safeThis) return;
+            if (ec) {
+                ec.clear();
+                continue;
+            }
+            std::error_code stEc;
+            if (!fs::is_regular_file(it->symlink_status(stEc)) || stEc) continue;
+            std::error_code szEc;
+            const auto sz = fs::file_size(it->path(), szEc);
+            if (szEc) continue;
+            totalSize += static_cast<qlonglong>(sz);
+        }
+
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, target, totalSize]() {
+                if (!safeThis) return;
+                safeThis->m_pendingFolderSizeRequests.remove(target);
+                safeThis->m_folderSizeCache.insert(target, totalSize);
+                emit safeThis->folderSizeResolved(target, totalSize);
+            }, Qt::QueuedConnection);
+        }
+    });
+}
+
 void AppController::compressItems(const QStringList &paths)
 {
     if (paths.isEmpty()) return;
     QString parentDir = QFileInfo(paths.first()).absolutePath();
     QString archiveName = parentDir + "/archive.tar.gz";
-    QStringList args; args << "-czf" << archiveName;
-    for(const auto& p : paths) args << QFileInfo(p).fileName();
-    if (QProcess::startDetached("tar", args, parentDir)) emit operationSuccess("Compressing...");
-    else emit operationError("Failed to start tar");
+
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, paths, archiveName, parentDir]() {
+        struct archive *a;
+        struct archive_entry *entry;
+        struct stat st;
+        char buff[8192];
+        int len;
+        FILE *fd;
+
+        a = archive_write_new();
+        archive_write_add_filter_gzip(a);
+        archive_write_set_format_pax_restricted(a);
+        archive_write_open_filename(a, archiveName.toStdString().c_str());
+
+        bool success = true;
+        for (const QString& path : paths) {
+            std::string stdPath = path.toStdString();
+            std::string relPath = QFileInfo(path).fileName().toStdString();
+            
+            if (stat(stdPath.c_str(), &st) != 0) { success = false; continue; }
+
+            entry = archive_entry_new();
+            archive_entry_set_pathname(entry, relPath.c_str());
+            archive_entry_set_size(entry, st.st_size);
+            archive_entry_set_filetype(entry, st.st_mode);
+            archive_entry_set_perm(entry, 0644);
+            archive_write_header(a, entry);
+
+            if (S_ISREG(st.st_mode)) {
+                fd = fopen(stdPath.c_str(), "rb");
+                if (fd) {
+                    while ((len = fread(buff, 1, sizeof(buff), fd)) > 0)
+                        archive_write_data(a, buff, len);
+                    fclose(fd);
+                }
+            }
+            archive_entry_free(entry);
+        }
+        archive_write_close(a);
+        archive_write_free(a);
+
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, success]() {
+                if (success) { safeThis->refresh(); emit safeThis->operationSuccess("Compressed successfully"); }
+                else emit safeThis->operationError("Failed to compress some items");
+            }, Qt::QueuedConnection);
+        }
+    });
+}
+
+static int copy_data(struct archive *ar, struct archive *aw) {
+    int r;
+    const void *buff;
+    size_t size;
+    la_int64_t offset;
+    for (;;) {
+        r = archive_read_data_block(ar, &buff, &size, &offset);
+        if (r == ARCHIVE_EOF) return ARCHIVE_OK;
+        if (r < ARCHIVE_OK) return r;
+        r = archive_write_data_block(aw, buff, size, offset);
+        if (r < ARCHIVE_OK) return r;
+    }
 }
 
 void AppController::extractItem(const QString &path)
 {
     if (path.isEmpty()) return;
-    QFileInfo fi(path); QString dir = fi.absolutePath(); QString ext = fi.suffix().toLower();
-    QString cmd; QStringList args;
-    if (ext == "zip") { cmd = "unzip"; args << path << "-d" << dir; }
-    else if (ext == "tar" || ext == "gz" || ext == "bz2" || ext == "xz") { cmd = "tar"; args << "-xf" << path << "-C" << dir; }
-    else { emit operationError("Unsupported archive format"); return; }
-    if (QProcess::startDetached(cmd, args, dir)) emit operationSuccess("Extracting...");
-    else emit operationError("Failed to start " + cmd);
+    QFileInfo fi(path); QString dir = fi.absolutePath();
+
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, path, dir]() {
+        struct archive *a;
+        struct archive *ext;
+        struct archive_entry *entry;
+        int flags = ARCHIVE_EXTRACT_TIME | ARCHIVE_EXTRACT_PERM | ARCHIVE_EXTRACT_ACL | ARCHIVE_EXTRACT_FFLAGS;
+        int r;
+
+        a = archive_read_new();
+        archive_read_support_format_all(a);
+        archive_read_support_filter_all(a);
+        ext = archive_write_disk_new();
+        archive_write_disk_set_options(ext, flags);
+        archive_write_disk_set_standard_lookup(ext);
+
+        bool success = true;
+        if ((r = archive_read_open_filename(a, path.toStdString().c_str(), 10240))) {
+            success = false;
+        } else {
+            // Change dir before extraction
+            chdir(dir.toStdString().c_str());
+            for (;;) {
+                r = archive_read_next_header(a, &entry);
+                if (r == ARCHIVE_EOF) break;
+                if (r < ARCHIVE_OK) if (r < ARCHIVE_WARN) { success = false; break; }
+                r = archive_write_header(ext, entry);
+                if (r < ARCHIVE_OK) {
+                    if (r < ARCHIVE_WARN) { success = false; break; }
+                } else if (archive_entry_size(entry) > 0) {
+                    r = copy_data(a, ext);
+                    if (r < ARCHIVE_OK) if (r < ARCHIVE_WARN) { success = false; break; }
+                }
+                r = archive_write_finish_entry(ext);
+                if (r < ARCHIVE_OK) if (r < ARCHIVE_WARN) { success = false; break; }
+            }
+        }
+        archive_read_close(a);
+        archive_read_free(a);
+        archive_write_close(ext);
+        archive_write_free(ext);
+
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, success]() {
+                if (success) { safeThis->refresh(); emit safeThis->operationSuccess("Extracted successfully"); }
+                else emit safeThis->operationError("Extraction failed");
+            }, Qt::QueuedConnection);
+        }
+    });
 }
 
 void AppController::openInCode(const QString &path) { 
@@ -997,6 +1663,74 @@ void AppController::removeBookmarkByPath(const QString &path) {
 bool AppController::isBookmarked(const QString &path) const {
     if (!m_placesModel || path.isEmpty()) return false;
     return m_placesModel->isBookmarked(path);
+}
+
+void AppController::connectRemote(const QString &url) {
+    if (url.isEmpty()) return;
+    
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, url]() {
+        QProcess proc;
+        proc.start("gio", QStringList() << "mount" << url);
+        proc.waitForFinished(-1);
+        bool success = (proc.exitCode() == 0);
+        
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, success, url]() {
+                if (success) {
+                    emit safeThis->operationSuccess("Connected to " + url);
+                    
+                    // Attempt to find the mount path
+                    // Usually /run/user/UID/gvfs/NAME
+                    // We can check mounted volumes
+                    QTimer::singleShot(1000, safeThis, [safeThis, url]() {
+                        for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
+                            if (storage.isValid() && storage.isReady()) {
+                                if (storage.rootPath().contains("gvfs")) {
+                                    // Try to match URL to mount path
+                                    // This is a bit heuristical but often works
+                                    safeThis->openPath(storage.rootPath());
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    emit safeThis->operationError("Failed to connect to " + url);
+                }
+            }, Qt::QueuedConnection);
+        }
+    });
+}
+
+void AppController::mountRemote(const QString &url) { connectRemote(url); }
+
+void AppController::dropItems(const QStringList &paths, const QString &targetDir, bool isCopy)
+{
+    if (paths.isEmpty() || targetDir.isEmpty()) return;
+    
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, paths, targetDir, isCopy]() {
+        for (const QString &src : paths) {
+            QString cleanSrc = src;
+            if (cleanSrc.startsWith("file://")) cleanSrc = QUrl(src).toLocalFile();
+            
+            QFileInfo fi(cleanSrc);
+            QString dest = targetDir + "/" + fi.fileName();
+            
+            if (isCopy) {
+                FileSystemEngine::copyPath(cleanSrc.toStdString(), dest.toStdString(), nullptr);
+            } else {
+                FileSystemEngine::movePath(cleanSrc.toStdString(), dest.toStdString());
+            }
+        }
+        
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis]() {
+                if (safeThis) safeThis->refresh();
+            }, Qt::QueuedConnection);
+        }
+    });
 }
 void AppController::toggleBookmark(const QString &path, const QString &name) {
     if (!m_placesModel || path.isEmpty()) return;
@@ -1072,28 +1806,31 @@ void AppController::setPermissions(const QString &path, const QString &mode)
 
 void AppController::setWallpaper(const QString &path)
 {
+    const QString targetPath = safePath(path);
+    if (targetPath.isEmpty()) return;
+
     QString desktop = QProcessEnvironment::systemEnvironment().value("XDG_CURRENT_DESKTOP").toLower();
     if (desktop.contains("gnome") || desktop.contains("unity")) { 
-        QProcess::startDetached("gsettings", {"set", "org.gnome.desktop.background", "picture-uri", "file://" + path}); 
-        QProcess::startDetached("gsettings", {"set", "org.gnome.desktop.background", "picture-uri-dark", "file://" + path}); 
+        QProcess::startDetached("gsettings", {"set", "org.gnome.desktop.background", "picture-uri", "file://" + targetPath}); 
+        QProcess::startDetached("gsettings", {"set", "org.gnome.desktop.background", "picture-uri-dark", "file://" + targetPath}); 
     }
     else if (desktop.contains("kde") || desktop.contains("plasma")) {
+        // Use a safer way to pass the script to qdbus
         QString script = QString("var allDesktops = desktops();"
                                  "for (i=0;i<allDesktops.length;i++) {"
                                  "    d = allDesktops[i];"
                                  "    d.wallpaperPlugin = \"org.kde.image\";"
                                  "    d.currentConfigGroup = Array(\"Wallpaper\", \"org.kde.image\", \"General\");"
                                  "    d.writeConfig(\"Image\", \"file://%1\");"
-                                 "}").arg(path);
+                                 "}").arg(targetPath);
         QProcess::startDetached("qdbus", {"org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", script});
     }
-    else { if (QProcess::startDetached("feh", {"--bg-scale", path})) emit operationSuccess("Wallpaper set (feh)"); else emit operationError("Could not set wallpaper (try installing feh)"); }
-}
-
-void AppController::mountRemote(const QString &url)
-{
-    if (QProcess::startDetached("gio", {"mount", url})) emit operationSuccess("Mounting " + url + "...");
-    else emit operationError("Failed to mount remote");
+    else { 
+        if (QProcess::startDetached("feh", {"--bg-scale", targetPath})) 
+            emit operationSuccess("Wallpaper set (feh)"); 
+        else 
+            emit operationError("Could not set wallpaper (try installing feh)"); 
+    }
 }
 
 void AppController::loadRecentSearches()

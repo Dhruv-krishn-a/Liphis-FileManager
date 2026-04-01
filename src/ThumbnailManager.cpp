@@ -11,6 +11,7 @@
 #include <QUrl>
 #include <QProcess>
 #include <QMutexLocker>
+#include <QThread>
 
 namespace {
 QString getStandardThumbnailPath(const QString &filePath) {
@@ -34,7 +35,7 @@ ThumbnailManager::ThumbnailManager(QObject *parent)
     : QObject(parent),
       m_memCache(32 * 1024) // 32MB limit for thumbs
 {
-    m_maxConcurrentJobs = 4;
+    m_maxConcurrentJobs = qMax(4, QThread::idealThreadCount());
     QString baseCache = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
     if (baseCache.isEmpty()) baseCache = QDir::homePath() + "/.cache";
     m_diskCacheDir = QDir(baseCache).filePath("liphis_thumbs");

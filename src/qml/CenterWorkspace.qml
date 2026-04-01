@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Liphis.Core 1.0
 
 SplitView {
     id: root
@@ -13,6 +14,9 @@ SplitView {
     property var itemMenuHandler: null
     property bool splitVisible: false
     property string splitPath: ""
+    property var docIntelController: null
+    property var toastManager: null
+    property var lastFileController: null
 
     signal controllerChanged(var controller)
 
@@ -33,7 +37,25 @@ SplitView {
     function addTab(path) {
         var normalized = normalizePath(path)
         if (!normalized || normalized.length === 0) return
-        tabModel.append({"title": normalized.split('/').pop() || "Root", "path": normalized})
+        tabModel.append({"title": normalized.split('/').pop() || "Root", "path": normalized, "kind": "file", "section": ""})
+        tabView.currentIndex = tabModel.count - 1
+    }
+
+    function openDocCenter(section) {
+        var targetSection = section && section.length > 0 ? section : "inbox"
+        for (var i = 0; i < tabModel.count; ++i) {
+            if (tabModel.get(i).kind === "doc_center") {
+                tabModel.setProperty(i, "section", targetSection)
+                tabView.currentIndex = i
+                return
+            }
+        }
+        tabModel.append({
+            "title": "Document Center",
+            "path": "",
+            "kind": "doc_center",
+            "section": targetSection
+        })
         tabView.currentIndex = tabModel.count - 1
     }
 
@@ -47,13 +69,44 @@ SplitView {
         }
     }
 
+    function closeCurrentTab() {
+        var idx = tabView.currentIndex
+        if (idx >= 0 && idx < tabModel.count) {
+            tabModel.remove(idx)
+            if (tabModel.count === 0) {
+                tabModel.append({"title": "Home", "path": root.homePath, "kind": "file", "section": ""})
+                tabView.currentIndex = 0
+            } else if (tabView.currentIndex >= tabModel.count) {
+                tabView.currentIndex = tabModel.count - 1
+            }
+        }
+    }
+
     function updateActiveController() {
         if (tabView.count > tabView.currentIndex && tabView.currentIndex >= 0) {
             var view = tabRepeater.itemAt(tabView.currentIndex)
             if (view) {
+                if (view.kind === "doc_center") {
+                    root.activeView = null
+                    if (root.lastFileController && root.activeController !== root.lastFileController) {
+                        root.activeController = root.lastFileController
+                        root.controllerChanged(root.activeController)
+                    }
+                    return
+                }
+
                 root.activeView = view
-                root.activeController = view.controller
-                root.controllerChanged(root.activeController)
+                var controllerRef = null
+                if (view.item && view.item.controller !== undefined && view.item.controller !== null) {
+                    controllerRef = view.item.controller
+                } else if (view.controller !== undefined && view.controller !== null) {
+                    controllerRef = view.controller
+                }
+                if (controllerRef !== null && controllerRef.openPath !== undefined) {
+                    root.lastFileController = controllerRef
+                    root.activeController = controllerRef
+                    root.controllerChanged(root.activeController)
+                }
             }
         }
     }
@@ -75,7 +128,7 @@ SplitView {
                 onTabClosed: (index) => {
                     tabModel.remove(index)
                     if (tabModel.count === 0) {
-                        tabModel.append({"title": "Home", "path": root.homePath})
+                        tabModel.append({"title": "Home", "path": root.homePath, "kind": "file", "section": ""})
                         tabView.currentIndex = 0
                     } else if (tabView.currentIndex >= tabModel.count) {
                         tabView.currentIndex = tabModel.count - 1
@@ -110,16 +163,38 @@ SplitView {
                             id: tabRepeater
                             model: tabModel
 
+                            Loader {
+                                active: true
+                                sourceComponent: model.kind === "doc_center" ? docCenterComponent : fileViewComponent
+
+                                property int tabIndex: index
+                                property var tabModelData: model
+                                property string kind: model.kind
+                            }
+                        }
+
+                        Component {
+                            id: fileViewComponent
                             FileView {
-                                initialPath: model.path
+                                initialPath: parent.tabModelData.path
                                 theme: root.theme
                                 itemMenuHandler: root.itemMenuHandler
-                                onRequestedActive: tabView.currentIndex = index
+                                onRequestedActive: tabView.currentIndex = parent.tabIndex
                                 onTabTitleChanged: (title) => {
-                                    if (index >= 0 && index < tabModel.count && title && title.length > 0) {
-                                        tabModel.setProperty(index, "title", title)
+                                    if (parent.tabIndex >= 0 && parent.tabIndex < tabModel.count && title && title.length > 0) {
+                                        tabModel.setProperty(parent.tabIndex, "title", title)
                                     }
                                 }
+                            }
+                        }
+
+                        Component {
+                            id: docCenterComponent
+                            DocumentCenterPage {
+                                theme: root.theme
+                                controller: root.docIntelController
+                                toastManager: root.toastManager
+                                section: parent.tabModelData.section
                             }
                         }
                     }
@@ -148,58 +223,100 @@ SplitView {
             }
 
             ListModel {
-                id: tabModel
-                Component.onCompleted: append({"title": "Home", "path": root.normalizePath(root.homePath)})
-            }
+            id: tabModel
+            Component.onCompleted: append({"title": "Home", "path": root.normalizePath(root.homePath), "kind": "file", "section": ""})
         }
     }
+    }
 
+    // Terminal Panel
     Rectangle {
+        id: terminalPanel
         SplitView.preferredHeight: 220
         SplitView.fillWidth: true
         visible: root.terminalVisible
         color: theme.surface
+        
+        TerminalManager {
+            id: terminalManager
+        }
 
         ColumnLayout {
             anchors.fill: parent
             spacing: 0
 
+            // Terminal Toolbar
             Rectangle {
                 Layout.fillWidth: true
                 height: 32
                 color: theme.surfaceRaised
-
-                Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: theme ? theme.space16 : 16
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "TERMINAL"
-                    color: theme.textSecondary
-                    font.pixelSize: theme ? theme.fontLabel : 10
-                    font.bold: true
-                    font.letterSpacing: theme ? theme.letterSpacingLabel : 1
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 12
+                    Text { text: "TERMINAL - " + (terminalManager.currentDir || ""); color: theme.textSecondary; font.pixelSize: 10; font.bold: true; font.letterSpacing: 1 }
+                    Item { Layout.fillWidth: true }
+                    ThemedIconButton { theme: root.theme; iconName: "trash"; iconSize: 12; onClicked: terminalManager.clear() }
                 }
-
-                Rectangle {
-                    anchors.bottom: parent.bottom
-                    width: parent.width
-                    height: 1
-                    color: theme.border
-                }
+                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: theme.border }
             }
 
             ScrollView {
+                id: terminalScroll
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
+                clip: true
+                
                 TextArea {
+                    id: terminalOutput
+                    text: terminalManager.output
                     readOnly: true
-                    text: "liphis@linux:~$ _"
                     font.family: "Monospace"
-                    font.pixelSize: 13
+                    font.pixelSize: 12
                     color: theme.success
                     background: null
-                    padding: theme ? theme.space12 : 12
+                    wrapMode: TextArea.Wrap
+                    padding: 12
+                    onTextChanged: {
+                        terminalScroll.ScrollBar.vertical.position = 1.0
+                    }
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 36
+                color: theme.surfaceMuted
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 12
+                    spacing: 8
+                    Text { text: "$"; color: theme.accent; font.family: "Monospace"; font.bold: true }
+                    TextField {
+                        id: terminalInput
+                        Layout.fillWidth: true
+                        font.family: "Monospace"
+                        font.pixelSize: 12
+                        color: theme.textPrimary
+                        background: null
+                        placeholderText: "Enter command..."
+                        selectByMouse: true
+                        onAccepted: {
+                            if (text.trim().length > 0) {
+                                terminalManager.sendCommand(text)
+                                text = ""
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Connections {
+            target: root
+            function onActiveControllerChanged() {
+                if (root.activeController && root.activeController.currentPath) {
+                    terminalManager.currentDir = root.activeController.currentPath
                 }
             }
         }

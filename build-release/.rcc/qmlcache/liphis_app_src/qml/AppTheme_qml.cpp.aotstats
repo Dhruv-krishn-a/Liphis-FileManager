@@ -8,48 +8,48 @@
                         {
                             "codegenResult": 0,
                             "column": 24,
-                            "durationMicroseconds": 0,
+                            "durationMicroseconds": 3000,
                             "functionName": "bg",
                             "line": 9,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 33,
+                            "column": 29,
                             "durationMicroseconds": 0,
-                            "functionName": "surfaceMain",
+                            "functionName": "surface",
                             "line": 10,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 37,
+                            "column": 35,
                             "durationMicroseconds": 0,
-                            "functionName": "surfaceElevated",
+                            "functionName": "surfaceRaised",
                             "line": 11,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 38,
+                            "column": 34,
                             "durationMicroseconds": 0,
-                            "functionName": "surfaceSecondary",
+                            "functionName": "surfaceMuted",
                             "line": 12,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 31,
+                            "column": 29,
                             "durationMicroseconds": 0,
-                            "functionName": "sidebarBg",
+                            "functionName": "sidebar",
                             "line": 13,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 30,
+                            "column": 28,
                             "durationMicroseconds": 0,
-                            "functionName": "headerBg",
+                            "functionName": "header",
                             "line": 14,
                             "message": ""
                         },
@@ -87,10 +87,26 @@
                         },
                         {
                             "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "textTertiary",
+                            "line": 21,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "textMuted",
-                            "line": 21,
+                            "line": 22,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "textPlaceholder",
+                            "line": 23,
                             "message": ""
                         },
                         {
@@ -98,7 +114,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "accent",
-                            "line": 23,
+                            "line": 25,
                             "message": ""
                         },
                         {
@@ -106,14 +122,6 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "accentSoft",
-                            "line": 24,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 29,
-                            "durationMicroseconds": 0,
-                            "functionName": "success",
                             "line": 26,
                             "message": ""
                         },
@@ -121,8 +129,16 @@
                             "codegenResult": 0,
                             "column": 29,
                             "durationMicroseconds": 0,
+                            "functionName": "success",
+                            "line": 28,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 29,
+                            "durationMicroseconds": 0,
                             "functionName": "warning",
-                            "line": 27,
+                            "line": 29,
                             "message": ""
                         },
                         {
@@ -130,24 +146,120 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "error",
-                            "line": 28,
+                            "line": 30,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 4000,
+                            "functionName": "hover",
+                            "line": 32,
+                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: conversion to QVariant -> QColor stored as QVariant"
                         },
                         {
                             "codegenResult": 2,
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "selection",
-                            "line": 30,
+                            "line": 33,
                             "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: conversion to QVariant -> QColor stored as QVariant"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 27,
+                            "column": 29,
                             "durationMicroseconds": 0,
-                            "functionName": "hover",
-                            "line": 31,
+                            "functionName": "pressed",
+                            "line": 35,
                             "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: conversion to QVariant -> QColor stored as QVariant"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 33,
+                            "durationMicroseconds": 0,
+                            "functionName": "surfaceMain",
+                            "line": 89,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "surfaceElevated",
+                            "line": 90,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "surfaceSecondary",
+                            "line": 91,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "sidebarBg",
+                            "line": 92,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "headerBg",
+                            "line": 93,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 95,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "radiusLarge",
+                            "line": 96,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "radiusSmall",
+                            "line": 97,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacingSmall",
+                            "line": 99,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 33,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacingMedium",
+                            "line": 100,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacingLarge",
+                            "line": 101,
+                            "message": ""
                         }
                     ],
                     "filePath": "/home/dhruv/Liphis/src/qml/AppTheme.qml"

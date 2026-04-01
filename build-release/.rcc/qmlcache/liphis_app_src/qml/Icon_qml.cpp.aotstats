@@ -7,10 +7,26 @@
                     "entries": [
                         {
                             "codegenResult": 0,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitWidth",
+                            "line": 12,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitHeight",
+                            "line": 13,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
                             "column": 12,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 10,
+                            "line": 14,
                             "message": ""
                         },
                         {
@@ -18,7 +34,71 @@
                             "column": 13,
                             "durationMicroseconds": 0,
                             "functionName": "height",
-                            "line": 11,
+                            "line": 15,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "mappedIconName",
+                            "line": 17,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "localAsset",
+                            "line": 45,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "filledAsset",
+                            "line": 109,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "iconTheme",
+                            "line": 116,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "assetSource",
+                            "line": 117,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 122,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 19,
+                            "durationMicroseconds": 0,
+                            "functionName": "fillMode",
+                            "line": 127,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "smooth",
+                            "line": 128,
                             "message": ""
                         },
                         {
@@ -26,24 +106,56 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 14,
+                            "line": 121,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 24,
+                            "column": 27,
                             "durationMicroseconds": 0,
-                            "functionName": "fillColor",
-                            "line": 16,
+                            "functionName": "width",
+                            "line": 125,
                             "message": ""
                         },
                         {
-                            "codegenResult": 2,
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "height",
+                            "line": 126,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 135,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 136,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 137,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
                             "column": 23,
-                            "durationMicroseconds": 1000,
-                            "functionName": "path",
-                            "line": 23,
-                            "message": "Cannot access value for name name"
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 134,
+                            "message": ""
                         }
                     ],
                     "filePath": "/home/dhruv/Liphis/src/qml/Icon.qml"

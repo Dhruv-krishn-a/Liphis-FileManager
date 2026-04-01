@@ -2,6 +2,7 @@
 #include <QJSValue>
 #include <QJSEngine>
 #include <QDebug>
+#include <QKeySequence>
 
 CommandModel::CommandModel(QObject *parent) : QAbstractListModel(parent) {}
 
@@ -79,42 +80,73 @@ void CommandManager::registerCommandCpp(const QString &id, const QString &catego
 
 void CommandManager::updateFilteredModel() {
     if (m_filter.isEmpty()) {
-        m_filteredModel->setCommands(m_allCommands);
+        QList<CommandEntry> sorted = m_allCommands;
+        std::sort(sorted.begin(), sorted.end(), [](const CommandEntry &a, const CommandEntry &b) {
+            if (a.category != b.category) return a.category < b.category;
+            return a.label < b.label;
+        });
+        m_filteredModel->setCommands(sorted);
         return;
     }
 
     QList<CommandEntry> filtered;
     QString f = m_filter.toLower();
+    
+    // Check for category prefix '@'
+    QString categoryFilter;
+    QString termFilter = f;
+    if (f.startsWith("@")) {
+        int spaceIdx = f.indexOf(" ");
+        if (spaceIdx > 0) {
+            categoryFilter = f.mid(1, spaceIdx - 1);
+            termFilter = f.mid(spaceIdx + 1);
+        } else {
+            categoryFilter = f.mid(1);
+            termFilter = "";
+        }
+    }
+
     for (auto c : m_allCommands) {
+        if (!categoryFilter.isEmpty() && !c.category.toLower().startsWith(categoryFilter)) continue;
+        
+        if (termFilter.isEmpty()) {
+            c.score = 100;
+            filtered.append(c);
+            continue;
+        }
+
         QString full = (c.category + ": " + c.label).toLower();
+        QString label = c.label.toLower();
         int score = 0;
         
-        if (full.contains(f)) {
-            // Priority: Starts with > Exact substring > Fuzzy match
-            if (full.startsWith(f)) score = 100;
+        if (label.contains(termFilter)) {
+            if (label.startsWith(termFilter)) score = 200;
+            else score = 150;
+        } else if (full.contains(termFilter)) {
+            if (full.startsWith(termFilter)) score = 100;
             else score = 50;
-            
-            c.score = score;
-            filtered.append(c);
         } else {
-            // Basic fuzzy: check if characters appear in order
+            // Basic fuzzy match
             int lastIdx = 0;
             bool match = true;
-            for (int i = 0; i < f.length(); ++i) {
-                int idx = full.indexOf(f[i], lastIdx);
+            for (int i = 0; i < termFilter.length(); ++i) {
+                int idx = full.indexOf(termFilter[i], lastIdx);
                 if (idx < 0) { match = false; break; }
                 lastIdx = idx + 1;
             }
-            if (match) {
-                c.score = 10;
-                filtered.append(c);
-            }
+            if (match) score = 10;
+        }
+        
+        if (score > 0) {
+            c.score = score;
+            filtered.append(c);
         }
     }
     
     // Sort by score (descending)
     std::sort(filtered.begin(), filtered.end(), [](const CommandEntry &a, const CommandEntry &b) {
         if (a.score != b.score) return a.score > b.score;
+        if (a.category != b.category) return a.category < b.category;
         return a.label < b.label;
     });
     
@@ -135,4 +167,42 @@ void CommandManager::executeCommandById(const QString &id) {
             return;
         }
     }
+}
+
+void CommandManager::updateCommandShortcut(const QString &id, const QString &shortcut)
+{
+    bool changed = false;
+    for (auto &c : m_allCommands) {
+        if (c.id == id) {
+            if (c.shortcut != shortcut) {
+                c.shortcut = shortcut;
+                changed = true;
+            }
+            break;
+        }
+    }
+    if (changed) updateFilteredModel();
+}
+
+void CommandManager::clearCommands()
+{
+    m_allCommands.clear();
+    updateFilteredModel();
+}
+
+bool CommandManager::isValidShortcut(const QString &shortcut) const
+{
+    const QString s = shortcut.trimmed();
+    if (s.isEmpty()) return true;
+    QKeySequence ks(s, QKeySequence::PortableText);
+    return !ks.isEmpty() && !ks.toString(QKeySequence::PortableText).trimmed().isEmpty();
+}
+
+QString CommandManager::normalizeShortcut(const QString &shortcut) const
+{
+    const QString s = shortcut.trimmed();
+    if (s.isEmpty()) return "";
+    QKeySequence ks(s, QKeySequence::PortableText);
+    if (ks.isEmpty()) return "";
+    return ks.toString(QKeySequence::PortableText);
 }

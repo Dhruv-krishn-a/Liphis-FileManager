@@ -1,10 +1,13 @@
 /home/dhruv/Liphis/build-release/liphis_app_autogen/UVLADIE3JM/moc_AppController.cpp: /home/dhruv/Liphis/src/AppController.hpp \
   /home/dhruv/Liphis/build-release/liphis_app_autogen/moc_predefs.h \
+  /home/dhruv/Liphis/core/FileCommand.hpp \
   /home/dhruv/Liphis/core/FileMeta.hpp \
+  /home/dhruv/Liphis/core/FileSystemEngine.hpp \
   /home/dhruv/Liphis/core/ThreadPool.hpp \
   /home/dhruv/Liphis/src/ThumbnailManager.hpp \
   /home/dhruv/Liphis/src/models/FileFilterProxyModel.hpp \
   /home/dhruv/Liphis/src/models/FileListModel.hpp \
+  /home/dhruv/Liphis/src/models/FileTreeModel.hpp \
   /home/dhruv/Liphis/src/models/PlacesModel.hpp \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
@@ -252,6 +255,7 @@
   /usr/include/c++/15.2.1/ext/numeric_traits.h \
   /usr/include/c++/15.2.1/ext/string_conversions.h \
   /usr/include/c++/15.2.1/ext/type_traits.h \
+  /usr/include/c++/15.2.1/filesystem \
   /usr/include/c++/15.2.1/format \
   /usr/include/c++/15.2.1/functional \
   /usr/include/c++/15.2.1/future \
@@ -348,9 +352,11 @@
   /usr/include/qt6/QtCore/QSet \
   /usr/include/qt6/QtCore/QSortFilterProxyModel \
   /usr/include/qt6/QtCore/QString \
+  /usr/include/qt6/QtCore/QStringList \
   /usr/include/qt6/QtCore/QVariant \
   /usr/include/qt6/QtCore/QVariantMap \
   /usr/include/qt6/QtCore/q17memory.h \
+  /usr/include/qt6/QtCore/q20bit.h \
   /usr/include/qt6/QtCore/q20functional.h \
   /usr/include/qt6/QtCore/q20iterator.h \
   /usr/include/qt6/QtCore/q20memory.h \
@@ -376,6 +382,7 @@
   /usr/include/qt6/QtCore/qbytearraylist.h \
   /usr/include/qt6/QtCore/qbytearrayview.h \
   /usr/include/qt6/QtCore/qcache.h \
+  /usr/include/qt6/QtCore/qcalendar.h \
   /usr/include/qt6/QtCore/qchar.h \
   /usr/include/qt6/QtCore/qcheckedint_impl.h \
   /usr/include/qt6/QtCore/qcompare.h \
@@ -390,9 +397,15 @@
   /usr/include/qt6/QtCore/qcontiguouscache.h \
   /usr/include/qt6/QtCore/qdarwinhelpers.h \
   /usr/include/qt6/QtCore/qdatastream.h \
+  /usr/include/qt6/QtCore/qdatetime.h \
   /usr/include/qt6/QtCore/qdeadlinetimer.h \
   /usr/include/qt6/QtCore/qdebug.h \
+  /usr/include/qt6/QtCore/qdir.h \
+  /usr/include/qt6/QtCore/qdirlisting.h \
   /usr/include/qt6/QtCore/qexceptionhandling.h \
+  /usr/include/qt6/QtCore/qfile.h \
+  /usr/include/qt6/QtCore/qfiledevice.h \
+  /usr/include/qt6/QtCore/qfileinfo.h \
   /usr/include/qt6/QtCore/qfilesystemwatcher.h \
   /usr/include/qt6/QtCore/qflags.h \
   /usr/include/qt6/QtCore/qfloat16.h \
@@ -404,12 +417,14 @@
   /usr/include/qt6/QtCore/qglobalstatic.h \
   /usr/include/qt6/QtCore/qhash.h \
   /usr/include/qt6/QtCore/qhashfunctions.h \
+  /usr/include/qt6/QtCore/qiodevice.h \
   /usr/include/qt6/QtCore/qiodevicebase.h \
   /usr/include/qt6/QtCore/qiterable.h \
   /usr/include/qt6/QtCore/qiterator.h \
   /usr/include/qt6/QtCore/qlatin1stringview.h \
   /usr/include/qt6/QtCore/qline.h \
   /usr/include/qt6/QtCore/qlist.h \
+  /usr/include/qt6/QtCore/qlocale.h \
   /usr/include/qt6/QtCore/qlogging.h \
   /usr/include/qt6/QtCore/qmalloc.h \
   /usr/include/qt6/QtCore/qmap.h \
@@ -469,6 +484,7 @@
   /usr/include/qt6/QtCore/qtenvironmentvariables.h \
   /usr/include/qt6/QtCore/qtextstream.h \
   /usr/include/qt6/QtCore/qtformat_impl.h \
+  /usr/include/qt6/QtCore/qtimezone.h \
   /usr/include/qt6/QtCore/qtmetamacros.h \
   /usr/include/qt6/QtCore/qtnoop.h \
   /usr/include/qt6/QtCore/qtpreprocessorsupport.h \
@@ -487,11 +503,15 @@
   /usr/include/qt6/QtCore/qversiontagging.h \
   /usr/include/qt6/QtCore/qxptype_traits.h \
   /usr/include/qt6/QtCore/qyieldcpu.h \
+  /usr/include/qt6/QtGui/QFileSystemModel \
   /usr/include/qt6/QtGui/QImage \
   /usr/include/qt6/QtGui/qcolor.h \
+  /usr/include/qt6/QtGui/qfilesystemmodel.h \
+  /usr/include/qt6/QtGui/qicon.h \
   /usr/include/qt6/QtGui/qimage.h \
   /usr/include/qt6/QtGui/qpaintdevice.h \
   /usr/include/qt6/QtGui/qpixelformat.h \
+  /usr/include/qt6/QtGui/qpixmap.h \
   /usr/include/qt6/QtGui/qpolygon.h \
   /usr/include/qt6/QtGui/qregion.h \
   /usr/include/qt6/QtGui/qrgb.h \

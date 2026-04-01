@@ -17,16 +17,17 @@ FileFilterProxyModel::FileFilterProxyModel(QObject *parent)
     connect(this, &QAbstractItemModel::layoutChanged, this, &FileFilterProxyModel::countChanged);
 }
 
-void FileFilterProxyModel::setSortBy(const QString &roleName)
+void FileFilterProxyModel::setSortBy(const QString &roleName, bool ascending)
 {
     if (roleName == "name") setSortRole(FileListModel::NameRole);
     else if (roleName == "date") setSortRole(FileListModel::MTimeRole);
     else if (roleName == "size") setSortRole(FileListModel::SizeRole);
-    sort(0, sortOrder());
+    
+    sort(0, ascending ? Qt::AscendingOrder : Qt::DescendingOrder);
 }
 
-void FileFilterProxyModel::beginFilterChange() { beginResetModel(); }
-void FileFilterProxyModel::endFilterChange() { endResetModel(); }
+void FileFilterProxyModel::beginFilterChange() { }
+void FileFilterProxyModel::endFilterChange() { invalidateFilter(); }
 
 bool FileFilterProxyModel::showHidden() const { return m_showHidden; }
 void FileFilterProxyModel::setShowHidden(bool show) {
@@ -183,7 +184,8 @@ bool FileFilterProxyModel::lessThan(const QModelIndex &source_left, const QModel
     bool rightIsDir = sourceModel()->data(source_right, FileListModel::IsDirRole).toBool();
 
     if (leftIsDir != rightIsDir) {
-        return leftIsDir && !rightIsDir;
+        bool isLess = leftIsDir && !rightIsDir;
+        return sortOrder() == Qt::AscendingOrder ? isLess : !isLess;
     }
 
     const QString q = m_searchQuery.trimmed().toLower();
@@ -203,5 +205,12 @@ bool FileFilterProxyModel::lessThan(const QModelIndex &source_left, const QModel
         if (lr != rr) return lr < rr;
     }
 
-    return QSortFilterProxyModel::lessThan(source_left, source_right);
+    bool result = QSortFilterProxyModel::lessThan(source_left, source_right);
+    if (!result && !QSortFilterProxyModel::lessThan(source_right, source_left)) {
+        // Values are equal, fallback to name
+        const QString leftName = sourceModel()->data(source_left, FileListModel::NameRole).toString().toLower();
+        const QString rightName = sourceModel()->data(source_right, FileListModel::NameRole).toString().toLower();
+        return leftName < rightName;
+    }
+    return result;
 }

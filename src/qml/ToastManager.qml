@@ -63,7 +63,7 @@ Item {
                     anchors.centerIn: parent; spacing: 10
                     Icon { 
                         name: model.isError ? "close" : "info"
-                        size: 18; color: model.isError ? theme.error : theme.accent
+                        iconSize: 18; color: model.isError ? theme.error : theme.accent
                     }
                     Text {
                         id: msgText

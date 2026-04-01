@@ -64,6 +64,7 @@
 #define __BFLT16_MAX_10_EXP__ 38
 #define __BFLT16_MAX_EXP__ 128
 #define __LDBL_IS_IEC_60559__ 1
+#define QT_NO_DEBUG 1
 #define __FLT64X_HAS_QUIET_NAN__ 1
 #define __UINT_LEAST8_MAX__ 0xff
 #define __GCC_ATOMIC_BOOL_LOCK_FREE 2
@@ -374,6 +375,7 @@
 #define __FLT_MAX_EXP__ 128
 #define __ORDER_BIG_ENDIAN__ 4321
 #define __DBL_MANT_DIG__ 53
+#define QT_CORE_LIB 1
 #define __SIZEOF_FLOAT128__ 16
 #define __BFLT16_MANT_DIG__ 8
 #define __DEC64_MIN__ 1E-383DD

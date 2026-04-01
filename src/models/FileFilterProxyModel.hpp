@@ -19,7 +19,7 @@ class FileFilterProxyModel : public QSortFilterProxyModel
 public:
     explicit FileFilterProxyModel(QObject *parent = nullptr);
 
-    Q_INVOKABLE void setSortBy(const QString &roleName);
+    Q_INVOKABLE void setSortBy(const QString &roleName, bool ascending = true);
 
     bool showHidden() const;
     void setShowHidden(bool show);

@@ -10,10 +10,15 @@ Rectangle {
     property string activePath: ""
     property string homePath: ""
     property bool expanded: true
+    property var activeController: null
+    property var docIntelController: null
 
     signal pathActivated(string path)
     signal removeBookmarkRequested(string path)
     signal toggleExpanded()
+    signal openDocInboxRequested()
+    signal openDocDuplicatesRequested()
+    signal openDocHealthRequested()
 
     color: theme.sidebar
 
@@ -106,6 +111,109 @@ Rectangle {
                 expanded: root.expanded
                 onClicked: root.pathActivated(model.path)
                 onActionClicked: root.removeBookmarkRequested(model.path)
+            }
+        }
+
+        // Clipboard Status
+        Rectangle {
+            visible: !!(root.docIntelController && root.expanded)
+            Layout.fillWidth: true
+            Layout.preferredHeight: 84
+            color: theme.surfaceMuted
+            border.color: theme.border
+            border.width: 1
+            radius: 8
+            Layout.leftMargin: 8
+            Layout.rightMargin: 8
+            Layout.bottomMargin: 8
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 8
+                spacing: 6
+                Text {
+                    text: "DOC INTEL"
+                    color: theme.textMuted
+                    font.pixelSize: 10
+                    font.bold: true
+                    font.letterSpacing: 1.0
+                }
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+                    Button {
+                        text: "Inbox"
+                        Layout.fillWidth: true
+                        onClicked: root.openDocInboxRequested()
+                        background: Rectangle { radius: 6; color: parent.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    }
+                    Button {
+                        text: "Dupes"
+                        Layout.fillWidth: true
+                        onClicked: root.openDocDuplicatesRequested()
+                        background: Rectangle { radius: 6; color: parent.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    }
+                    Button {
+                        text: "Health"
+                        Layout.fillWidth: true
+                        onClicked: root.openDocHealthRequested()
+                        background: Rectangle { radius: 6; color: parent.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            id: clipboardBar
+            visible: !!(root.activeController && root.activeController.hasClipboard)
+            Layout.fillWidth: true
+            Layout.preferredHeight: root.expanded ? 64 : 50
+            color: theme.surfaceMuted
+            border.color: theme.border
+            border.width: 1
+            radius: 8
+            Layout.margins: 8
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.margins: 8
+                spacing: 8
+
+                Icon {
+                    name: root.activeController && root.activeController.isCutOp ? "cut" : "copy"
+                    iconSize: 16
+                    color: theme.accent
+                }
+
+                Column {
+                    Layout.fillWidth: true
+                    visible: root.expanded
+                    Text {
+                        text: root.activeController && root.activeController.isCutOp ? "Cut Pending" : "Copy Pending"
+                        color: theme.textSecondary
+                        font.pixelSize: 10
+                        font.bold: true
+                    }
+                    Text {
+                        text: {
+                            if (!root.activeController || !root.activeController.clipboardPaths || root.activeController.clipboardPaths.length === 0) return ""
+                            let p = root.activeController.clipboardPaths[0]
+                            return p.substring(p.lastIndexOf("/") + 1)
+                        }
+                        color: theme.textPrimary
+                        font.pixelSize: 12
+                        elide: Text.ElideMiddle
+                        width: parent.width
+                    }
+                }
+
+                ThemedIconButton {
+                    theme: root.theme
+                    iconName: "close"
+                    iconSize: 14
+                    toolTip: "Clear Clipboard"
+                    onClicked: root.activeController.clearClipboard()
+                }
             }
         }
     }

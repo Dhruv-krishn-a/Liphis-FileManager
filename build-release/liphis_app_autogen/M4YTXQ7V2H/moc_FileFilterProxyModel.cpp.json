@@ -3,6 +3,39 @@
         {
             "className": "FileFilterProxyModel",
             "lineNumber": 5,
+            "methods": [
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "roleName",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "ascending",
+                            "type": "bool"
+                        }
+                    ],
+                    "index": 10,
+                    "lineNumber": 22,
+                    "name": "setSortBy",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "roleName",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 11,
+                    "isCloned": true,
+                    "lineNumber": 22,
+                    "name": "setSortBy",
+                    "returnType": "void"
+                }
+            ],
             "object": true,
             "properties": [
                 {
@@ -13,12 +46,14 @@
                     "lineNumber": 8,
                     "name": "showHidden",
                     "notify": "showHiddenChanged",
+                    "override": false,
                     "read": "showHidden",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "bool",
                     "user": false,
+                    "virtual": false,
                     "write": "setShowHidden"
                 },
                 {
@@ -29,12 +64,14 @@
                     "lineNumber": 9,
                     "name": "minSize",
                     "notify": "minSizeChanged",
+                    "override": false,
                     "read": "minSize",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "qlonglong",
                     "user": false,
+                    "virtual": false,
                     "write": "setMinSize"
                 },
                 {
@@ -45,12 +82,14 @@
                     "lineNumber": 10,
                     "name": "maxSize",
                     "notify": "maxSizeChanged",
+                    "override": false,
                     "read": "maxSize",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "qlonglong",
                     "user": false,
+                    "virtual": false,
                     "write": "setMaxSize"
                 },
                 {
@@ -61,12 +100,14 @@
                     "lineNumber": 11,
                     "name": "minDate",
                     "notify": "minDateChanged",
+                    "override": false,
                     "read": "minDate",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "qlonglong",
                     "user": false,
+                    "virtual": false,
                     "write": "setMinDate"
                 },
                 {
@@ -77,12 +118,14 @@
                     "lineNumber": 12,
                     "name": "maxDate",
                     "notify": "maxDateChanged",
+                    "override": false,
                     "read": "maxDate",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "qlonglong",
                     "user": false,
+                    "virtual": false,
                     "write": "setMaxDate"
                 },
                 {
@@ -93,13 +136,86 @@
                     "lineNumber": 13,
                     "name": "extensionFilter",
                     "notify": "extensionFilterChanged",
+                    "override": false,
                     "read": "extensionFilter",
                     "required": false,
                     "scriptable": true,
                     "stored": true,
                     "type": "QString",
                     "user": false,
+                    "virtual": false,
                     "write": "setExtensionFilter"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 6,
+                    "lineNumber": 14,
+                    "name": "searchQuery",
+                    "notify": "searchQueryChanged",
+                    "override": false,
+                    "read": "searchQuery",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "QString",
+                    "user": false,
+                    "virtual": false,
+                    "write": "setSearchQuery"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 7,
+                    "lineNumber": 15,
+                    "name": "typeFilter",
+                    "notify": "typeFilterChanged",
+                    "override": false,
+                    "read": "typeFilter",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "QString",
+                    "user": false,
+                    "virtual": false,
+                    "write": "setTypeFilter"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 8,
+                    "lineNumber": 16,
+                    "name": "exactMatch",
+                    "notify": "exactMatchChanged",
+                    "override": false,
+                    "read": "exactMatch",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "bool",
+                    "user": false,
+                    "virtual": false,
+                    "write": "setExactMatch"
+                },
+                {
+                    "constant": false,
+                    "designable": true,
+                    "final": false,
+                    "index": 9,
+                    "lineNumber": 17,
+                    "name": "count",
+                    "notify": "countChanged",
+                    "override": false,
+                    "read": "rowCount",
+                    "required": false,
+                    "scriptable": true,
+                    "stored": true,
+                    "type": "int",
+                    "user": false,
+                    "virtual": false
                 }
             ],
             "qualifiedClassName": "FileFilterProxyModel",
@@ -107,43 +223,71 @@
                 {
                     "access": "public",
                     "index": 0,
-                    "lineNumber": 37,
+                    "lineNumber": 49,
                     "name": "showHiddenChanged",
                     "returnType": "void"
                 },
                 {
                     "access": "public",
                     "index": 1,
-                    "lineNumber": 38,
+                    "lineNumber": 50,
                     "name": "minSizeChanged",
                     "returnType": "void"
                 },
                 {
                     "access": "public",
                     "index": 2,
-                    "lineNumber": 39,
+                    "lineNumber": 51,
                     "name": "maxSizeChanged",
                     "returnType": "void"
                 },
                 {
                     "access": "public",
                     "index": 3,
-                    "lineNumber": 40,
+                    "lineNumber": 52,
                     "name": "minDateChanged",
                     "returnType": "void"
                 },
                 {
                     "access": "public",
                     "index": 4,
-                    "lineNumber": 41,
+                    "lineNumber": 53,
                     "name": "maxDateChanged",
                     "returnType": "void"
                 },
                 {
                     "access": "public",
                     "index": 5,
-                    "lineNumber": 42,
+                    "lineNumber": 54,
                     "name": "extensionFilterChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 6,
+                    "lineNumber": 55,
+                    "name": "searchQueryChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 7,
+                    "lineNumber": 56,
+                    "name": "typeFilterChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 8,
+                    "lineNumber": 57,
+                    "name": "exactMatchChanged",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 9,
+                    "lineNumber": 58,
+                    "name": "countChanged",
                     "returnType": "void"
                 }
             ],

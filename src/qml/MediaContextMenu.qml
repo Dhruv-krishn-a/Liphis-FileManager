@@ -39,13 +39,13 @@ Menu {
     }
 
     function iconSource(name) {
-        if (name === "media-playback-start") return "assets/icons/outline/player-play.svg"
-        if (name === "background") return "assets/icons/outline/background.svg"
-        if (name === "edit-cut") return "assets/icons/outline/scissors.svg"
-        if (name === "edit-copy") return "assets/icons/outline/copy.svg"
-        if (name === "edit-rename") return "assets/icons/outline/pencil.svg"
-        if (name === "user-trash") return "assets/icons/outline/trash.svg"
-        if (name === "document-properties") return "assets/icons/outline/list-details.svg"
+        if (name === "media-playback-start") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/player-play.svg"
+        if (name === "background") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/background.svg"
+        if (name === "edit-cut") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/scissors.svg"
+        if (name === "edit-copy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/copy.svg"
+        if (name === "edit-rename") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pencil.svg"
+        if (name === "user-trash") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
+        if (name === "document-properties") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
         return ""
     }
 
@@ -54,6 +54,12 @@ Menu {
         Component.onCompleted: root.compact(this)
         onTriggered: if (controller) controller.openPath(root.targetPath)
         icon.source: root.iconSource("media-playback-start")
+    }
+    MenuItem {
+        text: "Open With..."
+        Component.onCompleted: root.compact(this)
+        onTriggered: if (controller) controller.openWith(root.targetPath)
+        icon.source: root.iconSource("document-open")
     }
     
     MenuItem { 
@@ -106,7 +112,7 @@ Menu {
                 }
             }
             Item { Layout.fillWidth: true }
-            Icon { name: "tag"; size: 16; color: theme.textMuted }
+            Icon { name: "tag"; iconSize: 16; color: theme.textMuted }
         }
     }
 

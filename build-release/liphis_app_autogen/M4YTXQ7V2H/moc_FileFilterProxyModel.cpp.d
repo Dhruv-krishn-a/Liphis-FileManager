@@ -315,6 +315,7 @@
   /usr/include/pthread.h \
   /usr/include/qt6/QtCore/QSortFilterProxyModel \
   /usr/include/qt6/QtCore/q17memory.h \
+  /usr/include/qt6/QtCore/q20bit.h \
   /usr/include/qt6/QtCore/q20functional.h \
   /usr/include/qt6/QtCore/q20memory.h \
   /usr/include/qt6/QtCore/q20type_traits.h \

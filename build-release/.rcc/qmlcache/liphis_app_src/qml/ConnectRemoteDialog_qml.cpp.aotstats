@@ -7,10 +7,18 @@
                     "entries": [
                         {
                             "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "closePolicy",
+                            "line": 10,
+                            "message": "Could not find property \"closePolicy\"."
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "standardButtons",
-                            "line": 10,
+                            "line": 11,
                             "message": "Could not find property \"standardButtons\"."
                         },
                         {
@@ -18,7 +26,7 @@
                             "column": 15,
                             "durationMicroseconds": 0,
                             "functionName": "onOpened",
-                            "line": 24,
+                            "line": 25,
                             "message": "Could not find signal \"opened\"."
                         },
                         {
@@ -26,7 +34,7 @@
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "onAccepted",
-                            "line": 25,
+                            "line": 26,
                             "message": "Could not find signal \"accepted\"."
                         },
                         {
@@ -34,7 +42,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 15,
+                            "line": 16,
                             "message": ""
                         }
                     ],

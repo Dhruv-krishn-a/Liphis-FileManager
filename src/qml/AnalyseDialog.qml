@@ -10,6 +10,7 @@ Dialog {
     width: 640
     height: 720
     modal: true
+    closePolicy: Popup.CloseOnEscape
     anchors.centerIn: parent
     standardButtons: Dialog.NoButton
     
@@ -45,7 +46,20 @@ Dialog {
         currentItem = item
     }
 
-    function finish() {
+    function finish(result) {
+        var listedTotal = 0
+        for (var i = 0; i < listModel.count; ++i) {
+            var node = listModel.get(i)
+            listedTotal += (node && node.size !== undefined) ? Number(node.size) : 0
+        }
+        if (result && result.size !== undefined) {
+            liveSize = Math.max(Number(result.size), listedTotal)
+        } else {
+            liveSize = listedTotal
+        }
+        if (result && result.fileCount !== undefined) {
+            liveFiles = result.fileCount
+        }
         isScanning = false
     }
 
@@ -88,7 +102,7 @@ Dialog {
                     if (isScanning && analysisController) analysisController.cancel()
                     root.close()
                 }
-                contentItem: Icon { name: "close"; color: theme.textSecondary; anchors.centerIn: parent; size: 20 }
+                contentItem: Icon { name: "close"; color: theme.textSecondary; anchors.centerIn: parent; iconSize: 20 }
                 background: Rectangle { radius: theme.radiusSmall; color: parent.hovered ? theme.hover : "transparent" }
             }
         }
@@ -115,7 +129,7 @@ Dialog {
                 }
                 RowLayout {
                     visible: isScanning; spacing: 6
-                    Icon { name: "info"; color: theme.textMuted; size: 12 }
+                    Icon { name: "info"; color: theme.textMuted; iconSize: 12 }
                     Text { 
                         text: root.currentItem; font.pixelSize: 10; color: theme.textMuted; elide: Text.ElideMiddle; Layout.fillWidth: true 
                     }

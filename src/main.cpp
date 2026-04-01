@@ -7,6 +7,8 @@
 
 #include "AppController.hpp"
 #include "AnalysisController.hpp"
+#include "DocumentIntelligenceController.hpp"
+#include "TerminalManager.hpp"
 #include "CommandManager.hpp"
 #include "src/ThumbnailManager.hpp"
 #include "ThumbnailImageProvider.hpp"
@@ -16,9 +18,12 @@
 #include <QWindow>
 #include <QtQml>
 #include <unistd.h>
+#include <git2.h>
 
 int main(int argc, char **argv)
 {
+    git_libgit2_init();
+
     qputenv("QSG_RENDER_LOOP", "basic");
 
     const QByteArray lang = qgetenv("LANG");
@@ -42,7 +47,7 @@ int main(int argc, char **argv)
     const QString serverName = "liphis_app_singleton_" + QString::number(getuid());
     QLocalSocket socket;
     socket.connectToServer(serverName);
-    if (socket.waitForConnected(500)) {
+    if (socket.waitForConnected(120)) {
         if (argc > 1) {
             socket.write(argv[1]);
             socket.waitForBytesWritten(1000);
@@ -63,6 +68,10 @@ int main(int argc, char **argv)
     
     qmlRegisterType<AppController>("Liphis.Core", 1, 0, "AppController");
     qmlRegisterType<AnalysisController>("Liphis.Core", 1, 0, "AnalysisController");
+    qmlRegisterType<DocumentIntelligenceController>("Liphis.Core", 1, 0, "DocumentIntelligenceController");
+    qmlRegisterType<FileListModel>("Liphis.Core", 1, 0, "FileListModel");
+    qmlRegisterType<FileTreeModel>("Liphis.Core", 1, 0, "FileTreeModel");
+    qmlRegisterType<TerminalManager>("Liphis.Core", 1, 0, "TerminalManager");
 
     QQmlApplicationEngine engine;
     
@@ -102,5 +111,7 @@ int main(int argc, char **argv)
         }
     });
 
-    return app.exec();
+    int ret = app.exec();
+    git_libgit2_shutdown();
+    return ret;
 }

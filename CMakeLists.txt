@@ -8,7 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(GNUInstallDirs)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Core5Compat)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Core5Compat Sql)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGIT2 libgit2)
 pkg_check_modules(LIBARCHIVE libarchive)
@@ -24,7 +24,10 @@ qt_policy(SET QTP0004 NEW)
 add_library(liphis_core STATIC
     core/FileSystemEngine.cpp
     core/AnalysisEngine.cpp
+    core/FileCommand.cpp
 )
+
+target_link_libraries(liphis_core PRIVATE Qt6::Core)
 
 target_include_directories(liphis_core PUBLIC
     ${CMAKE_SOURCE_DIR}/core
@@ -39,12 +42,18 @@ qt_add_executable(liphis_app
     src/AppController.hpp
     src/AnalysisController.cpp
     src/AnalysisController.hpp
+    src/DocumentIntelligenceController.cpp
+    src/DocumentIntelligenceController.hpp
     src/SystemIconProvider.cpp
     src/SystemIconProvider.hpp
     src/models/FileListModel.cpp
     src/models/FileListModel.hpp
+    src/models/FileTreeModel.cpp
+    src/models/FileTreeModel.hpp
     src/models/FileFilterProxyModel.cpp
     src/models/FileFilterProxyModel.hpp
+    src/TerminalManager.cpp
+    src/TerminalManager.hpp
     src/models/PlacesModel.cpp
     src/models/PlacesModel.hpp
     src/ThumbnailManager.cpp
@@ -78,17 +87,27 @@ qt_add_qml_module(liphis_app
         src/qml/LeftSidebar.qml
         src/qml/TabStrip.qml
         src/qml/CenterWorkspace.qml
+        src/qml/DocumentCenterPage.qml
         src/qml/InspectorPanel.qml
         src/qml/StatusBar.qml
         src/qml/FileIcon.qml
         src/qml/Breadcrumbs.qml
+        src/qml/HeaderColumn.qml
+        src/qml/SettingsDialog.qml
+        src/qml/OpenWithDialog.qml
+        src/qml/ProgressDialog.qml
         src/qml/FileView.qml
         src/qml/PropertiesDialog.qml
         src/qml/AnalyseDialog.qml
+        src/qml/DocumentInboxDialog.qml
+        src/qml/DocumentDuplicatesDialog.qml
+        src/qml/DocumentHealthDialog.qml
+        src/qml/CanonicalNamingDialog.qml
         src/qml/ToastManager.qml
         src/qml/BulkRenameDialog.qml
         src/qml/ConnectRemoteDialog.qml
         src/qml/FolderContextMenu.qml
+        src/qml/DirectoryContextMenu.qml
         src/qml/FileContextMenu.qml
         src/qml/MediaContextMenu.qml
     RESOURCES
@@ -150,6 +169,11 @@ qt_add_qml_module(liphis_app
         src/qml/assets/icons/outline/music.svg
         src/qml/assets/icons/outline/photo.svg
         src/qml/assets/icons/outline/video.svg
+        src/qml/assets/icons/outline/download.svg
+        src/qml/assets/icons/outline/chevron-right.svg
+        src/qml/assets/icons/outline/chevron-down.svg
+        src/qml/assets/icons/outline/pointer.svg
+        src/qml/assets/icons/outline/settings.svg
         src/qml/assets/icons/filled/star.svg
         src/qml/assets/icons/filled/folder.svg
         src/qml/assets/icons/filled/folder-open.svg
@@ -161,7 +185,17 @@ target_link_libraries(liphis_app
     PRIVATE Qt6::Concurrent
     PRIVATE Qt6::Gui
     PRIVATE Qt6::Core5Compat
+    PRIVATE Qt6::Sql
     PRIVATE liphis_core
+    PRIVATE ${LIBGIT2_LIBRARIES}
+    PRIVATE ${LIBARCHIVE_LIBRARIES}
+)
+
+target_include_directories(liphis_app PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/models
+    ${LIBGIT2_INCLUDE_DIRS}
+    ${LIBARCHIVE_INCLUDE_DIRS}
 )
 
 # =========================
@@ -175,8 +209,17 @@ target_link_libraries(fs_test
     PRIVATE liphis_core
 )
 
+add_executable(unit_tests
+    tests/unit_tests.cpp
+)
+
+target_link_libraries(unit_tests
+    PRIVATE liphis_core
+)
+
 enable_testing()
 add_test(NAME fs_test_smoke COMMAND fs_test ${CMAKE_SOURCE_DIR})
+add_test(NAME unit_tests COMMAND unit_tests)
 
 install(TARGETS liphis_app
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

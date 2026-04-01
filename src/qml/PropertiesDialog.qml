@@ -9,9 +9,10 @@ Dialog {
     id: root
     title: qsTr("Properties: %1").arg(fileName || "")
     modal: true
+    closePolicy: Popup.CloseOnEscape
     visible: false
     width: 600
-    height: 640
+    height: 680
     standardButtons: Dialog.NoButton
     anchors.centerIn: parent
 
@@ -32,6 +33,8 @@ Dialog {
     property string fileDateRaw: ""
     property bool isDir: false
     property string mimeType: ""
+    property var associatedApps: []
+    property var activeController: null
 
     property var permModel: ({
         owner: { r: false, w: false, x: false },
@@ -49,7 +52,10 @@ Dialog {
         isDir = !!meta.isDir
         fileSizeBytes = meta.isDir ? 0 : (meta.size || 0)
         fileDateRaw = meta.mtime || meta.date || ""
-        mimeType = meta.mime || ""
+        mimeType = meta.mimeType || ""
+        if (activeController) {
+            associatedApps = activeController.getAssociatedApps(filePath)
+        }
         parsePermString(filePerms)
         open()
     }
@@ -135,10 +141,58 @@ Dialog {
                         Text { text: humanReadableSize(fileSizeBytes); color: theme.textPrimary; font.pixelSize: 12 }
                         Label { text: "Modified"; color: theme.textMuted; font.pixelSize: 11; font.bold: true }
                         Text { text: formatDate(fileDateRaw); color: theme.textPrimary; font.pixelSize: 12 }
-                        Label { text: "Owner"; color: theme.textMuted; font.pixelSize: 11; font.bold: true }
-                        Text { text: fileOwner + " / " + fileGroup; color: theme.textPrimary; font.pixelSize: 12 }
+                        Label { text: "MIME Type"; color: theme.textMuted; font.pixelSize: 11; font.bold: true }
+                        Text { text: mimeType; color: theme.textPrimary; font.pixelSize: 12 }
                     }
                 }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    visible: !isDir
+                    Text {
+                        text: "Default Application"
+                        color: theme.accent
+                        font.pixelSize: 11; font.bold: true; font.letterSpacing: 0.8
+                        Layout.fillWidth: true
+                    }
+                    Button {
+                        text: "Change..."
+                        flat: true
+                        font.pixelSize: 10
+                        onClicked: if (appWindow) appWindow.showOpenWith(filePath, activeController)
+                        background: null
+                        contentItem: Text { text: parent.text; color: theme.accent; font.bold: true }
+                    }
+                }
+
+                Rectangle {
+                    visible: !isDir
+                    Layout.fillWidth: true; Layout.fillHeight: true; color: theme.surfaceSecondary; radius: 12; border.color: theme.border
+                    clip: true
+                    ListView {
+                        anchors.fill: parent; anchors.margins: 5
+                        model: associatedApps
+                        delegate: ItemDelegate {
+                            width: parent.width
+                            height: 40
+                            contentItem: RowLayout {
+                                spacing: 10
+                                Icon { name: modelData.icon || "application-x-executable"; iconSize: 18; color: theme.textPrimary }
+                                Text { text: modelData.name; color: theme.textPrimary; font.pixelSize: 12; Layout.fillWidth: true }
+                                RadioButton {
+                                    checked: modelData.isDefault || false
+                                    onClicked: {
+                                        if (activeController) activeController.setDefaultApp(mimeType, modelData.id)
+                                        // Refresh the list to update defaults
+                                        associatedApps = activeController.getAssociatedApps(filePath)
+                                    }
+                                }
+                            }
+                            background: Rectangle { radius: 8; color: parent.hovered ? theme.hover : "transparent" }
+                        }
+                    }
+                }
+
                 Item { Layout.fillHeight: true }
             }
 

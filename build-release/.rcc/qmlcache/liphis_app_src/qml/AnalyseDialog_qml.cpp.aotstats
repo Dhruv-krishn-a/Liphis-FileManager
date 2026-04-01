@@ -7,10 +7,18 @@
                     "entries": [
                         {
                             "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "closePolicy",
+                            "line": 13,
+                            "message": "Could not find property \"closePolicy\"."
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "standardButtons",
-                            "line": 14,
+                            "line": 15,
                             "message": "Could not find property \"standardButtons\"."
                         },
                         {
@@ -18,7 +26,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "resetDialog",
-                            "line": 26,
+                            "line": 28,
                             "message": "method open cannot be resolved."
                         },
                         {
@@ -26,7 +34,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "addNode",
-                            "line": 36,
+                            "line": 38,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -34,7 +42,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "setProgress",
-                            "line": 40,
+                            "line": 42,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -42,7 +50,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "finish",
-                            "line": 47,
+                            "line": 49,
                             "message": ""
                         },
                         {
@@ -50,7 +58,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "formatSize",
-                            "line": 51,
+                            "line": 53,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -58,28 +66,20 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 13,
+                            "line": 14,
                             "message": "Could not find property \"centerIn\"."
                         },
                         {
                             "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "isDark",
+                            "line": 18,
+                            "message": "Cannot retrieve a non-object type by ID: root"
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 16,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 61,
-                            "message": "Cannot access value for name theme"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 17,
-                            "durationMicroseconds": 0,
-                            "functionName": "radius",
-                            "line": 62,
-                            "message": "Cannot access value for name theme"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "color",
                             "line": 63,
@@ -87,18 +87,34 @@
                         },
                         {
                             "codegenResult": 2,
-                            "column": 55,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 64,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "color",
                             "line": 65,
-                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 67,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
                             "column": 77,
                             "durationMicroseconds": 0,
                             "functionName": "spacing",
-                            "line": 69,
+                            "line": 71,
                             "message": ""
                         },
                         {
@@ -106,7 +122,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 69,
+                            "line": 71,
                             "message": ""
                         },
                         {
@@ -114,7 +130,7 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "margins",
-                            "line": 69,
+                            "line": 71,
                             "message": ""
                         },
                         {
@@ -122,7 +138,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 76,
+                            "line": 78,
                             "message": "Cannot access value for name isScanning"
                         },
                         {
@@ -130,7 +146,7 @@
                             "column": 65,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 77,
+                            "line": 79,
                             "message": ""
                         },
                         {
@@ -138,7 +154,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 80,
+                            "line": 82,
                             "message": "Cannot access value for name liveFiles"
                         },
                         {
@@ -146,7 +162,7 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 81,
+                            "line": 83,
                             "message": ""
                         },
                         {
@@ -154,7 +170,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 86,
+                            "line": 88,
                             "message": "Could not find signal \"clicked\"."
                         },
                         {
@@ -162,7 +178,7 @@
                             "column": 59,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 90,
+                            "line": 92,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -170,7 +186,7 @@
                             "column": 98,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 90,
+                            "line": 92,
                             "message": ""
                         },
                         {
@@ -178,7 +194,7 @@
                             "column": 49,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 91,
+                            "line": 93,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -186,7 +202,7 @@
                             "column": 75,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 91,
+                            "line": 93,
                             "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/AnalyseDialog.qml)::parent with type QQuickItem."
                         },
                         {
@@ -194,7 +210,7 @@
                             "column": 73,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 97,
+                            "line": 99,
                             "message": ""
                         },
                         {
@@ -202,7 +218,7 @@
                             "column": 104,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 97,
+                            "line": 99,
                             "message": ""
                         },
                         {
@@ -210,7 +226,7 @@
                             "column": 132,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 97,
+                            "line": 99,
                             "message": ""
                         },
                         {
@@ -218,7 +234,7 @@
                             "column": 86,
                             "durationMicroseconds": 0,
                             "functionName": "spacing",
-                            "line": 99,
+                            "line": 101,
                             "message": ""
                         },
                         {
@@ -226,7 +242,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 99,
+                            "line": 101,
                             "message": ""
                         },
                         {
@@ -234,7 +250,7 @@
                             "column": 56,
                             "durationMicroseconds": 0,
                             "functionName": "margins",
-                            "line": 99,
+                            "line": 101,
                             "message": ""
                         },
                         {
@@ -242,7 +258,7 @@
                             "column": 75,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 101,
+                            "line": 103,
                             "message": ""
                         },
                         {
@@ -250,7 +266,7 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 103,
+                            "line": 105,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -258,7 +274,7 @@
                             "column": 105,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 103,
+                            "line": 105,
                             "message": ""
                         },
                         {
@@ -266,7 +282,7 @@
                             "column": 60,
                             "durationMicroseconds": 0,
                             "functionName": "indeterminate",
-                            "line": 106,
+                            "line": 108,
                             "message": "Could not find property \"indeterminate\"."
                         },
                         {
@@ -274,7 +290,7 @@
                             "column": 79,
                             "durationMicroseconds": 0,
                             "functionName": "value",
-                            "line": 106,
+                            "line": 108,
                             "message": "Could not find property \"value\"."
                         },
                         {
@@ -282,7 +298,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 109,
+                            "line": 111,
                             "message": "Cannot load property value from QQuickItem::parent with type QQuickItem."
                         },
                         {
@@ -290,7 +306,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 110,
+                            "line": 112,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -298,7 +314,7 @@
                             "column": 74,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 113,
+                            "line": 115,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -306,7 +322,7 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 116,
+                            "line": 118,
                             "message": "Cannot access value for name isScanning"
                         },
                         {
@@ -314,7 +330,7 @@
                             "column": 49,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 117,
+                            "line": 119,
                             "message": ""
                         },
                         {
@@ -322,7 +338,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 119,
+                            "line": 121,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -330,7 +346,7 @@
                             "column": 76,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 119,
+                            "line": 121,
                             "message": ""
                         },
                         {
@@ -338,7 +354,7 @@
                             "column": 100,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 119,
+                            "line": 121,
                             "message": ""
                         },
                         {
@@ -346,7 +362,7 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 128,
+                            "line": 130,
                             "message": ""
                         },
                         {
@@ -354,7 +370,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 130,
+                            "line": 132,
                             "message": "Cannot access value for name listView"
                         },
                         {
@@ -362,7 +378,7 @@
                             "column": 60,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 130,
+                            "line": 132,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -370,7 +386,7 @@
                             "column": 86,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 130,
+                            "line": 132,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -378,7 +394,7 @@
                             "column": 123,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 130,
+                            "line": 132,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -386,7 +402,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 132,
+                            "line": 134,
                             "message": ""
                         },
                         {
@@ -394,15 +410,23 @@
                             "column": 94,
                             "durationMicroseconds": 0,
                             "functionName": "isDir",
-                            "line": 133,
+                            "line": 135,
                             "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 114,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 135,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 38,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 136,
+                            "line": 138,
                             "message": "Cannot access value for name model"
                         },
                         {
@@ -410,7 +434,7 @@
                             "column": 57,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 136,
+                            "line": 138,
                             "message": ""
                         },
                         {
@@ -418,7 +442,7 @@
                             "column": 101,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 136,
+                            "line": 138,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -426,7 +450,7 @@
                             "column": 87,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 138,
+                            "line": 140,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -434,7 +458,7 @@
                             "column": 40,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 140,
+                            "line": 142,
                             "message": "Cannot access value for name model"
                         },
                         {
@@ -442,7 +466,7 @@
                             "column": 116,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 140,
+                            "line": 142,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -450,7 +474,7 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 144,
+                            "line": 146,
                             "message": "Cannot access value for name model"
                         },
                         {
@@ -458,7 +482,7 @@
                             "column": 102,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 144,
+                            "line": 146,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -466,7 +490,7 @@
                             "column": 53,
                             "durationMicroseconds": 0,
                             "functionName": "policy",
-                            "line": 147,
+                            "line": 149,
                             "message": "Could not find property \"policy\"."
                         },
                         {
@@ -474,7 +498,7 @@
                             "column": 46,
                             "durationMicroseconds": 0,
                             "functionName": "spacing",
-                            "line": 151,
+                            "line": 153,
                             "message": ""
                         },
                         {
@@ -482,7 +506,7 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "enabled",
-                            "line": 155,
+                            "line": 157,
                             "message": "Could not find property \"enabled\"."
                         },
                         {
@@ -490,7 +514,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 156,
+                            "line": 158,
                             "message": "Could not find signal \"clicked\"."
                         },
                         {
@@ -498,7 +522,7 @@
                             "column": 49,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 160,
+                            "line": 162,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -506,7 +530,7 @@
                             "column": 109,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 160,
+                            "line": 162,
                             "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/AnalyseDialog.qml)::parent with type QQuickItem."
                         },
                         {
@@ -514,7 +538,7 @@
                             "column": 164,
                             "durationMicroseconds": 0,
                             "functionName": "opacity",
-                            "line": 160,
+                            "line": 162,
                             "message": ""
                         },
                         {
@@ -522,7 +546,7 @@
                             "column": 82,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 160,
+                            "line": 162,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -530,7 +554,7 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 161,
+                            "line": 163,
                             "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/AnalyseDialog.qml)::parent with type QQuickItem."
                         },
                         {
@@ -538,7 +562,7 @@
                             "column": 63,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 161,
+                            "line": 163,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -546,7 +570,7 @@
                             "column": 163,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 161,
+                            "line": 163,
                             "message": ""
                         },
                         {
@@ -554,7 +578,7 @@
                             "column": 201,
                             "durationMicroseconds": 0,
                             "functionName": "verticalAlignment",
-                            "line": 161,
+                            "line": 163,
                             "message": ""
                         },
                         {
@@ -562,7 +586,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 164,
+                            "line": 166,
                             "message": "Could not find property \"text\"."
                         },
                         {
@@ -570,7 +594,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 166,
+                            "line": 168,
                             "message": "Could not find signal \"clicked\"."
                         },
                         {
@@ -578,7 +602,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 171,
+                            "line": 173,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -586,7 +610,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 172,
+                            "line": 174,
                             "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/AnalyseDialog.qml)::parent with type QQuickItem."
                         },
                         {
@@ -594,7 +618,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 173,
+                            "line": 175,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -602,7 +626,7 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 175,
+                            "line": 177,
                             "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/AnalyseDialog.qml)::parent with type QQuickItem."
                         },
                         {
@@ -610,7 +634,7 @@
                             "column": 63,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 175,
+                            "line": 177,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -618,7 +642,7 @@
                             "column": 163,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 175,
+                            "line": 177,
                             "message": ""
                         },
                         {
@@ -626,7 +650,7 @@
                             "column": 201,
                             "durationMicroseconds": 0,
                             "functionName": "verticalAlignment",
-                            "line": 175,
+                            "line": 177,
                             "message": ""
                         }
                     ],

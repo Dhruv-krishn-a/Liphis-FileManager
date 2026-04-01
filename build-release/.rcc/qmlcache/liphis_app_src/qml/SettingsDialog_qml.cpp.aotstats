@@ -1,0 +1,847 @@
+{
+    "formatRevision": 1,
+    "modules": [
+        {
+            "moduleFiles": [
+                {
+                    "entries": [
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "closePolicy",
+                            "line": 12,
+                            "message": "Could not find property \"closePolicy\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "standardButtons",
+                            "line": 16,
+                            "message": "Could not find property \"standardButtons\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 17,
+                            "message": "Could not find property \"centerIn\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 65,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 67,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 71,
+                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 83,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "centerIn",
+                            "line": 81,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 90,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 92,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 89,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 103,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 110,
+                            "message": "Cannot access value for name generalTab"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 111,
+                            "message": "Cannot access value for name generalTab"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 112,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 80,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 112,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 71,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 116,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 116,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 126,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 116,
+                            "message": "Cannot access value for name generalTab"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 116,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 124,
+                            "message": "Cannot access value for name viewTab"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 125,
+                            "message": "Cannot access value for name viewTab"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 126,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 80,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 126,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 71,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 130,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 130,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 126,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 130,
+                            "message": "Cannot access value for name viewTab"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 130,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 138,
+                            "message": "Cannot access value for name behaviorTab"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 139,
+                            "message": "Cannot access value for name behaviorTab"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 140,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 80,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 140,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 71,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 144,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 103,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 144,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 126,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 144,
+                            "message": "Cannot access value for name behaviorTab"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
+                            "line": 144,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "currentIndex",
+                            "line": 150,
+                            "message": "Cannot access value for name settingsTabs"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 158,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 59,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 163,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 74,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 167,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 168,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 73,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 172,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 173,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 59,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 181,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 183,
+                            "message": "Could not find property \"model\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "currentIndex",
+                            "line": 184,
+                            "message": "Could not find property \"currentIndex\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "onActivated",
+                            "line": 185,
+                            "message": "Could not find signal \"activated\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 191,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 97,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 191,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 140,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 191,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 66,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 195,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 197,
+                            "message": "Could not find property \"model\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "currentIndex",
+                            "line": 198,
+                            "message": "Could not find property \"currentIndex\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "onActivated",
+                            "line": 199,
+                            "message": "Could not find signal \"activated\"."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 210,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 212,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 81,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 212,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 115,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 212,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 213,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 81,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 213,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 115,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 213,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 214,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 90,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 214,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 124,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 214,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 215,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 88,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 215,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 129,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 215,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 216,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 82,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 216,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 117,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 216,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 217,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 82,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 217,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 117,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 217,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 218,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 86,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 218,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 120,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 218,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 219,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 89,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 219,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 126,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 219,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 220,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 90,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 220,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 128,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 220,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 228,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 230,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 97,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 230,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 137,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 230,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 231,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 100,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 231,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 142,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 231,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 232,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 105,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 232,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 153,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 232,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 235,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 94,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 235,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 137,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 235,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 67,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 239,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "value",
+                            "line": 242,
+                            "message": "Could not find property \"value\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "onValueChanged",
+                            "line": 243,
+                            "message": "Could not find signal \"valueChanged\"."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 15,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 253,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 254,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 268,
+                            "message": "Cannot access value for name label"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 268,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 269,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 54,
+                            "durationMicroseconds": 0,
+                            "functionName": "onToggled",
+                            "line": 269,
+                            "message": "Could not find signal \"toggled\"."
+                        }
+                    ],
+                    "filePath": "/home/dhruv/Liphis/src/qml/SettingsDialog.qml"
+                }
+            ],
+            "moduleId": "liphis(liphis_app)"
+        }
+    ]
+}

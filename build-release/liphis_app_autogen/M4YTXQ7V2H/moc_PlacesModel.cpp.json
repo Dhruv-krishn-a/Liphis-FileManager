@@ -51,6 +51,33 @@
                     ],
                     "index": 3,
                     "lineNumber": 34,
+                    "name": "removeBookmarkByPath",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "path",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 4,
+                    "isConst": true,
+                    "lineNumber": 35,
+                    "name": "isBookmarked",
+                    "returnType": "bool"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "path",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 5,
+                    "lineNumber": 36,
                     "name": "addRecent",
                     "returnType": "void"
                 }

@@ -3,13 +3,52 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
+import QtCore
 import Liphis.Core 1.0
 
 Item {
     id: root
     focus: true
     activeFocusOnTab: true
-    
+
+    PinchHandler {
+        id: ph
+        target: null
+        property real startZoom: 100
+        onActiveChanged: if (active) startZoom = pendingZoomLevel
+        onScaleChanged: {
+            var newZoom = Math.max(50, Math.min(300, startZoom * scale))
+            if (Math.abs(newZoom - pendingZoomLevel) > 5) {
+                queueZoom(newZoom)
+            }
+        }
+    }
+
+    WheelHandler {
+        acceptedModifiers: Qt.ControlModifier
+        onWheel: (event) => {
+            if (event.angleDelta.y > 0) zoomIn()
+            else zoomOut()
+        }
+    }
+
+    DropArea {
+        anchors.fill: parent
+        onDropped: (drop) => {
+            if (drop.hasText) {
+                let paths = drop.text.split("\n")
+                controller.dropItems(paths, controller.currentPath, (drop.supportedActions & Qt.CopyAction) && (drop.proposedAction === Qt.CopyAction))
+            }
+        }
+    }
+
+    WheelHandler {
+        onWheel: (event) => {
+            if (event.angleDelta.x > 0) controller.goBack()
+            else if (event.angleDelta.x < 0) controller.goForward()
+        }
+    }
+
     property string initialPath: ""
     property alias controller: controller
     property var theme: null
@@ -23,14 +62,23 @@ Item {
     property string typeBuffer: ""
     property int cycleMatchIndex: -1
     
-    property int zoomLevel: 100 // Percentage
+    property int zoomLevel: generalSettings ? generalSettings.defaultZoom : 100 // Percentage
+    property int pendingZoomLevel: zoomLevel
     readonly property int baseCellSize: 100
     readonly property int baseIconSize: 56
     readonly property int baseListHeight: 44
 
-    function zoomIn() { zoomLevel = Math.min(300, zoomLevel + 10) }
-    function zoomOut() { zoomLevel = Math.max(50, zoomLevel - 10) }
-    function resetZoom() { zoomLevel = 100 }
+    readonly property real zoomScale: zoomLevel / 100.0
+
+    function queueZoom(nextZoom) {
+        var quantized = Math.round(Math.max(50, Math.min(300, nextZoom)) / 5) * 5
+        if (pendingZoomLevel === quantized) return
+        pendingZoomLevel = quantized
+        zoomApplyTimer.restart()
+    }
+    function zoomIn() { queueZoom(pendingZoomLevel + 10) }
+    function zoomOut() { queueZoom(pendingZoomLevel - 10) }
+    function resetZoom() { queueZoom(100) }
 
     function focusFileArea() {
         root.forceActiveFocus()
@@ -93,9 +141,36 @@ Item {
         applySelection(next, modifiers)
     }
 
+    function toggleSort(field) {
+        if (viewSettings.sortField === field) {
+            viewSettings.sortAscending = !viewSettings.sortAscending
+        } else {
+            viewSettings.sortField = field
+            viewSettings.sortAscending = true
+        }
+        if (controller && controller.fileModel) {
+            controller.fileModel.setSortBy(viewSettings.sortField, viewSettings.sortAscending)
+        }
+    }
+
     function gridStepForUpDown() {
         var cols = Math.floor(gv.width / gv.cellWidth)
         return Math.max(1, cols)
+    }
+
+    function openBulkRename() {
+        if (!controller) return
+        let selectedMetadata = []
+        for (let i = 0; i < controller.selectedPaths.length; i++) {
+            let meta = controller.fileModel.metadataForPath(controller.selectedPaths[i])
+            if (Object.keys(meta).length > 0) {
+                selectedMetadata.push(meta)
+            }
+        }
+        if (selectedMetadata.length > 0) {
+            bulkRenameDialog.controller = controller
+            bulkRenameDialog.show(selectedMetadata)
+        }
     }
 
     function openCurrentSelection() {
@@ -183,7 +258,7 @@ Item {
 
     Timer {
         id: thumbsDebounce
-        interval: 140
+        interval: 50
         repeat: false
         onTriggered: root.requestVisibleThumbnails()
     }
@@ -194,6 +269,15 @@ Item {
         repeat: true
         running: !!(controller && controller.searchInProgress)
         onTriggered: root.requestVisibleThumbnails()
+    }
+
+    Timer {
+        id: zoomApplyTimer
+        interval: 24
+        repeat: false
+        onTriggered: {
+            if (zoomLevel !== pendingZoomLevel) zoomLevel = pendingZoomLevel
+        }
     }
 
     Keys.onPressed: (event) => {
@@ -225,6 +309,15 @@ Item {
         }
         if (event.key === Qt.Key_Backspace) {
             controller.goUp()
+            event.accepted = true
+            return
+        }
+        
+        if (event.key === Qt.Key_Escape || event.key === 16777250) {
+            if (controller && controller.hasSelection) {
+                controller.clearSelection()
+                appWindow.toastManager.show("Selection cleared", false)
+            }
             event.accepted = true
             return
         }
@@ -296,11 +389,26 @@ Item {
         }
         onRenameRequested: (path) => renamingPath = path
         onCurrentPathChanged: {
-            // Memory Optimization: Force garbage collection on major navigation
-            gc();
             root.tabTitleChanged(controller.title)
         }
+        onOperationSuccess: (msg) => {
+            if (msg.indexOf("Compressing") !== -1 || msg.indexOf("Extracting") !== -1) {
+                progressDialog.statusText = msg
+                progressDialog.progress = 0.5
+                progressDialog.open()
+            } else {
+                progressDialog.close()
+                toastManager.show(msg, false)
+            }
+        }
+        onOperationError: (msg) => {
+            progressDialog.close()
+            toastManager.show(msg, true)
+        }
     }
+
+    property var viewSettings: appWindow.viewSettings
+    property var generalSettings: appWindow.generalSettings
     
     Component.onCompleted: {
         if (typeof updateActiveController === "function") updateActiveController()
@@ -347,20 +455,28 @@ Item {
         id: bgMenu
         Material.theme: (theme && theme.isDark) ? Material.Dark : Material.Light
         Material.background: theme.surfaceElevated
-        MenuItem { text: "New Folder"; onTriggered: createFolderDialog.open() }
+        MenuItem { text: "New Folder"; onTriggered: root.openCreateFolderDialog() }
         MenuItem { text: "Show Hidden"; checkable: true; checked: controller.showHiddenFiles; onTriggered: controller.showHiddenFiles = checked }
         MenuItem { text: "Paste"; enabled: controller.hasClipboard; onTriggered: controller.pasteItem() }
+        MenuItem { text: "Go to Parent"; onTriggered: controller.goUp() }
         MenuItem { text: "Refresh"; onTriggered: controller.refresh() }
+        MenuSeparator {}
+        MenuItem { 
+            text: "Quit Liphis"
+            onTriggered: Qt.quit()
+            icon.source: "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/logout.svg"
+        }
     }
 
     // --- DELEGATES ---
-
     Component {
         id: listDelegate
         Item {
             id: listRoot
-            width: lv.width; height: baseListHeight * (zoomLevel / 100.0)
-            readonly property bool isActuallySelected: controller.selectedPaths.indexOf(model.path) !== -1
+            width: lv.width; height: baseListHeight * root.zoomScale
+            readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPaths.includes(model.path)
+            readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
+            opacity: isHidden ? 0.6 : 1.0
 
             Rectangle {
                 anchors.fill: parent; anchors.margins: 2; radius: theme ? theme.radiusSmall : 6
@@ -369,40 +485,195 @@ Item {
             }
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 16
-                FileIcon { Layout.preferredWidth: 22 * (zoomLevel / 100.0); Layout.preferredHeight: 22 * (zoomLevel / 100.0); isDir: model.isDir; iconName: model.iconName; theme: root.theme }
-                Text {
-                    text: root.displayName(model.name)
-                    textFormat: Text.PlainText
-                    Layout.fillWidth: true
-                    elide: Text.ElideRight
-                    wrapMode: Text.NoWrap
-                    clip: true
-                    color: root.colTextPrimary
-                    font.pixelSize: Math.max(8, 13 * (zoomLevel / 100.0))
-                    font.weight: listRoot.isActuallySelected ? Font.Medium : Font.Normal
+                anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 0
+                
+                Item {
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colNameWidth : 300) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    RowLayout {
+                        anchors.fill: parent; spacing: 12
+                        FileIcon { 
+                            Layout.preferredWidth: 22 * (root.zoomScale || 1.0); 
+                            Layout.preferredHeight: 22 * (root.zoomScale || 1.0); 
+                            isDir: (model.isDir !== undefined ? model.isDir : false); 
+                            iconName: (model.iconName !== undefined ? model.iconName : ""); 
+                            theme: root.theme
+                            gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
+                        }
+                        Text {
+                            text: (model.name !== undefined ? root.displayName(model.name) : "")
+                            textFormat: Text.PlainText
+                            Layout.fillWidth: true
+                            elide: Text.ElideRight
+                            color: root.colTextPrimary
+                            font.pixelSize: Math.max(8, 13 * (root.zoomScale || 1.0))
+                            font.weight: listRoot.isActuallySelected ? Font.Medium : Font.Normal
+                        }
+                        ToolTip.visible: listMA.containsMouse
+                        ToolTip.text: (model.path !== undefined ? String(model.path) : "")
+                    }
                 }
-                Text { text: model.formattedSize; Layout.preferredWidth: 80 * (zoomLevel / 100.0); horizontalAlignment: Text.AlignRight; color: root.colTextSecondary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)) }
-                Text { text: model.formattedDate; Layout.preferredWidth: 140 * (zoomLevel / 100.0); horizontalAlignment: Text.AlignRight; color: root.colTextSecondary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)) }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showSize : true
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colSizeWidth : 100) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        text: (model.formattedSize !== undefined ? model.formattedSize : "")
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showType : true
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colTypeWidth : 140) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; leftPadding: 12; verticalAlignment: Text.AlignVCenter
+                        text: (model.type !== undefined ? model.type : "")
+                        elide: Text.ElideRight
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showDate : true
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colDateWidth : 180) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        text: (model.formattedDate !== undefined ? model.formattedDate : "")
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showCreated : false
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colCreatedWidth : 180) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        text: (model.formattedCTime !== undefined ? model.formattedCTime : "")
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showAccessed : false
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colAccessedWidth : 180) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        text: (model.formattedATime !== undefined ? model.formattedATime : "")
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showPermissions : false
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colPermsWidth : 100) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; leftPadding: 12; verticalAlignment: Text.AlignVCenter
+                        text: (model.permissions !== undefined ? model.permissions : "")
+                        font.family: "Monospace"
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 11 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showOwner : false
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colOwnerWidth : 100) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; leftPadding: 12; verticalAlignment: Text.AlignVCenter
+                        text: (model.owner !== undefined ? model.owner : "")
+                        elide: Text.ElideRight
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showGroup : false
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colGroupWidth : 100) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; leftPadding: 12; verticalAlignment: Text.AlignVCenter
+                        text: (model.group !== undefined ? model.group : "")
+                        elide: Text.ElideRight
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
+                    }
+                }
+
+                Item {
+                    visible: viewSettings ? viewSettings.showMime : false
+                    Layout.preferredWidth: (viewSettings ? viewSettings.colMimeWidth : 180) * (root.zoomScale || 1.0)
+                    Layout.fillHeight: true
+                    Text {
+                        anchors.fill: parent; leftPadding: 12; verticalAlignment: Text.AlignVCenter
+                        text: (model.mimeType !== undefined ? model.mimeType : "")
+                        elide: Text.ElideRight
+                        color: root.colTextSecondary
+                        font.pixelSize: Math.max(8, 11 * (root.zoomScale || 1.0))
+                    }
+                }                
+                Item { Layout.fillWidth: true }
             }
 
             MouseArea {
                 id: listMA; anchors.fill: parent; hoverEnabled: true; acceptedButtons: Qt.LeftButton | Qt.RightButton
+                drag.target: dragProxy
+                
+                Item { id: dragProxy; Drag.active: listMA.drag.active; Drag.source: listRoot; Drag.supportedActions: Qt.CopyAction | Qt.MoveAction; Drag.keys: ["text/uri-list"]; Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") } }
+
                 onClicked: (mouse) => {
                     var idx = controller.indexOfPath(model.path)
                     if (mouse.modifiers & Qt.ShiftModifier) {
                         if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
                         controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
                     } else if (mouse.modifiers & Qt.ControlModifier) controller.toggleSelection(model.path)
-                    else controller.selectPath(model.path)
+                    else {
+                        if (!listMA.drag.active) controller.selectPath(model.path)
+                    }
                     root.keyboardIndex = controller.indexOfPath(model.path)
                     if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
                     root.forceActiveFocus()
                     if (mouse.button === Qt.RightButton) {
                         if (typeof itemMenuHandler === "function") itemMenuHandler(model, controller)
+                    } else if (mouse.button === Qt.LeftButton && generalSettings.singleClick) {
+                        controller.openPath(model.path)
                     }
                 }
-                onDoubleClicked: controller.openPath(model.path)
+                onWheel: (wheel) => {
+                    if (wheel.modifiers & Qt.ControlModifier) {
+                        if (wheel.angleDelta.y > 0) zoomIn()
+                        else zoomOut()
+                        wheel.accepted = true
+                    } else {
+                        wheel.accepted = false
+                    }
+                }
+                onDoubleClicked: if (!generalSettings.singleClick) controller.openPath(model.path)
+            }
+
+            DropArea {
+                anchors.fill: parent
+                enabled: model.isDir
+                onDropped: (drop) => {
+                    if (drop.hasText) {
+                        let paths = drop.text.split("\n")
+                        controller.dropItems(paths, model.path, (drop.supportedActions & Qt.CopyAction) && (drop.proposedAction === Qt.CopyAction))
+                    }
+                }
             }
         }
     }
@@ -412,7 +683,9 @@ Item {
         Item {
             id: gridRoot
             width: gv.cellWidth; height: gv.cellHeight
-            readonly property bool isActuallySelected: controller.selectedPaths.indexOf(model.path) !== -1
+            readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPaths.includes(model.path)
+            readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
+            opacity: isHidden ? 0.6 : 1.0
 
             Rectangle {
                 anchors.fill: parent; anchors.margins: 4; radius: theme ? theme.radius : 8
@@ -424,14 +697,23 @@ Item {
                 anchors.fill: parent; anchors.margins: 12 * (zoomLevel / 100.0); spacing: 8 * (zoomLevel / 100.0)
                 Item {
                     Layout.fillWidth: true; Layout.fillHeight: true
-                    FileIcon { anchors.centerIn: parent; width: baseIconSize * (zoomLevel / 100.0); height: baseIconSize * (zoomLevel / 100.0); isDir: model.isDir; iconName: model.iconName; theme: root.theme; visible: !gridThumb.visible }
+                    FileIcon { 
+                        anchors.centerIn: parent; 
+                        width: baseIconSize * (zoomLevel / 100.0); 
+                        height: baseIconSize * (zoomLevel / 100.0); 
+                        isDir: (model.isDir !== undefined ? model.isDir : false); 
+                        iconName: (model.iconName !== undefined ? model.iconName : ""); 
+                        theme: root.theme; 
+                        visible: !gridThumb.visible 
+                        gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
+                    }
                     Image { 
-                        id: gridThumb; anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: model.thumbnail ? model.thumbnail : ""
-                        visible: status === Image.Ready; asynchronous: false; cache: true // Sync for memory predictability
+                        id: gridThumb; anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: (model.thumbnail !== undefined ? model.thumbnail : "")
+                        visible: status === Image.Ready; asynchronous: true; cache: true
                     }
                 }
                 Text { 
-                    text: root.displayName(model.name)
+                    text: (model.name !== undefined ? root.displayName(model.name) : "")
                     textFormat: Text.PlainText
                     Layout.fillWidth: true
                     Layout.preferredHeight: gridRoot.isActuallySelected ? (30 * (zoomLevel / 100.0)) : (16 * (zoomLevel / 100.0))
@@ -442,25 +724,55 @@ Item {
                     clip: true
                     color: root.colTextPrimary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)); font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
+                ToolTip.visible: gridMA.containsMouse
+                ToolTip.text: (model.path !== undefined ? String(model.path) : "")
             }
 
             MouseArea {
                 id: gridMA; anchors.fill: parent; hoverEnabled: true; acceptedButtons: Qt.LeftButton | Qt.RightButton
+                drag.target: gridDragProxy
+                
+                Item { id: gridDragProxy; Drag.active: gridMA.drag.active; Drag.source: gridRoot; Drag.supportedActions: Qt.CopyAction | Qt.MoveAction; Drag.keys: ["text/uri-list"]; Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") } }
+
                 onClicked: (mouse) => {
                     var idx = controller.indexOfPath(model.path)
                     if (mouse.modifiers & Qt.ShiftModifier) {
                         if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
                         controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
                     } else if (mouse.modifiers & Qt.ControlModifier) controller.toggleSelection(model.path)
-                    else controller.selectPath(model.path)
+                    else {
+                        if (!gridMA.drag.active) controller.selectPath(model.path)
+                    }
                     root.keyboardIndex = controller.indexOfPath(model.path)
                     if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
                     root.forceActiveFocus()
                     if (mouse.button === Qt.RightButton) {
                         if (typeof itemMenuHandler === "function") itemMenuHandler(model, controller)
+                    } else if (mouse.button === Qt.LeftButton && generalSettings.singleClick) {
+                        controller.openPath(model.path)
                     }
                 }
-                onDoubleClicked: controller.openPath(model.path)
+                onWheel: (wheel) => {
+                    if (wheel.modifiers & Qt.ControlModifier) {
+                        if (wheel.angleDelta.y > 0) zoomIn()
+                        else zoomOut()
+                        wheel.accepted = true
+                    } else {
+                        wheel.accepted = false
+                    }
+                }
+                onDoubleClicked: if (!generalSettings.singleClick) controller.openPath(model.path)
+            }
+
+            DropArea {
+                anchors.fill: parent
+                enabled: model.isDir
+                onDropped: (drop) => {
+                    if (drop.hasText) {
+                        let paths = drop.text.split("\n")
+                        controller.dropItems(paths, model.path, (drop.supportedActions & Qt.CopyAction) && (drop.proposedAction === Qt.CopyAction))
+                    }
+                }
             }
         }
     }
@@ -470,25 +782,223 @@ Item {
     StackLayout {
         id: viewStack
         anchors.fill: parent
-        currentIndex: controller.viewMode === "grid" ? 1 : 0
+        currentIndex: controller.viewMode === "grid" ? 1 : (controller.viewMode === "list" ? 0 : 2)
 
         ListView {
             id: lv; model: controller.fileModel; clip: true; delegate: listDelegate
-            visible: controller.fileModel.count > 0
-            cacheBuffer: 0
+            focus: true
+            Keys.onEscapePressed: (event) => {
+                if (controller) {
+                    controller.clearSelection()
+                    event.accepted = true
+                }
+            }
+            reuseItems: true
+            cacheBuffer: 420
+            onContentYChanged: thumbsDebounce.restart()
+            onCountChanged: thumbsDebounce.restart()
+            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded; active: true }
+            
+            headerPositioning: ListView.OverlayHeader
+            header: Rectangle {
+                z: 10; width: lv.width; height: 36; color: theme.surfaceMuted
+                
+                RowLayout {
+                    anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 0
+                    
+                    HeaderColumn {
+                        title: "Name"; field: "name"; theme: root.theme; minWidth: 100
+                        columnWidth: viewSettings.colNameWidth * root.zoomScale
+                        paddingLeft: 34 * root.zoomScale
+                        isSortActive: viewSettings.sortField === "name"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("name")
+                        onWidthChangedByHandle: (w) => viewSettings.colNameWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showSize; title: "Size"; field: "size"; theme: root.theme; minWidth: 60
+                        columnWidth: viewSettings.colSizeWidth * root.zoomScale
+                        horizontalAlignment: Text.AlignRight
+                        paddingRight: 12
+                        isSortActive: viewSettings.sortField === "size"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("size")
+                        onWidthChangedByHandle: (w) => viewSettings.colSizeWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showType; title: "Type"; field: "type"; theme: root.theme; minWidth: 60
+                        columnWidth: viewSettings.colTypeWidth * root.zoomScale
+                        paddingLeft: 12
+                        isSortActive: viewSettings.sortField === "type"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("type")
+                        onWidthChangedByHandle: (w) => viewSettings.colTypeWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showDate; title: "Date Modified"; field: "date"; theme: root.theme; minWidth: 80
+                        columnWidth: viewSettings.colDateWidth * root.zoomScale
+                        horizontalAlignment: Text.AlignRight
+                        paddingRight: 12
+                        isSortActive: viewSettings.sortField === "date"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("date")
+                        onWidthChangedByHandle: (w) => viewSettings.colDateWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showCreated; title: "Date Created"; field: "ctime"; theme: root.theme; minWidth: 80
+                        columnWidth: viewSettings.colCreatedWidth * root.zoomScale
+                        horizontalAlignment: Text.AlignRight
+                        paddingRight: 12
+                        isSortActive: viewSettings.sortField === "ctime"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("ctime")
+                        onWidthChangedByHandle: (w) => viewSettings.colCreatedWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showAccessed; title: "Date Accessed"; field: "atime"; theme: root.theme; minWidth: 80
+                        columnWidth: viewSettings.colAccessedWidth * root.zoomScale
+                        horizontalAlignment: Text.AlignRight
+                        paddingRight: 12
+                        isSortActive: viewSettings.sortField === "atime"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("atime")
+                        onWidthChangedByHandle: (w) => viewSettings.colAccessedWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showPermissions; title: "Permissions"; field: "permissions"; theme: root.theme; minWidth: 60
+                        columnWidth: viewSettings.colPermsWidth * root.zoomScale
+                        paddingLeft: 12
+                        isSortActive: viewSettings.sortField === "permissions"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("permissions")
+                        onWidthChangedByHandle: (w) => viewSettings.colPermsWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showOwner; title: "Owner"; field: "owner"; theme: root.theme; minWidth: 60
+                        columnWidth: viewSettings.colOwnerWidth * root.zoomScale
+                        paddingLeft: 12
+                        isSortActive: viewSettings.sortField === "owner"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("owner")
+                        onWidthChangedByHandle: (w) => viewSettings.colOwnerWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showGroup; title: "Group"; field: "group"; theme: root.theme; minWidth: 60
+                        columnWidth: viewSettings.colGroupWidth * root.zoomScale
+                        paddingLeft: 12
+                        isSortActive: viewSettings.sortField === "group"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("group")
+                        onWidthChangedByHandle: (w) => viewSettings.colGroupWidth = w / root.zoomScale
+                    }
+                    HeaderColumn {
+                        visible: viewSettings.showMime; title: "MIME Type"; field: "mimeType"; theme: root.theme; minWidth: 80
+                        columnWidth: viewSettings.colMimeWidth * root.zoomScale
+                        paddingLeft: 12
+                        showSplitter: false
+                        isSortActive: viewSettings.sortField === "mimeType"
+                        sortAscending: viewSettings.sortAscending
+                        onClicked: toggleSort("mimeType")
+                        onWidthChangedByHandle: (w) => viewSettings.colMimeWidth = w / root.zoomScale
+                    }
+                    
+                    Item { Layout.fillWidth: true }
+                }
+                
+                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: theme.border }
+            }
+        }
+
+        GridView {
+            id: gv; model: controller.fileModel; clip: true; delegate: gridDelegate
+            focus: true
+            Keys.onEscapePressed: (event) => {
+                if (controller) {
+                    controller.clearSelection()
+                    event.accepted = true
+                }
+            }
+            cellWidth: Math.max(80, baseCellSize * root.zoomScale)
+            cellHeight: Math.max(80, baseCellSize * root.zoomScale)
+            reuseItems: true
+            cacheBuffer: 520
             onContentYChanged: thumbsDebounce.restart()
             onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
         }
 
-        GridView {
-            id: gv; model: controller.fileModel; clip: true; delegate: gridDelegate
-            visible: controller.fileModel.count > 0
-            cellWidth: baseCellSize * (zoomLevel / 100.0)
-            cellHeight: baseCellSize * (zoomLevel / 100.0)
-            cacheBuffer: 0
-            onContentYChanged: thumbsDebounce.restart()
-            onCountChanged: thumbsDebounce.restart()
+        // Actual Tree View
+        TreeView {
+            id: treeView
+            model: controller.treeModel
+            focus: true
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            
+            delegate: Item {
+                id: treeDelegate
+                implicitWidth: treeView.width
+                implicitHeight: 32
+                
+                readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPath === model.path
+                
+                Rectangle {
+                    anchors.fill: parent; anchors.margins: 2; radius: 4
+                    color: isActuallySelected ? theme.selection : (treeMA.containsMouse ? theme.hover : "transparent")
+                    visible: isActuallySelected || treeMA.containsMouse
+                }
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: (model.depth || 0) * 20 + 8
+                    spacing: 8
+
+                    Icon {
+                        name: model.isExpanded ? "chevron-down" : "chevron-right"
+                        iconSize: 12
+                        color: theme.textTertiary
+                        visible: model.hasChildren
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                if (model.isExpanded) treeView.collapse(model.index)
+                                else treeView.expand(model.index)
+                            }
+                        }
+                    }
+
+                    FileIcon {
+                        Layout.preferredWidth: 18
+                        Layout.preferredHeight: 18
+                        isDir: model.isDir
+                        iconName: model.iconName
+                        theme: root.theme
+                        gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
+                    }
+
+                    Text {
+                        text: model.name
+                        Layout.fillWidth: true
+                        elide: Text.ElideRight
+                        color: treeDelegate.isActuallySelected ? theme.accent : theme.textPrimary
+                        font.pixelSize: 13
+                    }
+                    ToolTip.visible: treeMA.containsMouse
+                    ToolTip.text: model.path
+                }
+
+                MouseArea {
+                    id: treeMA
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        controller.selectPath(model.path)
+                        if (model.isDir && generalSettings.singleClick) controller.openPath(model.path)
+                    }
+                    onDoubleClicked: if (model.isDir && !generalSettings.singleClick) controller.openPath(model.path)
+                }
+            }
+            
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
         }
     }
@@ -530,7 +1040,7 @@ Item {
             Icon {
                 Layout.alignment: Qt.AlignHCenter
                 name: "search"
-                size: 64
+                iconSize: 64
                 color: theme.textMuted
                 opacity: 0.4
             }
@@ -575,7 +1085,9 @@ Item {
             if (mouse.button === Qt.RightButton) bgMenu.popup()
             else if (mouse.button === Qt.BackButton) controller.goBack()
             else if (mouse.button === Qt.ForwardButton) controller.goForward()
-            else if (mouse.button === Qt.LeftButton) controller.clearSelection()
+            else if (mouse.button === Qt.LeftButton) {
+                controller.clearSelection()
+            }
         }
         onWheel: (wheel) => {
             if (wheel.modifiers & Qt.ControlModifier) {

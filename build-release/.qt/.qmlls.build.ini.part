@@ -1,0 +1,3 @@
+[<SLASH>home<SLASH>dhruv<SLASH>Liphis]
+importPaths="/home/dhruv/Liphis/build-release:/home/dhruv/Liphis/build-release/liphis:/usr/lib/qt6/qml"
+resourceFiles="/home/dhruv/Liphis/build-release/.qt/rcc/qmake_liphis.qrc:/home/dhruv/Liphis/build-release/.qt/rcc/liphis_app_raw_qml_0.qrc:/home/dhruv/Liphis/build-release/.qt/rcc/liphis_app_raw_res_0.qrc:/home/dhruv/Liphis/build-release/.qt/rcc/liphis_app_raw_qml_0_extra_qmldirs.qrc"

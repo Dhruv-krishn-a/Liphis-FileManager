@@ -4,6 +4,39 @@
             {
                 "className": "FileFilterProxyModel",
                 "lineNumber": 5,
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "roleName",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "ascending",
+                                "type": "bool"
+                            }
+                        ],
+                        "index": 10,
+                        "lineNumber": 22,
+                        "name": "setSortBy",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "roleName",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 11,
+                        "isCloned": true,
+                        "lineNumber": 22,
+                        "name": "setSortBy",
+                        "returnType": "void"
+                    }
+                ],
                 "object": true,
                 "properties": [
                     {
@@ -14,12 +47,14 @@
                         "lineNumber": 8,
                         "name": "showHidden",
                         "notify": "showHiddenChanged",
+                        "override": false,
                         "read": "showHidden",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "bool",
                         "user": false,
+                        "virtual": false,
                         "write": "setShowHidden"
                     },
                     {
@@ -30,12 +65,14 @@
                         "lineNumber": 9,
                         "name": "minSize",
                         "notify": "minSizeChanged",
+                        "override": false,
                         "read": "minSize",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "qlonglong",
                         "user": false,
+                        "virtual": false,
                         "write": "setMinSize"
                     },
                     {
@@ -46,12 +83,14 @@
                         "lineNumber": 10,
                         "name": "maxSize",
                         "notify": "maxSizeChanged",
+                        "override": false,
                         "read": "maxSize",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "qlonglong",
                         "user": false,
+                        "virtual": false,
                         "write": "setMaxSize"
                     },
                     {
@@ -62,12 +101,14 @@
                         "lineNumber": 11,
                         "name": "minDate",
                         "notify": "minDateChanged",
+                        "override": false,
                         "read": "minDate",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "qlonglong",
                         "user": false,
+                        "virtual": false,
                         "write": "setMinDate"
                     },
                     {
@@ -78,12 +119,14 @@
                         "lineNumber": 12,
                         "name": "maxDate",
                         "notify": "maxDateChanged",
+                        "override": false,
                         "read": "maxDate",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "qlonglong",
                         "user": false,
+                        "virtual": false,
                         "write": "setMaxDate"
                     },
                     {
@@ -94,13 +137,86 @@
                         "lineNumber": 13,
                         "name": "extensionFilter",
                         "notify": "extensionFilterChanged",
+                        "override": false,
                         "read": "extensionFilter",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "QString",
                         "user": false,
+                        "virtual": false,
                         "write": "setExtensionFilter"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 6,
+                        "lineNumber": 14,
+                        "name": "searchQuery",
+                        "notify": "searchQueryChanged",
+                        "override": false,
+                        "read": "searchQuery",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setSearchQuery"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 7,
+                        "lineNumber": 15,
+                        "name": "typeFilter",
+                        "notify": "typeFilterChanged",
+                        "override": false,
+                        "read": "typeFilter",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setTypeFilter"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 8,
+                        "lineNumber": 16,
+                        "name": "exactMatch",
+                        "notify": "exactMatchChanged",
+                        "override": false,
+                        "read": "exactMatch",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setExactMatch"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 9,
+                        "lineNumber": 17,
+                        "name": "count",
+                        "notify": "countChanged",
+                        "override": false,
+                        "read": "rowCount",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "virtual": false
                     }
                 ],
                 "qualifiedClassName": "FileFilterProxyModel",
@@ -108,43 +224,71 @@
                     {
                         "access": "public",
                         "index": 0,
-                        "lineNumber": 37,
+                        "lineNumber": 49,
                         "name": "showHiddenChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 1,
-                        "lineNumber": 38,
+                        "lineNumber": 50,
                         "name": "minSizeChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 2,
-                        "lineNumber": 39,
+                        "lineNumber": 51,
                         "name": "maxSizeChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 3,
-                        "lineNumber": 40,
+                        "lineNumber": 52,
                         "name": "minDateChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 4,
-                        "lineNumber": 41,
+                        "lineNumber": 53,
                         "name": "maxDateChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 5,
-                        "lineNumber": 42,
+                        "lineNumber": 54,
                         "name": "extensionFilterChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 6,
+                        "lineNumber": 55,
+                        "name": "searchQueryChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 7,
+                        "lineNumber": 56,
+                        "name": "typeFilterChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 8,
+                        "lineNumber": 57,
+                        "name": "exactMatchChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 9,
+                        "lineNumber": 58,
+                        "name": "countChanged",
                         "returnType": "void"
                     }
                 ],
@@ -163,7 +307,7 @@
         "classes": [
             {
                 "className": "FileListModel",
-                "lineNumber": 8,
+                "lineNumber": 9,
                 "methods": [
                     {
                         "access": "public",
@@ -173,23 +317,130 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 0,
+                        "index": 3,
                         "isConst": true,
-                        "lineNumber": 45,
+                        "lineNumber": 53,
                         "name": "metadataForPath",
                         "returnType": "QVariantMap"
                     },
                     {
                         "access": "public",
-                        "index": 1,
+                        "index": 4,
                         "isConst": true,
-                        "lineNumber": 46,
+                        "lineNumber": 54,
                         "name": "availableExtensions",
                         "returnType": "QStringList"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "field",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "ascending",
+                                "type": "bool"
+                            }
+                        ],
+                        "index": 5,
+                        "lineNumber": 55,
+                        "name": "setSortBy",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "field",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 6,
+                        "isCloned": true,
+                        "lineNumber": 55,
+                        "name": "setSortBy",
+                        "returnType": "void"
                     }
                 ],
                 "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 0,
+                        "lineNumber": 12,
+                        "name": "count",
+                        "notify": "countChanged",
+                        "override": false,
+                        "read": "rowCount",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 1,
+                        "lineNumber": 13,
+                        "name": "sortField",
+                        "notify": "sortFieldChanged",
+                        "override": false,
+                        "read": "sortField",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 2,
+                        "lineNumber": 14,
+                        "name": "sortAscending",
+                        "notify": "sortAscendingChanged",
+                        "override": false,
+                        "read": "sortAscending",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false
+                    }
+                ],
                 "qualifiedClassName": "FileListModel",
+                "signals": [
+                    {
+                        "access": "public",
+                        "index": 0,
+                        "lineNumber": 61,
+                        "name": "countChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 1,
+                        "lineNumber": 62,
+                        "name": "sortFieldChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 2,
+                        "lineNumber": 63,
+                        "name": "sortAscendingChanged",
+                        "returnType": "void"
+                    }
+                ],
                 "superClasses": [
                     {
                         "access": "public",
@@ -199,6 +450,24 @@
             }
         ],
         "inputFile": "FileListModel.hpp",
+        "outputRevision": 69
+    },
+    {
+        "classes": [
+            {
+                "className": "FileTreeModel",
+                "lineNumber": 6,
+                "object": true,
+                "qualifiedClassName": "FileTreeModel",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QFileSystemModel"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "FileTreeModel.hpp",
         "outputRevision": 69
     },
     {
@@ -254,6 +523,33 @@
                         ],
                         "index": 3,
                         "lineNumber": 34,
+                        "name": "removeBookmarkByPath",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 4,
+                        "isConst": true,
+                        "lineNumber": 35,
+                        "name": "isBookmarked",
+                        "returnType": "bool"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 5,
+                        "lineNumber": 36,
                         "name": "addRecent",
                         "returnType": "void"
                     }
@@ -328,12 +624,14 @@
                         "lineNumber": 14,
                         "name": "busy",
                         "notify": "busyChanged",
+                        "override": false,
                         "read": "busy",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "bool",
-                        "user": false
+                        "user": false,
+                        "virtual": false
                     }
                 ],
                 "qualifiedClassName": "AnalysisController",
@@ -436,8 +734,43 @@
         "classes": [
             {
                 "className": "AppController",
-                "lineNumber": 16,
+                "lineNumber": 18,
                 "methods": [
+                    {
+                        "access": "public",
+                        "index": 30,
+                        "lineNumber": 72,
+                        "name": "undo",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 31,
+                        "lineNumber": 73,
+                        "name": "redo",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 32,
+                        "isConst": true,
+                        "lineNumber": 84,
+                        "name": "viewMode",
+                        "returnType": "QString"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "mode",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 33,
+                        "lineNumber": 85,
+                        "name": "setViewMode",
+                        "returnType": "void"
+                    },
                     {
                         "access": "public",
                         "arguments": [
@@ -446,36 +779,116 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 19,
-                        "lineNumber": 70,
+                        "index": 34,
+                        "lineNumber": 101,
                         "name": "openPath",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 20,
-                        "lineNumber": 71,
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 35,
+                        "lineNumber": 102,
+                        "name": "openWith",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "appCommand",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 36,
+                        "lineNumber": 103,
+                        "name": "openWithApp",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 37,
+                        "lineNumber": 104,
+                        "name": "getAssociatedApps",
+                        "returnType": "QVariantList"
+                    },
+                    {
+                        "access": "public",
+                        "index": 38,
+                        "lineNumber": 105,
+                        "name": "getAllApplications",
+                        "returnType": "QVariantList"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "mimeType",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "desktopFile",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 39,
+                        "lineNumber": 106,
+                        "name": "setDefaultApp",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 40,
+                        "lineNumber": 107,
+                        "name": "getMimeType",
+                        "returnType": "QString"
+                    },
+                    {
+                        "access": "public",
+                        "index": 41,
+                        "lineNumber": 108,
                         "name": "goUp",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 21,
-                        "lineNumber": 72,
+                        "index": 42,
+                        "lineNumber": 109,
                         "name": "goBack",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 22,
-                        "lineNumber": 73,
+                        "index": 43,
+                        "lineNumber": 110,
                         "name": "goForward",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 23,
-                        "lineNumber": 74,
+                        "index": 44,
+                        "lineNumber": 111,
                         "name": "refresh",
                         "returnType": "void"
                     },
@@ -487,8 +900,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 24,
-                        "lineNumber": 75,
+                        "index": 45,
+                        "lineNumber": 112,
                         "name": "setSearchText",
                         "returnType": "void"
                     },
@@ -500,9 +913,42 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 25,
-                        "lineNumber": 76,
+                        "index": 46,
+                        "lineNumber": 113,
                         "name": "startGlobalSearch",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "query",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 47,
+                        "lineNumber": 114,
+                        "name": "applySearchQuery",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "query",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 48,
+                        "lineNumber": 115,
+                        "name": "saveSearchQuery",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 49,
+                        "lineNumber": 116,
+                        "name": "cancelSearch",
                         "returnType": "void"
                     },
                     {
@@ -513,9 +959,22 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 26,
-                        "lineNumber": 79,
+                        "index": 50,
+                        "lineNumber": 119,
                         "name": "createFolder",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "name",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 51,
+                        "lineNumber": 120,
+                        "name": "createFile",
                         "returnType": "void"
                     },
                     {
@@ -530,8 +989,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 27,
-                        "lineNumber": 80,
+                        "index": 52,
+                        "lineNumber": 121,
                         "name": "renameItem",
                         "returnType": "void"
                     },
@@ -559,8 +1018,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 28,
-                        "lineNumber": 81,
+                        "index": 53,
+                        "lineNumber": 122,
                         "name": "bulkRename",
                         "returnType": "void"
                     },
@@ -572,9 +1031,22 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 29,
-                        "lineNumber": 82,
+                        "index": 54,
+                        "lineNumber": 123,
                         "name": "deleteItem",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "paths",
+                                "type": "QStringList"
+                            }
+                        ],
+                        "index": 55,
+                        "lineNumber": 124,
+                        "name": "deleteItems",
                         "returnType": "void"
                     },
                     {
@@ -585,8 +1057,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 30,
-                        "lineNumber": 83,
+                        "index": 56,
+                        "lineNumber": 125,
                         "name": "copyItem",
                         "returnType": "void"
                     },
@@ -598,16 +1070,23 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 31,
-                        "lineNumber": 84,
+                        "index": 57,
+                        "lineNumber": 126,
                         "name": "cutItem",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 32,
-                        "lineNumber": 85,
+                        "index": 58,
+                        "lineNumber": 127,
                         "name": "pasteItem",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 59,
+                        "lineNumber": 128,
+                        "name": "clearClipboard",
                         "returnType": "void"
                     },
                     {
@@ -618,8 +1097,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 33,
-                        "lineNumber": 88,
+                        "index": 60,
+                        "lineNumber": 131,
                         "name": "requestThumbnail",
                         "returnType": "void"
                     },
@@ -631,8 +1110,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 34,
-                        "lineNumber": 89,
+                        "index": 61,
+                        "lineNumber": 132,
                         "name": "selectPath",
                         "returnType": "void"
                     },
@@ -644,24 +1123,69 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 35,
-                        "lineNumber": 90,
+                        "index": 62,
+                        "lineNumber": 133,
                         "name": "toggleSelection",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 36,
-                        "lineNumber": 91,
+                        "index": 63,
+                        "lineNumber": 134,
                         "name": "clearSelection",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
-                        "index": 37,
-                        "lineNumber": 92,
+                        "index": 64,
+                        "lineNumber": 135,
                         "name": "selectAll",
                         "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "from",
+                                "type": "int"
+                            },
+                            {
+                                "name": "to",
+                                "type": "int"
+                            }
+                        ],
+                        "index": 65,
+                        "lineNumber": 136,
+                        "name": "selectRangeByIndexes",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "index",
+                                "type": "int"
+                            }
+                        ],
+                        "index": 66,
+                        "isConst": true,
+                        "lineNumber": 137,
+                        "name": "pathAtIndex",
+                        "returnType": "QString"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "index",
+                                "type": "int"
+                            }
+                        ],
+                        "index": 67,
+                        "isConst": true,
+                        "lineNumber": 138,
+                        "name": "nameAtIndex",
+                        "returnType": "QString"
                     },
                     {
                         "access": "public",
@@ -671,8 +1195,22 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 38,
-                        "lineNumber": 93,
+                        "index": 68,
+                        "isConst": true,
+                        "lineNumber": 139,
+                        "name": "indexOfPath",
+                        "returnType": "int"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 69,
+                        "lineNumber": 140,
                         "name": "startRename",
                         "returnType": "void"
                     },
@@ -684,9 +1222,9 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 39,
+                        "index": 70,
                         "isConst": true,
-                        "lineNumber": 98,
+                        "lineNumber": 149,
                         "name": "metadataForPath",
                         "returnType": "QVariantMap"
                     },
@@ -702,8 +1240,8 @@
                                 "type": "int"
                             }
                         ],
-                        "index": 40,
-                        "lineNumber": 99,
+                        "index": 71,
+                        "lineNumber": 150,
                         "name": "requestThumbnailsForRange",
                         "returnType": "void"
                     },
@@ -715,8 +1253,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 41,
-                        "lineNumber": 100,
+                        "index": 72,
+                        "lineNumber": 151,
                         "name": "getFilePreview",
                         "returnType": "QString"
                     },
@@ -728,8 +1266,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 42,
-                        "lineNumber": 101,
+                        "index": 73,
+                        "lineNumber": 152,
                         "name": "openInTerminal",
                         "returnType": "void"
                     },
@@ -741,8 +1279,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 43,
-                        "lineNumber": 102,
+                        "index": 74,
+                        "lineNumber": 153,
                         "name": "copyToClipboard",
                         "returnType": "void"
                     },
@@ -754,8 +1292,8 @@
                                 "type": "QStringList"
                             }
                         ],
-                        "index": 44,
-                        "lineNumber": 103,
+                        "index": 75,
+                        "lineNumber": 154,
                         "name": "trashItems",
                         "returnType": "void"
                     },
@@ -767,10 +1305,40 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 45,
-                        "lineNumber": 104,
+                        "index": 76,
+                        "lineNumber": 155,
                         "name": "analyseFolder",
                         "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "cmd",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 77,
+                        "lineNumber": 156,
+                        "name": "runGitCommand",
+                        "returnType": "QString"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 78,
+                        "lineNumber": 157,
+                        "name": "getFolderMetadata",
+                        "returnType": "QVariantMap"
                     },
                     {
                         "access": "public",
@@ -780,8 +1348,8 @@
                                 "type": "QStringList"
                             }
                         ],
-                        "index": 46,
-                        "lineNumber": 107,
+                        "index": 79,
+                        "lineNumber": 160,
                         "name": "compressItems",
                         "returnType": "void"
                     },
@@ -793,9 +1361,22 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 47,
-                        "lineNumber": 108,
+                        "index": 80,
+                        "lineNumber": 161,
                         "name": "extractItem",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "url",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 81,
+                        "lineNumber": 162,
+                        "name": "connectRemote",
                         "returnType": "void"
                     },
                     {
@@ -806,8 +1387,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 48,
-                        "lineNumber": 109,
+                        "index": 82,
+                        "lineNumber": 163,
                         "name": "openInCode",
                         "returnType": "void"
                     },
@@ -823,8 +1404,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 49,
-                        "lineNumber": 110,
+                        "index": 83,
+                        "lineNumber": 164,
                         "name": "addToBookmarks",
                         "returnType": "void"
                     },
@@ -836,8 +1417,8 @@
                                 "type": "int"
                             }
                         ],
-                        "index": 50,
-                        "lineNumber": 111,
+                        "index": 84,
+                        "lineNumber": 165,
                         "name": "removeFromBookmarks",
                         "returnType": "void"
                     },
@@ -849,8 +1430,52 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 51,
-                        "lineNumber": 112,
+                        "index": 85,
+                        "lineNumber": 166,
+                        "name": "removeBookmarkByPath",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 86,
+                        "isConst": true,
+                        "lineNumber": 167,
+                        "name": "isBookmarked",
+                        "returnType": "bool"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "name",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 87,
+                        "lineNumber": 168,
+                        "name": "toggleBookmark",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 88,
+                        "lineNumber": 169,
                         "name": "openAsRoot",
                         "returnType": "void"
                     },
@@ -862,8 +1487,21 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 52,
-                        "lineNumber": 113,
+                        "index": 89,
+                        "lineNumber": 170,
+                        "name": "openInNewWindow",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 90,
+                        "lineNumber": 171,
                         "name": "computeChecksum",
                         "returnType": "QString"
                     },
@@ -875,8 +1513,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 53,
-                        "lineNumber": 114,
+                        "index": 91,
+                        "lineNumber": 172,
                         "name": "duplicateItem",
                         "returnType": "void"
                     },
@@ -892,8 +1530,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 54,
-                        "lineNumber": 115,
+                        "index": 92,
+                        "lineNumber": 173,
                         "name": "createSymlink",
                         "returnType": "void"
                     },
@@ -905,8 +1543,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 55,
-                        "lineNumber": 116,
+                        "index": 93,
+                        "lineNumber": 174,
                         "name": "makeExecutable",
                         "returnType": "void"
                     },
@@ -922,8 +1560,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 56,
-                        "lineNumber": 117,
+                        "index": 94,
+                        "lineNumber": 175,
                         "name": "setPermissions",
                         "returnType": "void"
                     },
@@ -935,8 +1573,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 57,
-                        "lineNumber": 118,
+                        "index": 95,
+                        "lineNumber": 176,
                         "name": "setWallpaper",
                         "returnType": "void"
                     },
@@ -948,9 +1586,30 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 58,
-                        "lineNumber": 119,
+                        "index": 96,
+                        "lineNumber": 177,
                         "name": "mountRemote",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "paths",
+                                "type": "QStringList"
+                            },
+                            {
+                                "name": "targetDir",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "isCopy",
+                                "type": "bool"
+                            }
+                        ],
+                        "index": 97,
+                        "lineNumber": 178,
+                        "name": "dropItems",
                         "returnType": "void"
                     },
                     {
@@ -961,8 +1620,8 @@
                                 "type": "ThumbnailManager*"
                             }
                         ],
-                        "index": 59,
-                        "lineNumber": 174,
+                        "index": 98,
+                        "lineNumber": 259,
                         "name": "setThumbnailManager",
                         "returnType": "void"
                     },
@@ -974,8 +1633,8 @@
                                 "type": "PlacesModel*"
                             }
                         ],
-                        "index": 60,
-                        "lineNumber": 175,
+                        "index": 99,
+                        "lineNumber": 260,
                         "name": "setPlacesModel",
                         "returnType": "void"
                     }
@@ -987,179 +1646,201 @@
                         "designable": true,
                         "final": false,
                         "index": 0,
-                        "lineNumber": 20,
+                        "lineNumber": 22,
                         "name": "fileModel",
+                        "override": false,
                         "read": "fileModel",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "QObject*",
-                        "user": false
+                        "user": false,
+                        "virtual": false
                     },
                     {
-                        "constant": false,
+                        "constant": true,
                         "designable": true,
                         "final": false,
                         "index": 1,
-                        "lineNumber": 21,
-                        "name": "placesModel",
-                        "notify": "placesModelChanged",
-                        "read": "placesModel",
+                        "lineNumber": 23,
+                        "name": "treeModel",
+                        "override": false,
+                        "read": "treeModel",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "QObject*",
-                        "user": false
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 2,
-                        "lineNumber": 22,
-                        "name": "currentPath",
-                        "notify": "currentPathChanged",
-                        "read": "currentPath",
+                        "lineNumber": 24,
+                        "name": "placesModel",
+                        "notify": "placesModelChanged",
+                        "override": false,
+                        "read": "placesModel",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QString",
-                        "user": false
+                        "type": "QObject*",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 3,
-                        "lineNumber": 23,
-                        "name": "loading",
-                        "notify": "loadingChanged",
-                        "read": "loading",
+                        "lineNumber": 25,
+                        "name": "currentPath",
+                        "notify": "currentPathChanged",
+                        "override": false,
+                        "read": "currentPath",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "bool",
-                        "user": false
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 4,
-                        "lineNumber": 24,
-                        "name": "selectedPath",
-                        "notify": "selectedPathChanged",
-                        "read": "selectedPath",
+                        "lineNumber": 26,
+                        "name": "loading",
+                        "notify": "loadingChanged",
+                        "override": false,
+                        "read": "loading",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QString",
-                        "user": false
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 5,
-                        "lineNumber": 25,
-                        "name": "selectedPaths",
-                        "notify": "selectedPathsChanged",
-                        "read": "selectedPaths",
+                        "lineNumber": 27,
+                        "name": "selectedPath",
+                        "notify": "selectedPathChanged",
+                        "override": false,
+                        "read": "selectedPath",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QStringList",
-                        "user": false
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 6,
-                        "lineNumber": 26,
-                        "name": "hasSelection",
+                        "lineNumber": 28,
+                        "name": "selectedPaths",
                         "notify": "selectedPathsChanged",
-                        "read": "hasSelection",
+                        "override": false,
+                        "read": "selectedPaths",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "bool",
-                        "user": false
+                        "type": "QStringList",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 7,
-                        "lineNumber": 27,
-                        "name": "canGoBack",
-                        "notify": "canGoBackChanged",
-                        "read": "canGoBack",
+                        "lineNumber": 29,
+                        "name": "selectionRevision",
+                        "notify": "selectedPathsChanged",
+                        "override": false,
+                        "read": "selectionRevision",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "bool",
-                        "user": false
+                        "type": "int",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 8,
-                        "lineNumber": 28,
-                        "name": "canGoForward",
-                        "notify": "canGoForwardChanged",
-                        "read": "canGoForward",
+                        "lineNumber": 30,
+                        "name": "hasSelection",
+                        "notify": "selectedPathsChanged",
+                        "override": false,
+                        "read": "hasSelection",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "bool",
-                        "user": false
+                        "user": false,
+                        "virtual": false
                     },
                     {
-                        "constant": true,
+                        "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 9,
-                        "lineNumber": 29,
-                        "name": "homePath",
-                        "read": "homePath",
+                        "lineNumber": 31,
+                        "name": "canGoBack",
+                        "notify": "canGoBackChanged",
+                        "override": false,
+                        "read": "canGoBack",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QString",
-                        "user": false
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 10,
-                        "lineNumber": 30,
-                        "name": "title",
-                        "notify": "titleChanged",
-                        "read": "title",
-                        "required": false,
-                        "scriptable": true,
-                        "stored": true,
-                        "type": "QString",
-                        "user": false
-                    },
-                    {
-                        "constant": false,
-                        "designable": true,
-                        "final": false,
-                        "index": 11,
-                        "lineNumber": 33,
-                        "name": "showHiddenFiles",
-                        "notify": "showHiddenFilesChanged",
-                        "read": "showHiddenFiles",
+                        "lineNumber": 32,
+                        "name": "canGoForward",
+                        "notify": "canGoForwardChanged",
+                        "override": false,
+                        "read": "canGoForward",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "bool",
                         "user": false,
-                        "write": "setShowHiddenFiles"
+                        "virtual": false
+                    },
+                    {
+                        "constant": true,
+                        "designable": true,
+                        "final": false,
+                        "index": 11,
+                        "lineNumber": 33,
+                        "name": "homePath",
+                        "override": false,
+                        "read": "homePath",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
@@ -1167,106 +1848,328 @@
                         "final": false,
                         "index": 12,
                         "lineNumber": 34,
-                        "name": "hasClipboard",
-                        "notify": "clipboardChanged",
-                        "read": "hasClipboard",
+                        "name": "title",
+                        "notify": "titleChanged",
+                        "override": false,
+                        "read": "title",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "bool",
-                        "user": false
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 13,
-                        "lineNumber": 35,
-                        "name": "clipboardPath",
-                        "notify": "clipboardChanged",
-                        "read": "clipboardPath",
+                        "lineNumber": 37,
+                        "name": "showHiddenFiles",
+                        "notify": "showHiddenFilesChanged",
+                        "override": false,
+                        "read": "showHiddenFiles",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QString",
-                        "user": false
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setShowHiddenFiles"
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 14,
-                        "lineNumber": 36,
-                        "name": "isCutOp",
+                        "lineNumber": 38,
+                        "name": "hasClipboard",
                         "notify": "clipboardChanged",
-                        "read": "isCutOp",
+                        "override": false,
+                        "read": "hasClipboard",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "bool",
-                        "user": false
+                        "user": false,
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 15,
-                        "lineNumber": 37,
-                        "name": "iconSize",
-                        "notify": "iconSizeChanged",
-                        "read": "iconSize",
+                        "lineNumber": 39,
+                        "name": "clipboardPaths",
+                        "notify": "clipboardChanged",
+                        "override": false,
+                        "read": "clipboardPaths",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "int",
+                        "type": "QStringList",
                         "user": false,
-                        "write": "setIconSize"
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 16,
-                        "lineNumber": 38,
-                        "name": "viewMode",
-                        "notify": "viewModeChanged",
-                        "read": "viewMode",
+                        "lineNumber": 40,
+                        "name": "isCutOp",
+                        "notify": "clipboardChanged",
+                        "override": false,
+                        "read": "isCutOp",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QString",
+                        "type": "bool",
                         "user": false,
-                        "write": "setViewMode"
+                        "virtual": false
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 17,
-                        "lineNumber": 39,
-                        "name": "availableExtensions",
-                        "notify": "availableExtensionsChanged",
-                        "read": "availableExtensions",
+                        "lineNumber": 41,
+                        "name": "iconSize",
+                        "notify": "iconSizeChanged",
+                        "override": false,
+                        "read": "iconSize",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
-                        "type": "QStringList",
-                        "user": false
+                        "type": "int",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setIconSize"
                     },
                     {
                         "constant": false,
                         "designable": true,
                         "final": false,
                         "index": 18,
-                        "lineNumber": 40,
+                        "lineNumber": 42,
+                        "name": "viewMode",
+                        "notify": "viewModeChanged",
+                        "override": false,
+                        "read": "viewMode",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setViewMode"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 19,
+                        "lineNumber": 43,
+                        "name": "availableExtensions",
+                        "notify": "availableExtensionsChanged",
+                        "override": false,
+                        "read": "availableExtensions",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QStringList",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 20,
+                        "lineNumber": 44,
                         "name": "gitStatus",
                         "notify": "gitStatusChanged",
+                        "override": false,
                         "read": "gitStatus",
                         "required": false,
                         "scriptable": true,
                         "stored": true,
                         "type": "QVariantMap",
-                        "user": false
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 21,
+                        "lineNumber": 45,
+                        "name": "bookmarksRevision",
+                        "notify": "bookmarksRevisionChanged",
+                        "override": false,
+                        "read": "bookmarksRevision",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "int",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 22,
+                        "lineNumber": 46,
+                        "name": "searchMode",
+                        "notify": "searchModeChanged",
+                        "override": false,
+                        "read": "searchMode",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setSearchMode"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 23,
+                        "lineNumber": 47,
+                        "name": "searchScope",
+                        "notify": "searchScopeChanged",
+                        "override": false,
+                        "read": "searchScope",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setSearchScope"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 24,
+                        "lineNumber": 48,
+                        "name": "searchInProgress",
+                        "notify": "searchInProgressChanged",
+                        "override": false,
+                        "read": "searchInProgress",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 25,
+                        "lineNumber": 49,
+                        "name": "activeSearchTerm",
+                        "notify": "activeSearchTermChanged",
+                        "override": false,
+                        "read": "activeSearchTerm",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 26,
+                        "lineNumber": 50,
+                        "name": "searchContent",
+                        "notify": "searchContentChanged",
+                        "override": false,
+                        "read": "searchContent",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setSearchContent"
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 27,
+                        "lineNumber": 51,
+                        "name": "recentSearches",
+                        "notify": "recentSearchesChanged",
+                        "override": false,
+                        "read": "recentSearches",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QStringList",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 28,
+                        "lineNumber": 52,
+                        "name": "canUndo",
+                        "notify": "canUndoChanged",
+                        "override": false,
+                        "read": "canUndo",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 29,
+                        "lineNumber": 53,
+                        "name": "canRedo",
+                        "notify": "canRedoChanged",
+                        "override": false,
+                        "read": "canRedo",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "bool",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 30,
+                        "lineNumber": 54,
+                        "name": "undoDescription",
+                        "notify": "canUndoChanged",
+                        "override": false,
+                        "read": "undoDescription",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
                     }
                 ],
                 "qualifiedClassName": "AppController",
@@ -1274,77 +2177,77 @@
                     {
                         "access": "public",
                         "index": 0,
-                        "lineNumber": 122,
+                        "lineNumber": 181,
                         "name": "currentPathChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 1,
-                        "lineNumber": 123,
+                        "lineNumber": 182,
                         "name": "loadingChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 2,
-                        "lineNumber": 124,
+                        "lineNumber": 183,
                         "name": "selectedPathChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 3,
-                        "lineNumber": 125,
+                        "lineNumber": 184,
                         "name": "selectedPathsChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 4,
-                        "lineNumber": 126,
+                        "lineNumber": 185,
                         "name": "canGoBackChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 5,
-                        "lineNumber": 127,
+                        "lineNumber": 186,
                         "name": "canGoForwardChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 6,
-                        "lineNumber": 128,
+                        "lineNumber": 187,
                         "name": "showHiddenFilesChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 7,
-                        "lineNumber": 129,
+                        "lineNumber": 188,
                         "name": "clipboardChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 8,
-                        "lineNumber": 130,
+                        "lineNumber": 189,
                         "name": "titleChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 9,
-                        "lineNumber": 131,
+                        "lineNumber": 190,
                         "name": "iconSizeChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 10,
-                        "lineNumber": 132,
+                        "lineNumber": 191,
                         "name": "viewModeChanged",
                         "returnType": "void"
                     },
@@ -1357,21 +2260,21 @@
                             }
                         ],
                         "index": 11,
-                        "lineNumber": 133,
+                        "lineNumber": 192,
                         "name": "renameRequested",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 12,
-                        "lineNumber": 134,
+                        "lineNumber": 193,
                         "name": "availableExtensionsChanged",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 13,
-                        "lineNumber": 135,
+                        "lineNumber": 194,
                         "name": "gitStatusChanged",
                         "returnType": "void"
                     },
@@ -1384,15 +2287,98 @@
                             }
                         ],
                         "index": 14,
-                        "lineNumber": 136,
+                        "lineNumber": 195,
                         "name": "analyseRequested",
                         "returnType": "void"
                     },
                     {
                         "access": "public",
                         "index": 15,
-                        "lineNumber": 137,
+                        "lineNumber": 196,
                         "name": "placesModelChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 16,
+                        "lineNumber": 197,
+                        "name": "bookmarksRevisionChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 17,
+                        "lineNumber": 198,
+                        "name": "searchModeChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 18,
+                        "lineNumber": 199,
+                        "name": "searchScopeChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 19,
+                        "lineNumber": 200,
+                        "name": "searchInProgressChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 20,
+                        "lineNumber": 201,
+                        "name": "searchContentChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 21,
+                        "lineNumber": 202,
+                        "name": "activeSearchTermChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 22,
+                        "lineNumber": 203,
+                        "name": "recentSearchesChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 23,
+                        "lineNumber": 204,
+                        "name": "requestSearchClear",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "path",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 24,
+                        "lineNumber": 205,
+                        "name": "openWithRequested",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 25,
+                        "lineNumber": 206,
+                        "name": "canUndoChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 26,
+                        "lineNumber": 207,
+                        "name": "canRedoChanged",
                         "returnType": "void"
                     },
                     {
@@ -1403,8 +2389,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 16,
-                        "lineNumber": 139,
+                        "index": 27,
+                        "lineNumber": 209,
                         "name": "operationError",
                         "returnType": "void"
                     },
@@ -1416,8 +2402,8 @@
                                 "type": "QString"
                             }
                         ],
-                        "index": 17,
-                        "lineNumber": 140,
+                        "index": 28,
+                        "lineNumber": 210,
                         "name": "operationSuccess",
                         "returnType": "void"
                     },
@@ -1429,8 +2415,8 @@
                                 "type": "float"
                             }
                         ],
-                        "index": 18,
-                        "lineNumber": 141,
+                        "index": 29,
+                        "lineNumber": 211,
                         "name": "operationProgress",
                         "returnType": "void"
                     }
@@ -1444,6 +2430,270 @@
             }
         ],
         "inputFile": "AppController.hpp",
+        "outputRevision": 69
+    },
+    {
+        "classes": [
+            {
+                "className": "CommandModel",
+                "lineNumber": 21,
+                "object": true,
+                "qualifiedClassName": "CommandModel",
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QAbstractListModel"
+                    }
+                ]
+            },
+            {
+                "className": "CommandManager",
+                "lineNumber": 45,
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "id",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "category",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "label",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "icon",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "shortcut",
+                                "type": "QString"
+                            },
+                            {
+                                "name": "callback",
+                                "type": "QJSValue"
+                            }
+                        ],
+                        "index": 1,
+                        "lineNumber": 59,
+                        "name": "registerCommand",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "index",
+                                "type": "int"
+                            }
+                        ],
+                        "index": 2,
+                        "lineNumber": 66,
+                        "name": "executeCommand",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "id",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 3,
+                        "lineNumber": 67,
+                        "name": "executeCommandById",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "properties": [
+                    {
+                        "constant": true,
+                        "designable": true,
+                        "final": false,
+                        "index": 0,
+                        "lineNumber": 47,
+                        "name": "model",
+                        "override": false,
+                        "read": "model",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QAbstractListModel*",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 1,
+                        "lineNumber": 48,
+                        "name": "filter",
+                        "notify": "filterChanged",
+                        "override": false,
+                        "read": "filter",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setFilter"
+                    }
+                ],
+                "qualifiedClassName": "CommandManager",
+                "signals": [
+                    {
+                        "access": "public",
+                        "index": 0,
+                        "lineNumber": 70,
+                        "name": "filterChanged",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "CommandManager.hpp",
+        "outputRevision": 69
+    },
+    {
+        "classes": [
+            {
+                "className": "TerminalManager",
+                "lineNumber": 7,
+                "methods": [
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "cmd",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 5,
+                        "lineNumber": 21,
+                        "name": "sendCommand",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 6,
+                        "lineNumber": 22,
+                        "name": "clear",
+                        "returnType": "void"
+                    }
+                ],
+                "object": true,
+                "properties": [
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 0,
+                        "lineNumber": 10,
+                        "name": "output",
+                        "notify": "outputChanged",
+                        "override": false,
+                        "read": "output",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false
+                    },
+                    {
+                        "constant": false,
+                        "designable": true,
+                        "final": false,
+                        "index": 1,
+                        "lineNumber": 11,
+                        "name": "currentDir",
+                        "notify": "currentDirChanged",
+                        "override": false,
+                        "read": "currentDir",
+                        "required": false,
+                        "scriptable": true,
+                        "stored": true,
+                        "type": "QString",
+                        "user": false,
+                        "virtual": false,
+                        "write": "setCurrentDir"
+                    }
+                ],
+                "qualifiedClassName": "TerminalManager",
+                "signals": [
+                    {
+                        "access": "public",
+                        "index": 0,
+                        "lineNumber": 25,
+                        "name": "outputChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "index": 1,
+                        "lineNumber": 26,
+                        "name": "currentDirChanged",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "public",
+                        "arguments": [
+                            {
+                                "name": "cmd",
+                                "type": "QString"
+                            }
+                        ],
+                        "index": 2,
+                        "lineNumber": 27,
+                        "name": "commandExecuted",
+                        "returnType": "void"
+                    }
+                ],
+                "slots": [
+                    {
+                        "access": "private",
+                        "index": 3,
+                        "lineNumber": 30,
+                        "name": "readOutput",
+                        "returnType": "void"
+                    },
+                    {
+                        "access": "private",
+                        "arguments": [
+                            {
+                                "name": "error",
+                                "type": "QProcess::ProcessError"
+                            }
+                        ],
+                        "index": 4,
+                        "lineNumber": 31,
+                        "name": "handleError",
+                        "returnType": "void"
+                    }
+                ],
+                "superClasses": [
+                    {
+                        "access": "public",
+                        "name": "QObject"
+                    }
+                ]
+            }
+        ],
+        "inputFile": "TerminalManager.hpp",
         "outputRevision": 69
     },
     {

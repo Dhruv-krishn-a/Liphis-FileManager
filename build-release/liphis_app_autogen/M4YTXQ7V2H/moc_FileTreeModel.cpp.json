@@ -1,0 +1,18 @@
+{
+    "classes": [
+        {
+            "className": "FileTreeModel",
+            "lineNumber": 6,
+            "object": true,
+            "qualifiedClassName": "FileTreeModel",
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QFileSystemModel"
+                }
+            ]
+        }
+    ],
+    "inputFile": "FileTreeModel.hpp",
+    "outputRevision": 69
+}

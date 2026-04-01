@@ -38,24 +38,30 @@ Menu {
     }
 
     function iconSource(name) {
-        if (name === "document-open") return "assets/icons/outline/folder-open.svg"
-        if (name === "vscode") return "assets/icons/outline/brand-vscode.svg"
-        if (name === "edit-cut") return "assets/icons/outline/scissors.svg"
-        if (name === "edit-copy") return "assets/icons/outline/copy.svg"
-        if (name === "edit-rename") return "assets/icons/outline/pencil.svg"
-        if (name === "user-trash") return "assets/icons/outline/trash.svg"
-        if (name === "dialog-password") return "assets/icons/outline/password.svg"
-        if (name === "document-properties") return "assets/icons/outline/list-details.svg"
+        if (name === "document-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-open.svg"
+        if (name === "vscode") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/brand-vscode.svg"
+        if (name === "edit-cut") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/scissors.svg"
+        if (name === "edit-copy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/copy.svg"
+        if (name === "edit-rename") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pencil.svg"
+        if (name === "user-trash") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
+        if (name === "dialog-password") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/password.svg"
+        if (name === "document-properties") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
         return ""
     }
 
-    MenuItem { 
+    MenuItem {
         text: "Open"
         Component.onCompleted: root.compact(this)
         onTriggered: if (controller) controller.openPath(root.targetPath)
         icon.source: root.iconSource("document-open")
     }
-    MenuItem { 
+    MenuItem {
+        text: "Open With..."
+        Component.onCompleted: root.compact(this)
+        onTriggered: if (controller) controller.openWith(root.targetPath)
+        icon.source: root.iconSource("document-open")
+    }
+    MenuItem {
         text: "Open in Code"
         Component.onCompleted: root.compact(this)
         onTriggered: if (controller) controller.openInCode(root.targetPath)
@@ -65,21 +71,25 @@ Menu {
     MenuSeparator { topPadding: 2; bottomPadding: 2 }
 
     MenuItem { 
-        text: "Cut"
+        text: controller && controller.selectedPaths.length > 1 ? qsTr("Cut %1 Items").arg(controller.selectedPaths.length) : "Cut"
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.cutItem(root.targetPath)
+        onTriggered: if (controller) controller.cutItem("") // passing empty uses selection
         icon.source: root.iconSource("edit-cut")
     }
     MenuItem { 
-        text: "Copy"
+        text: controller && controller.selectedPaths.length > 1 ? qsTr("Copy %1 Items").arg(controller.selectedPaths.length) : "Copy"
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.copyItem(root.targetPath)
+        onTriggered: if (controller) controller.copyItem("") // passing empty uses selection
         icon.source: root.iconSource("edit-copy")
     }
     MenuItem { 
         text: "Copy Location"
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.copyToClipboard(root.targetPath)
+        onTriggered: {
+            if (!controller) return;
+            if (controller.selectedPaths.length > 1) controller.copyToClipboard(controller.selectedPaths.join("\n"));
+            else controller.copyToClipboard(root.targetPath);
+        }
         icon.source: root.iconSource("edit-copy")
     }
     
@@ -88,19 +98,35 @@ Menu {
     MenuItem { 
         text: "Duplicate"
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.duplicateItem(root.targetPath)
+        onTriggered: {
+            if (!controller) return;
+            if (controller.selectedPaths.length > 1) {
+                for (var i=0; i < controller.selectedPaths.length; i++) controller.duplicateItem(controller.selectedPaths[i]);
+            } else controller.duplicateItem(root.targetPath);
+        }
         icon.source: root.iconSource("edit-copy")
     }
     MenuItem { 
         text: "Rename..."
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.startRename(root.targetPath)
+        onTriggered: if (controller) {
+            if (controller.selectedPaths.length > 1) {
+                // Future: show bulk rename
+                if (appWindow) appWindow.showBulkRename(controller.selectedPaths);
+            } else {
+                controller.startRename(root.targetPath);
+            }
+        }
         icon.source: root.iconSource("edit-rename")
     }
     MenuItem { 
         text: "Move to Trash"
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.trashItems([root.targetPath])
+        onTriggered: {
+            if (!controller) return;
+            if (controller.selectedPaths.length > 1) controller.trashItems(controller.selectedPaths);
+            else controller.trashItems([root.targetPath]);
+        }
         icon.source: root.iconSource("user-trash")
     }
 

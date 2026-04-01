@@ -9,6 +9,7 @@ struct FileMeta
     std::string name;     // filename only
     std::string path;     // full absolute path
     std::uint64_t size = 0;   // file size in bytes
+    std::uint64_t itemCount = 0; // number of items if directory
     std::uint64_t mtime = 0;  // last modified time (epoch seconds)
     std::uint64_t ctime = 0;  // creation time (epoch seconds)
     std::uint64_t atime = 0;  // last access time (epoch seconds)

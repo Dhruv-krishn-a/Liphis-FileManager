@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'PlacesModel.hpp'
 **
-** Created by: The Qt Meta Object Compiler version 69 (Qt 6.10.2)
+** Created by: The Qt Meta Object Compiler version 69 (Qt 6.11.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -18,7 +18,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'PlacesModel.hpp' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 69
-#error "This file was generated using the moc from 6.10.2. It"
+#error "This file was generated using the moc from 6.11.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -46,6 +46,8 @@ template <> constexpr inline auto PlacesModel::qt_create_metaobjectdata<qt_meta_
         "name",
         "removeBookmark",
         "index",
+        "removeBookmarkByPath",
+        "isBookmarked",
         "addRecent"
     };
 
@@ -60,8 +62,16 @@ template <> constexpr inline auto PlacesModel::qt_create_metaobjectdata<qt_meta_
         QtMocHelpers::MethodData<void(int)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::Int, 7 },
         }}),
-        // Method 'addRecent'
+        // Method 'removeBookmarkByPath'
         QtMocHelpers::MethodData<void(const QString &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 4 },
+        }}),
+        // Method 'isBookmarked'
+        QtMocHelpers::MethodData<bool(const QString &) const>(9, 2, QMC::AccessPublic, QMetaType::Bool, {{
+            { QMetaType::QString, 4 },
+        }}),
+        // Method 'addRecent'
+        QtMocHelpers::MethodData<void(const QString &)>(10, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 4 },
         }}),
     };
@@ -90,7 +100,10 @@ void PlacesModel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 0: _t->refresh(); break;
         case 1: _t->addBookmark((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
         case 2: _t->removeBookmark((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
-        case 3: _t->addRecent((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 3: _t->removeBookmarkByPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 4: { bool _r = _t->isBookmarked((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+            if (_a[0]) *reinterpret_cast<bool*>(_a[0]) = std::move(_r); }  break;
+        case 5: _t->addRecent((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
         default: ;
         }
     }
@@ -115,14 +128,14 @@ int PlacesModel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 6;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 6)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 6;
     }
     return _id;
 }

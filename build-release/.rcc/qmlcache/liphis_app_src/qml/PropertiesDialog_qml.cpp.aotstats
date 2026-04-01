@@ -10,23 +10,39 @@
                             "column": 12,
                             "durationMicroseconds": 0,
                             "functionName": "title",
-                            "line": 9,
+                            "line": 10,
                             "message": "Could not find property \"title\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "closePolicy",
+                            "line": 12,
+                            "message": "Could not find property \"closePolicy\"."
                         },
                         {
                             "codegenResult": 2,
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "standardButtons",
-                            "line": 14,
+                            "line": 16,
                             "message": "Could not find property \"standardButtons\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "associatedApps",
+                            "line": 36,
+                            "message": "Cannot generate efficient code for storing an array in a non-sequence type"
                         },
                         {
                             "codegenResult": 0,
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "permModel",
-                            "line": 32,
+                            "line": 39,
                             "message": ""
                         },
                         {
@@ -34,7 +50,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "show",
-                            "line": 38,
+                            "line": 45,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -42,7 +58,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "humanReadableSize",
-                            "line": 53,
+                            "line": 63,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -50,7 +66,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "formatDate",
-                            "line": 61,
+                            "line": 71,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -58,7 +74,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "permsToNumeric",
-                            "line": 67,
+                            "line": 77,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -66,7 +82,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "parsePermString",
-                            "line": 72,
+                            "line": 82,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -74,23 +90,47 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 15,
+                            "line": 17,
                             "message": "Could not find property \"centerIn\"."
                         },
                         {
                             "codegenResult": 2,
-                            "column": 53,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "isDark",
+                            "line": 25,
+                            "message": "Cannot retrieve a non-object type by ID: root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 84,
-                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                            "line": 94,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 96,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 98,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 89,
+                            "line": 102,
                             "message": ""
                         },
                         {
@@ -98,23 +138,15 @@
                             "column": 86,
                             "durationMicroseconds": 0,
                             "functionName": "isDir",
-                            "line": 93,
-                            "message": "Cannot retrieve a non-object type by ID: root"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 30,
-                            "durationMicroseconds": 0,
-                            "functionName": "text",
-                            "line": 95,
+                            "line": 106,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 107,
+                            "column": 105,
                             "durationMicroseconds": 0,
-                            "functionName": "elide",
-                            "line": 95,
+                            "functionName": "theme",
+                            "line": 106,
                             "message": ""
                         },
                         {
@@ -122,15 +154,47 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 96,
+                            "line": 108,
                             "message": "Cannot retrieve a non-object type by ID: root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 108,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 115,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 108,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 109,
+                            "message": "Cannot retrieve a non-object type by ID: root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 69,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 109,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 105,
+                            "line": 118,
                             "message": "Cannot access value for name tabGen"
                         },
                         {
@@ -138,15 +202,15 @@
                             "column": 63,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 105,
+                            "line": 118,
                             "message": "Cannot access value for name tabGen"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 124,
+                            "column": 137,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 105,
+                            "line": 118,
                             "message": ""
                         },
                         {
@@ -154,15 +218,23 @@
                             "column": 113,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 106,
+                            "line": 119,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 165,
+                            "column": 145,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 119,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 168,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 106,
+                            "line": 119,
                             "message": "Cannot access value for name tabGen"
                         },
                         {
@@ -170,7 +242,7 @@
                             "column": 91,
                             "durationMicroseconds": 0,
                             "functionName": "bottom",
-                            "line": 106,
+                            "line": 119,
                             "message": ""
                         },
                         {
@@ -178,7 +250,7 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 111,
+                            "line": 124,
                             "message": "Cannot access value for name tabPerms"
                         },
                         {
@@ -186,15 +258,15 @@
                             "column": 65,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 111,
+                            "line": 124,
                             "message": "Cannot access value for name tabPerms"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 128,
+                            "column": 141,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 111,
+                            "line": 124,
                             "message": ""
                         },
                         {
@@ -202,15 +274,23 @@
                             "column": 113,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 112,
+                            "line": 125,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 165,
+                            "column": 145,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 125,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 168,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 112,
+                            "line": 125,
                             "message": "Cannot access value for name tabPerms"
                         },
                         {
@@ -218,7 +298,7 @@
                             "column": 91,
                             "durationMicroseconds": 0,
                             "functionName": "bottom",
-                            "line": 112,
+                            "line": 125,
                             "message": ""
                         },
                         {
@@ -226,167 +306,343 @@
                             "column": 76,
                             "durationMicroseconds": 0,
                             "functionName": "currentIndex",
-                            "line": 117,
+                            "line": 130,
                             "message": "Cannot retrieve a non-object type by ID: tabBar"
                         },
                         {
-                            "codegenResult": 2,
+                            "codegenResult": 0,
                             "column": 81,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 122,
-                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                            "line": 135,
+                            "message": ""
                         },
                         {
-                            "codegenResult": 2,
+                            "codegenResult": 0,
                             "column": 131,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 122,
-                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                            "line": 135,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 124,
+                            "line": 137,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 58,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 138,
+                            "message": "Could not find property \"color\"."
                         },
                         {
                             "codegenResult": 2,
                             "column": 38,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 126,
+                            "line": 139,
                             "message": "Cannot access value for name filePath"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 73,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 139,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 81,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 126,
+                            "line": 139,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
+                            "column": 54,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 140,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 38,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 128,
+                            "line": 141,
                             "message": "Cannot access value for name fileSizeBytes"
                         },
                         {
+                            "codegenResult": 0,
+                            "column": 79,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 141,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 58,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 142,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
                             "codegenResult": 2,
                             "column": 38,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 130,
+                            "line": 143,
                             "message": "Cannot access value for name fileDateRaw"
                         },
                         {
-                            "codegenResult": 2,
-                            "column": 38,
-                            "durationMicroseconds": 0,
-                            "functionName": "text",
-                            "line": 132,
-                            "message": "Cannot access value for name fileOwner"
-                        },
-                        {
                             "codegenResult": 0,
-                            "column": 95,
+                            "column": 70,
                             "durationMicroseconds": 0,
-                            "functionName": "horizontalAlignment",
+                            "functionName": "color",
                             "line": 143,
                             "message": ""
                         },
                         {
-                            "codegenResult": 0,
-                            "column": 95,
+                            "codegenResult": 2,
+                            "column": 59,
                             "durationMicroseconds": 0,
-                            "functionName": "horizontalAlignment",
+                            "functionName": "color",
                             "line": 144,
-                            "message": ""
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 145,
+                            "message": "Cannot access value for name mimeType"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 95,
+                            "column": 55,
                             "durationMicroseconds": 0,
-                            "functionName": "horizontalAlignment",
+                            "functionName": "color",
                             "line": 145,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 41,
+                            "column": 30,
                             "durationMicroseconds": 0,
-                            "functionName": "checked",
-                            "line": 148,
-                            "message": "Could not find property \"checked\"."
+                            "functionName": "visible",
+                            "line": 151,
+                            "message": "Cannot access value for name isDir"
                         },
                         {
-                            "codegenResult": 2,
-                            "column": 104,
+                            "codegenResult": 0,
+                            "column": 32,
                             "durationMicroseconds": 0,
-                            "functionName": "onCheckedChanged",
-                            "line": 148,
-                            "message": "Could not find signal \"checkedChanged\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 41,
-                            "durationMicroseconds": 0,
-                            "functionName": "checked",
-                            "line": 149,
-                            "message": "Could not find property \"checked\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 104,
-                            "durationMicroseconds": 0,
-                            "functionName": "onCheckedChanged",
-                            "line": 149,
-                            "message": "Could not find signal \"checkedChanged\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 41,
-                            "durationMicroseconds": 0,
-                            "functionName": "checked",
-                            "line": 150,
-                            "message": "Could not find property \"checked\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 104,
-                            "durationMicroseconds": 0,
-                            "functionName": "onCheckedChanged",
-                            "line": 150,
-                            "message": "Could not find signal \"checkedChanged\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 41,
-                            "durationMicroseconds": 0,
-                            "functionName": "checked",
-                            "line": 153,
-                            "message": "Could not find property \"checked\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 104,
-                            "durationMicroseconds": 0,
-                            "functionName": "onCheckedChanged",
-                            "line": 153,
-                            "message": "Could not find signal \"checkedChanged\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 41,
-                            "durationMicroseconds": 0,
-                            "functionName": "checked",
+                            "functionName": "color",
                             "line": 154,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 162,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 164,
+                            "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/PropertiesDialog.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 71,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 164,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 169,
+                            "message": "Cannot access value for name isDir"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 77,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 170,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 127,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 170,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 174,
+                            "message": "Cannot access value for name associatedApps"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 173,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 176,
+                            "message": "Could not find property \"width\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "name",
+                            "line": 180,
+                            "message": "Cannot access value for name modelData"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 113,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 180,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 181,
+                            "message": "Cannot access value for name modelData"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 69,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 181,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 183,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 184,
+                            "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 71,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 191,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/PropertiesDialog.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 204,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 98,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 204,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 205,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 98,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 205,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 206,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 98,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 206,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 50,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 208,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 209,
                             "message": "Could not find property \"checked\"."
                         },
                         {
@@ -394,7 +650,7 @@
                             "column": 104,
                             "durationMicroseconds": 0,
                             "functionName": "onCheckedChanged",
-                            "line": 154,
+                            "line": 209,
                             "message": "Could not find signal \"checkedChanged\"."
                         },
                         {
@@ -402,7 +658,7 @@
                             "column": 41,
                             "durationMicroseconds": 0,
                             "functionName": "checked",
-                            "line": 155,
+                            "line": 210,
                             "message": "Could not find property \"checked\"."
                         },
                         {
@@ -410,7 +666,7 @@
                             "column": 104,
                             "durationMicroseconds": 0,
                             "functionName": "onCheckedChanged",
-                            "line": 155,
+                            "line": 210,
                             "message": "Could not find signal \"checkedChanged\"."
                         },
                         {
@@ -418,15 +674,39 @@
                             "column": 41,
                             "durationMicroseconds": 0,
                             "functionName": "checked",
-                            "line": 158,
+                            "line": 211,
                             "message": "Could not find property \"checked\"."
                         },
                         {
                             "codegenResult": 2,
-                            "column": 106,
+                            "column": 104,
                             "durationMicroseconds": 0,
                             "functionName": "onCheckedChanged",
-                            "line": 158,
+                            "line": 211,
+                            "message": "Could not find signal \"checkedChanged\"."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 50,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 213,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 214,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 104,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCheckedChanged",
+                            "line": 214,
                             "message": "Could not find signal \"checkedChanged\"."
                         },
                         {
@@ -434,15 +714,15 @@
                             "column": 41,
                             "durationMicroseconds": 0,
                             "functionName": "checked",
-                            "line": 159,
+                            "line": 215,
                             "message": "Could not find property \"checked\"."
                         },
                         {
                             "codegenResult": 2,
-                            "column": 106,
+                            "column": 104,
                             "durationMicroseconds": 0,
                             "functionName": "onCheckedChanged",
-                            "line": 159,
+                            "line": 215,
                             "message": "Could not find signal \"checkedChanged\"."
                         },
                         {
@@ -450,7 +730,31 @@
                             "column": 41,
                             "durationMicroseconds": 0,
                             "functionName": "checked",
-                            "line": 160,
+                            "line": 216,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 104,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCheckedChanged",
+                            "line": 216,
+                            "message": "Could not find signal \"checkedChanged\"."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 218,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 219,
                             "message": "Could not find property \"checked\"."
                         },
                         {
@@ -458,7 +762,39 @@
                             "column": 106,
                             "durationMicroseconds": 0,
                             "functionName": "onCheckedChanged",
-                            "line": 160,
+                            "line": 219,
+                            "message": "Could not find signal \"checkedChanged\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 220,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 106,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCheckedChanged",
+                            "line": 220,
+                            "message": "Could not find signal \"checkedChanged\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 221,
+                            "message": "Could not find property \"checked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 106,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCheckedChanged",
+                            "line": 221,
                             "message": "Could not find signal \"checkedChanged\"."
                         },
                         {
@@ -466,15 +802,23 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 162,
+                            "line": 223,
                             "message": "Cannot access value for name permModel"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 75,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 223,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 171,
+                            "line": 232,
                             "message": "Could not find property \"visible\"."
                         },
                         {
@@ -482,31 +826,47 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 173,
+                            "line": 234,
                             "message": "Could not find signal \"clicked\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 66,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 235,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 175,
+                            "line": 236,
                             "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/PropertiesDialog.qml)::parent with type QQuickItem."
                         },
                         {
+                            "codegenResult": 2,
+                            "column": 63,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 236,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
                             "codegenResult": 0,
-                            "column": 155,
+                            "column": 158,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 175,
+                            "line": 236,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 193,
+                            "column": 196,
                             "durationMicroseconds": 0,
                             "functionName": "verticalAlignment",
-                            "line": 175,
+                            "line": 236,
                             "message": ""
                         },
                         {
@@ -514,39 +874,47 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 180,
+                            "line": 241,
                             "message": "Could not find signal \"clicked\"."
                         },
                         {
-                            "codegenResult": 0,
-                            "column": 38,
+                            "codegenResult": 2,
+                            "column": 59,
                             "durationMicroseconds": 0,
-                            "functionName": "orientation",
-                            "line": 184,
-                            "message": ""
+                            "functionName": "color",
+                            "line": 242,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 189,
+                            "line": 243,
                             "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/PropertiesDialog.qml)::parent with type QQuickItem."
                         },
                         {
+                            "codegenResult": 2,
+                            "column": 63,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 243,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
                             "codegenResult": 0,
-                            "column": 153,
+                            "column": 182,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 189,
+                            "line": 243,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 191,
+                            "column": 220,
                             "durationMicroseconds": 0,
                             "functionName": "verticalAlignment",
-                            "line": 189,
+                            "line": 243,
                             "message": ""
                         }
                     ],

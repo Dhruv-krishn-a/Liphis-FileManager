@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FileFilterProxyModel.hpp'
 **
-** Created by: The Qt Meta Object Compiler version 69 (Qt 6.10.2)
+** Created by: The Qt Meta Object Compiler version 69 (Qt 6.11.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -18,7 +18,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'FileFilterProxyModel.hpp' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 69
-#error "This file was generated using the moc from 6.10.2. It"
+#error "This file was generated using the moc from 6.11.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -46,12 +46,23 @@ template <> constexpr inline auto FileFilterProxyModel::qt_create_metaobjectdata
         "minDateChanged",
         "maxDateChanged",
         "extensionFilterChanged",
+        "searchQueryChanged",
+        "typeFilterChanged",
+        "exactMatchChanged",
+        "countChanged",
+        "setSortBy",
+        "roleName",
+        "ascending",
         "showHidden",
         "minSize",
         "maxSize",
         "minDate",
         "maxDate",
-        "extensionFilter"
+        "extensionFilter",
+        "searchQuery",
+        "typeFilter",
+        "exactMatch",
+        "count"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -67,20 +78,44 @@ template <> constexpr inline auto FileFilterProxyModel::qt_create_metaobjectdata
         QtMocHelpers::SignalData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'extensionFilterChanged'
         QtMocHelpers::SignalData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'searchQueryChanged'
+        QtMocHelpers::SignalData<void()>(8, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'typeFilterChanged'
+        QtMocHelpers::SignalData<void()>(9, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'exactMatchChanged'
+        QtMocHelpers::SignalData<void()>(10, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'countChanged'
+        QtMocHelpers::SignalData<void()>(11, 2, QMC::AccessPublic, QMetaType::Void),
+        // Method 'setSortBy'
+        QtMocHelpers::MethodData<void(const QString &, bool)>(12, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 13 }, { QMetaType::Bool, 14 },
+        }}),
+        // Method 'setSortBy'
+        QtMocHelpers::MethodData<void(const QString &)>(12, 2, QMC::AccessPublic | QMC::MethodCloned, QMetaType::Void, {{
+            { QMetaType::QString, 13 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
         // property 'showHidden'
-        QtMocHelpers::PropertyData<bool>(8, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 0),
+        QtMocHelpers::PropertyData<bool>(15, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 0),
         // property 'minSize'
-        QtMocHelpers::PropertyData<qlonglong>(9, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 1),
+        QtMocHelpers::PropertyData<qlonglong>(16, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 1),
         // property 'maxSize'
-        QtMocHelpers::PropertyData<qlonglong>(10, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 2),
+        QtMocHelpers::PropertyData<qlonglong>(17, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 2),
         // property 'minDate'
-        QtMocHelpers::PropertyData<qlonglong>(11, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 3),
+        QtMocHelpers::PropertyData<qlonglong>(18, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 3),
         // property 'maxDate'
-        QtMocHelpers::PropertyData<qlonglong>(12, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 4),
+        QtMocHelpers::PropertyData<qlonglong>(19, QMetaType::LongLong, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 4),
         // property 'extensionFilter'
-        QtMocHelpers::PropertyData<QString>(13, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 5),
+        QtMocHelpers::PropertyData<QString>(20, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 5),
+        // property 'searchQuery'
+        QtMocHelpers::PropertyData<QString>(21, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 6),
+        // property 'typeFilter'
+        QtMocHelpers::PropertyData<QString>(22, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 7),
+        // property 'exactMatch'
+        QtMocHelpers::PropertyData<bool>(23, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 8),
+        // property 'count'
+        QtMocHelpers::PropertyData<int>(24, QMetaType::Int, QMC::DefaultPropertyFlags, 9),
     };
     QtMocHelpers::UintData qt_enums {
     };
@@ -108,6 +143,12 @@ void FileFilterProxyModel::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
         case 3: _t->minDateChanged(); break;
         case 4: _t->maxDateChanged(); break;
         case 5: _t->extensionFilterChanged(); break;
+        case 6: _t->searchQueryChanged(); break;
+        case 7: _t->typeFilterChanged(); break;
+        case 8: _t->exactMatchChanged(); break;
+        case 9: _t->countChanged(); break;
+        case 10: _t->setSortBy((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<bool>>(_a[2]))); break;
+        case 11: _t->setSortBy((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
         default: ;
         }
     }
@@ -124,6 +165,14 @@ void FileFilterProxyModel::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
             return;
         if (QtMocHelpers::indexOfMethod<void (FileFilterProxyModel::*)()>(_a, &FileFilterProxyModel::extensionFilterChanged, 5))
             return;
+        if (QtMocHelpers::indexOfMethod<void (FileFilterProxyModel::*)()>(_a, &FileFilterProxyModel::searchQueryChanged, 6))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (FileFilterProxyModel::*)()>(_a, &FileFilterProxyModel::typeFilterChanged, 7))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (FileFilterProxyModel::*)()>(_a, &FileFilterProxyModel::exactMatchChanged, 8))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (FileFilterProxyModel::*)()>(_a, &FileFilterProxyModel::countChanged, 9))
+            return;
     }
     if (_c == QMetaObject::ReadProperty) {
         void *_v = _a[0];
@@ -134,6 +183,10 @@ void FileFilterProxyModel::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
         case 3: *reinterpret_cast<qlonglong*>(_v) = _t->minDate(); break;
         case 4: *reinterpret_cast<qlonglong*>(_v) = _t->maxDate(); break;
         case 5: *reinterpret_cast<QString*>(_v) = _t->extensionFilter(); break;
+        case 6: *reinterpret_cast<QString*>(_v) = _t->searchQuery(); break;
+        case 7: *reinterpret_cast<QString*>(_v) = _t->typeFilter(); break;
+        case 8: *reinterpret_cast<bool*>(_v) = _t->exactMatch(); break;
+        case 9: *reinterpret_cast<int*>(_v) = _t->rowCount(); break;
         default: break;
         }
     }
@@ -146,6 +199,9 @@ void FileFilterProxyModel::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
         case 3: _t->setMinDate(*reinterpret_cast<qlonglong*>(_v)); break;
         case 4: _t->setMaxDate(*reinterpret_cast<qlonglong*>(_v)); break;
         case 5: _t->setExtensionFilter(*reinterpret_cast<QString*>(_v)); break;
+        case 6: _t->setSearchQuery(*reinterpret_cast<QString*>(_v)); break;
+        case 7: _t->setTypeFilter(*reinterpret_cast<QString*>(_v)); break;
+        case 8: _t->setExactMatch(*reinterpret_cast<bool*>(_v)); break;
         default: break;
         }
     }
@@ -170,20 +226,20 @@ int FileFilterProxyModel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 12;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 12)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 6;
+        _id -= 12;
     }
     if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
             || _c == QMetaObject::ResetProperty || _c == QMetaObject::BindableProperty
             || _c == QMetaObject::RegisterPropertyMetaType) {
         qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 10;
     }
     return _id;
 }
@@ -222,5 +278,29 @@ void FileFilterProxyModel::maxDateChanged()
 void FileFilterProxyModel::extensionFilterChanged()
 {
     QMetaObject::activate(this, &staticMetaObject, 5, nullptr);
+}
+
+// SIGNAL 6
+void FileFilterProxyModel::searchQueryChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 6, nullptr);
+}
+
+// SIGNAL 7
+void FileFilterProxyModel::typeFilterChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 7, nullptr);
+}
+
+// SIGNAL 8
+void FileFilterProxyModel::exactMatchChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 8, nullptr);
+}
+
+// SIGNAL 9
+void FileFilterProxyModel::countChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 9, nullptr);
 }
 QT_WARNING_POP

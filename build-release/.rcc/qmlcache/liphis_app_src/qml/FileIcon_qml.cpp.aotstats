@@ -6,11 +6,35 @@
                 {
                     "entries": [
                         {
-                            "codegenResult": 2,
-                            "column": 18,
+                            "codegenResult": 0,
+                            "column": 48,
                             "durationMicroseconds": 0,
-                            "functionName": "visible",
-                            "line": 12,
+                            "functionName": "resolvedIconName",
+                            "line": 10,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 15,
+                            "durationMicroseconds": 0,
+                            "functionName": "name",
+                            "line": 18,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "filled",
+                            "line": 19,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 20,
                             "message": "Cannot access value for name isDir"
                         },
                         {
@@ -18,192 +42,88 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 11,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "y",
                             "line": 17,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 20,
+                            "column": 18,
                             "durationMicroseconds": 0,
-                            "functionName": "width",
-                            "line": 18,
+                            "functionName": "visible",
+                            "line": 28,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 49,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 29,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "height",
-                            "line": 18,
+                            "line": 30,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 22,
+                            "column": 17,
                             "durationMicroseconds": 0,
-                            "functionName": "y",
-                            "line": 25,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 20,
-                            "durationMicroseconds": 0,
-                            "functionName": "width",
-                            "line": 26,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 42,
-                            "durationMicroseconds": 0,
-                            "functionName": "height",
-                            "line": 26,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 49,
-                            "durationMicroseconds": 0,
-                            "functionName": "width",
-                            "line": 32,
+                            "functionName": "radius",
+                            "line": 31,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 24,
+                            "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "color",
+                            "line": 39,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "right",
+                            "line": 32,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottom",
                             "line": 33,
-                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: call to method rgba, returning QVariant -> QColor stored as QVariant"
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 30,
                             "durationMicroseconds": 0,
-                            "functionName": "top",
-                            "line": 32,
+                            "functionName": "rightMargin",
+                            "line": 34,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "bottomMargin",
+                            "line": 35,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 18,
-                            "durationMicroseconds": 0,
-                            "functionName": "visible",
-                            "line": 42,
-                            "message": "Cannot access value for name isDir"
-                        },
-                        {
-                            "codegenResult": 0,
                             "column": 23,
                             "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 40,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 26,
-                            "durationMicroseconds": 0,
-                            "functionName": "margins",
-                            "line": 41,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 20,
-                            "durationMicroseconds": 0,
-                            "functionName": "width",
-                            "line": 51,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 48,
-                            "durationMicroseconds": 0,
-                            "functionName": "height",
-                            "line": 51,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 28,
-                            "durationMicroseconds": 0,
-                            "functionName": "right",
-                            "line": 50,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 55,
-                            "durationMicroseconds": 0,
-                            "functionName": "top",
-                            "line": 50,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 31,
-                            "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 55,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 31,
-                            "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 61,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 35,
-                            "durationMicroseconds": 0,
-                            "functionName": "x",
-                            "line": 66,
-                            "message": "Cannot access value for name parent"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 52,
-                            "durationMicroseconds": 0,
-                            "functionName": "y",
-                            "line": 66,
-                            "message": "Cannot access value for name parent"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 41,
-                            "durationMicroseconds": 0,
-                            "functionName": "y",
-                            "line": 67,
-                            "message": "Cannot access value for name parent"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 31,
-                            "durationMicroseconds": 0,
-                            "functionName": "centerIn",
-                            "line": 75,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 36,
-                            "durationMicroseconds": 0,
-                            "functionName": "width",
-                            "line": 78,
-                            "message": "Cannot access value for name root"
+                            "functionName": "color",
+                            "line": 37,
+                            "message": "Cannot access value for name theme"
                         }
                     ],
                     "filePath": "/home/dhruv/Liphis/src/qml/FileIcon.qml"

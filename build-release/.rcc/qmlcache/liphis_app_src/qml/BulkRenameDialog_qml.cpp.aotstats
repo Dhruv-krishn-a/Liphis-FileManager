@@ -7,74 +7,282 @@
                     "entries": [
                         {
                             "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "closePolicy",
+                            "line": 11,
+                            "message": "Could not find property \"closePolicy\"."
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "standardButtons",
-                            "line": 10,
+                            "line": 14,
                             "message": "Could not find property \"standardButtons\"."
                         },
                         {
                             "codegenResult": 2,
                             "column": 25,
                             "durationMicroseconds": 0,
-                            "functionName": "paths",
-                            "line": 12,
+                            "functionName": "files",
+                            "line": 19,
                             "message": "Cannot generate efficient code for storing an array in a non-sequence type"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "search",
+                            "line": 21,
+                            "message": "Cannot access value for name searchField"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "replace",
+                            "line": 22,
+                            "message": "Cannot access value for name replaceField"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "prefix",
+                            "line": 23,
+                            "message": "Cannot access value for name prefixField"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "suffix",
+                            "line": 24,
+                            "message": "Cannot access value for name suffixField"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "show",
+                            "line": 32,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "previewName",
+                            "line": 37,
+                            "message": "Functions without type annotations won't be compiled"
                         },
                         {
                             "codegenResult": 2,
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "onAccepted",
-                            "line": 59,
+                            "line": 164,
                             "message": "Could not find signal \"accepted\"."
                         },
                         {
-                            "codegenResult": 0,
+                            "codegenResult": 2,
                             "column": 23,
                             "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 21,
-                            "message": ""
+                            "functionName": "centerIn",
+                            "line": 15,
+                            "message": "Could not find property \"centerIn\"."
                         },
                         {
                             "codegenResult": 2,
-                            "column": 22,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 27,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 29,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 23,
-                            "message": "Cannot access value for name paths"
+                            "line": 50,
+                            "message": "Cannot access value for name root"
                         },
                         {
                             "codegenResult": 2,
                             "column": 20,
                             "durationMicroseconds": 0,
-                            "functionName": "model",
-                            "line": 45,
-                            "message": "Cannot access value for name paths"
+                            "functionName": "color",
+                            "line": 51,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 63,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 71,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 79,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 87,
+                            "message": "Could not find property \"color\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 99,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 101,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 24,
+                            "column": 31,
                             "durationMicroseconds": 0,
-                            "functionName": "width",
-                            "line": 47,
+                            "functionName": "fill",
+                            "line": 104,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 23,
+                            "column": 28,
                             "durationMicroseconds": 0,
-                            "functionName": "text",
-                            "line": 48,
-                            "message": "Cannot access value for name modelData"
+                            "functionName": "color",
+                            "line": 111,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 24,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 115,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 86,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 118,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 81,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 119,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 127,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 129,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 136,
+                            "message": "Cannot access value for name modelData"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 138,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 54,
+                            "line": 140,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 146,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 151,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 153,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 156,
                             "message": ""
                         }
                     ],

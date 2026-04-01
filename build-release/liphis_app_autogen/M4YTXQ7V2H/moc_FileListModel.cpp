@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'FileListModel.hpp'
 **
-** Created by: The Qt Meta Object Compiler version 69 (Qt 6.10.2)
+** Created by: The Qt Meta Object Compiler version 69 (Qt 6.11.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -18,7 +18,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'FileListModel.hpp' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 69
-#error "This file was generated using the moc from 6.10.2. It"
+#error "This file was generated using the moc from 6.11.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -39,22 +39,51 @@ template <> constexpr inline auto FileListModel::qt_create_metaobjectdata<qt_met
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "FileListModel",
+        "countChanged",
+        "",
+        "sortFieldChanged",
+        "sortAscendingChanged",
         "metadataForPath",
         "QVariantMap",
-        "",
         "path",
-        "availableExtensions"
+        "availableExtensions",
+        "setSortBy",
+        "field",
+        "ascending",
+        "count",
+        "sortField",
+        "sortAscending"
     };
 
     QtMocHelpers::UintData qt_methods {
+        // Signal 'countChanged'
+        QtMocHelpers::SignalData<void()>(1, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'sortFieldChanged'
+        QtMocHelpers::SignalData<void()>(3, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'sortAscendingChanged'
+        QtMocHelpers::SignalData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'metadataForPath'
-        QtMocHelpers::MethodData<QVariantMap(const QString &) const>(1, 3, QMC::AccessPublic, 0x80000000 | 2, {{
-            { QMetaType::QString, 4 },
+        QtMocHelpers::MethodData<QVariantMap(const QString &) const>(5, 2, QMC::AccessPublic, 0x80000000 | 6, {{
+            { QMetaType::QString, 7 },
         }}),
         // Method 'availableExtensions'
-        QtMocHelpers::MethodData<QStringList() const>(5, 3, QMC::AccessPublic, QMetaType::QStringList),
+        QtMocHelpers::MethodData<QStringList() const>(8, 2, QMC::AccessPublic, QMetaType::QStringList),
+        // Method 'setSortBy'
+        QtMocHelpers::MethodData<void(const QString &, bool)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 10 }, { QMetaType::Bool, 11 },
+        }}),
+        // Method 'setSortBy'
+        QtMocHelpers::MethodData<void(const QString &)>(9, 2, QMC::AccessPublic | QMC::MethodCloned, QMetaType::Void, {{
+            { QMetaType::QString, 10 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
+        // property 'count'
+        QtMocHelpers::PropertyData<int>(12, QMetaType::Int, QMC::DefaultPropertyFlags, 0),
+        // property 'sortField'
+        QtMocHelpers::PropertyData<QString>(13, QMetaType::QString, QMC::DefaultPropertyFlags, 1),
+        // property 'sortAscending'
+        QtMocHelpers::PropertyData<bool>(14, QMetaType::Bool, QMC::DefaultPropertyFlags, 2),
     };
     QtMocHelpers::UintData qt_enums {
     };
@@ -76,11 +105,33 @@ void FileListModel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
     auto *_t = static_cast<FileListModel *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: { QVariantMap _r = _t->metadataForPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 0: _t->countChanged(); break;
+        case 1: _t->sortFieldChanged(); break;
+        case 2: _t->sortAscendingChanged(); break;
+        case 3: { QVariantMap _r = _t->metadataForPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QVariantMap*>(_a[0]) = std::move(_r); }  break;
-        case 1: { QStringList _r = _t->availableExtensions();
+        case 4: { QStringList _r = _t->availableExtensions();
             if (_a[0]) *reinterpret_cast<QStringList*>(_a[0]) = std::move(_r); }  break;
+        case 5: _t->setSortBy((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<bool>>(_a[2]))); break;
+        case 6: _t->setSortBy((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
         default: ;
+        }
+    }
+    if (_c == QMetaObject::IndexOfMethod) {
+        if (QtMocHelpers::indexOfMethod<void (FileListModel::*)()>(_a, &FileListModel::countChanged, 0))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (FileListModel::*)()>(_a, &FileListModel::sortFieldChanged, 1))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (FileListModel::*)()>(_a, &FileListModel::sortAscendingChanged, 2))
+            return;
+    }
+    if (_c == QMetaObject::ReadProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast<int*>(_v) = _t->rowCount(); break;
+        case 1: *reinterpret_cast<QString*>(_v) = _t->sortField(); break;
+        case 2: *reinterpret_cast<bool*>(_v) = _t->sortAscending(); break;
+        default: break;
         }
     }
 }
@@ -104,15 +155,39 @@ int FileListModel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 7;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 2;
+        _id -= 7;
+    }
+    if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
+            || _c == QMetaObject::ResetProperty || _c == QMetaObject::BindableProperty
+            || _c == QMetaObject::RegisterPropertyMetaType) {
+        qt_static_metacall(this, _c, _id, _a);
+        _id -= 3;
     }
     return _id;
+}
+
+// SIGNAL 0
+void FileListModel::countChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
+}
+
+// SIGNAL 1
+void FileListModel::sortFieldChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
+}
+
+// SIGNAL 2
+void FileListModel::sortAscendingChanged()
+{
+    QMetaObject::activate(this, &staticMetaObject, 2, nullptr);
 }
 QT_WARNING_POP
