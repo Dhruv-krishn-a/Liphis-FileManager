@@ -47,6 +47,8 @@ Rectangle {
         var q = raw
         if (typePreset.currentValue && typePreset.currentValue !== "all")
             q = (q.length > 0 ? q + " " : "") + "kind:" + typePreset.currentValue
+        if (scopePreset.currentValue && scopePreset.currentValue !== root.activeController.searchScope)
+            root.activeController.searchScope = scopePreset.currentValue
         root.activeController.applySearchQuery(q)
         if (immediateSave) root.activeController.saveSearchQuery(q)
     }
@@ -61,6 +63,7 @@ Rectangle {
             root.activeController.searchMode = "local"
             root.activeController.searchScope = "current"
         }
+        if (scopePreset) scopePreset.currentIndex = 0
         root.activeController.applySearchQuery("")
     }
 
@@ -158,7 +161,7 @@ Rectangle {
         ToolButton {
             id: logoButton
             Layout.preferredHeight: theme ? theme.controlMd : 40
-            Layout.preferredWidth: root.veryNarrow ? 142 : 196
+            Layout.preferredWidth: 196
             padding: 0
             onClicked: root.toggleThemeWithAnimation()
             ToolTip.visible: hovered
@@ -192,7 +195,7 @@ Rectangle {
 
                 Text {
                     text: root.themeAnimating ? root.brandScrambleText : root.brandStableText
-                    visible: !root.veryNarrow
+                    visible: true
                     color: root.theme.textPrimary
                     font.pixelSize: 15
                     font.bold: true
@@ -336,7 +339,7 @@ Rectangle {
                 spacing: theme ? theme.space6 : 6
 
                 Rectangle {
-                    Layout.preferredWidth: 160
+                    Layout.preferredWidth: 112
                     Layout.preferredHeight: theme.controlSm
                     radius: theme.rSm
                     color: theme.surface
@@ -373,30 +376,11 @@ Rectangle {
                             onClicked: {
                                 if (!root.activeController) return
                                 root.activeController.searchMode = "global"
-                                root.activeController.searchContent = false
                                 root.applySearch(false)
                             }
                             background: Rectangle {
                                 radius: theme.rSm
-                                color: root.activeController && root.activeController.searchMode === "global" && !root.activeController.searchContent
-                                    ? theme.selection
-                                    : "transparent"
-                            }
-                        }
-                        ToolButton {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            text: "Content"
-                            font.pixelSize: theme.fontLabel
-                            onClicked: {
-                                if (!root.activeController) return
-                                root.activeController.searchMode = "global"
-                                root.activeController.searchContent = true
-                                root.applySearch(false)
-                            }
-                            background: Rectangle {
-                                radius: theme.rSm
-                                color: root.activeController && root.activeController.searchContent
+                                color: root.activeController && root.activeController.searchMode === "global"
                                     ? theme.selection
                                     : "transparent"
                             }
@@ -406,7 +390,7 @@ Rectangle {
 
                 ComboBox {
                     id: typePreset
-                    Layout.preferredWidth: 86
+                    Layout.preferredWidth: 104
                     Layout.preferredHeight: theme.controlSm
                     model: [
                         { label: "All", value: "all" },
@@ -432,6 +416,56 @@ Rectangle {
                         leftPadding: 10
                         rightPadding: 20
                         text: typePreset.displayText
+                        color: theme.textPrimary
+                        font.pixelSize: theme.fontBody - 1
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
+                    indicator: Text {
+                        text: "▾"
+                        color: theme.textSecondary
+                        font.pixelSize: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: 8
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+                ComboBox {
+                    id: scopePreset
+                    Layout.preferredWidth: root.compactSearchControls ? 0 : 118
+                    Layout.preferredHeight: theme.controlSm
+                    visible: !root.compactSearchControls && !!root.activeController && root.activeController.searchMode === "global"
+                    model: [
+                        { label: "Current", value: "current" },
+                        { label: "Home", value: "home" },
+                        { label: "Mounted", value: "mounted" }
+                    ]
+                    textRole: "label"
+                    valueRole: "value"
+                    Component.onCompleted: {
+                        if (!root.activeController) return
+                        var idx = 0
+                        for (var i = 0; i < model.length; ++i) {
+                            if (model[i].value === root.activeController.searchScope) { idx = i; break }
+                        }
+                        currentIndex = idx
+                    }
+                    onActivated: {
+                        if (!root.activeController) return
+                        root.activeController.searchScope = currentValue
+                        root.applySearch(false)
+                    }
+                    background: Rectangle {
+                        radius: theme.rSm
+                        color: scopePreset.hovered ? theme.hover : theme.surface
+                        border.color: theme.border
+                        border.width: 1
+                    }
+                    contentItem: Text {
+                        leftPadding: 10
+                        rightPadding: 20
+                        text: scopePreset.displayText
                         color: theme.textPrimary
                         font.pixelSize: theme.fontBody - 1
                         verticalAlignment: Text.AlignVCenter
@@ -491,9 +525,9 @@ Rectangle {
                 ToolButton {
                     id: compactFiltersButton
                     visible: root.compactSearchControls
-                    Layout.preferredWidth: Math.max(theme.controlSm + 8, 52)
+                    Layout.preferredWidth: Math.max(theme.controlSm + 8, 66)
                     Layout.preferredHeight: theme.controlSm
-                    text: typePreset.displayText
+                    text: "Filter"
                     font.pixelSize: theme.fontLabel
                     onClicked: compactFiltersPopup.open()
                     background: Rectangle {
@@ -549,8 +583,8 @@ Rectangle {
             id: recentPopup
             readonly property point buttonPos: recentButton.mapToItem(root, 0, 0)
             y: buttonPos.y + recentButton.height + 4
-            x: Math.max(theme ? theme.space16 : 16, buttonPos.x + recentButton.width - width)
-            width: 320
+            x: Math.max(theme ? theme.space16 : 16, Math.min(root.width - width - (theme ? theme.space16 : 16), buttonPos.x))
+            width: 280
             padding: 6
             modal: false
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
@@ -617,6 +651,20 @@ Rectangle {
                     currentIndex: typePreset.currentIndex
                     onActivated: {
                         typePreset.currentIndex = currentIndex
+                        root.applySearch(false)
+                    }
+                }
+
+                ComboBox {
+                    Layout.fillWidth: true
+                    model: scopePreset.model
+                    textRole: "label"
+                    valueRole: "value"
+                    visible: !!root.activeController && root.activeController.searchMode === "global"
+                    currentIndex: scopePreset.currentIndex
+                    onActivated: {
+                        scopePreset.currentIndex = currentIndex
+                        if (root.activeController) root.activeController.searchScope = currentValue
                         root.applySearch(false)
                     }
                 }

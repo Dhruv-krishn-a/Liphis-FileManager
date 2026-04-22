@@ -120,8 +120,25 @@ Menu {
     }
     MenuItem { 
         text: "Move to Trash"
+        visible: controller ? !controller.currentPath.startsWith("trash:") : true
         Component.onCompleted: root.compact(this)
         onTriggered: if (controller) controller.trashItems([root.targetPath])
+        icon.source: root.iconSource("user-trash")
+    }
+
+    MenuItem {
+        text: "Restore"
+        visible: controller ? controller.currentPath.startsWith("trash:") : false
+        Component.onCompleted: root.compact(this)
+        onTriggered: if (controller) controller.restoreFromTrash([root.targetPath])
+        icon.source: root.iconSource("document-open")
+    }
+
+    MenuItem {
+        text: "Delete Permanently"
+        visible: controller ? controller.currentPath.startsWith("trash:") : false
+        Component.onCompleted: root.compact(this)
+        onTriggered: if (controller) controller.deleteItems([root.targetPath])
         icon.source: root.iconSource("user-trash")
     }
 

@@ -90,15 +90,15 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 49,
-                            "message": "Cannot access value for name controller"
+                            "line": 55,
+                            "message": "Cannot access value for name centerWorkspace"
                         },
                         {
                             "codegenResult": 2,
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 50,
+                            "line": 56,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -106,39 +106,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 51,
-                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 21,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 52,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "onTriggered",
                             "line": 57,
-                            "message": "Cannot access value for name controller"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 32,
-                            "durationMicroseconds": 0,
-                            "functionName": "onCompleted",
-                            "line": 58,
-                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "source",
-                            "line": 59,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -146,39 +114,71 @@
                             "column": 21,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 60,
+                            "line": 58,
                             "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 18,
-                            "durationMicroseconds": 0,
-                            "functionName": "checked",
-                            "line": 68,
-                            "message": "Cannot access value for name controller"
                         },
                         {
                             "codegenResult": 2,
                             "column": 22,
                             "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 63,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 64,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 69,
+                            "line": 67,
                             "message": "Cannot access value for name controller"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 32,
+                            "column": 51,
                             "durationMicroseconds": 0,
-                            "functionName": "onCompleted",
+                            "functionName": "source",
+                            "line": 66,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 71,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 54,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
                             "line": 70,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 22,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 75,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 71,
+                            "line": 74,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -186,7 +186,7 @@
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "enabled",
-                            "line": 76,
+                            "line": 83,
                             "message": "Cannot access value for name controller"
                         },
                         {
@@ -194,7 +194,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 77,
+                            "line": 84,
                             "message": "Cannot access value for name controller"
                         },
                         {
@@ -202,7 +202,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 78,
+                            "line": 85,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -210,31 +210,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 79,
-                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "onTriggered",
                             "line": 86,
-                            "message": "Cannot access value for name controller"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 32,
-                            "durationMicroseconds": 0,
-                            "functionName": "onCompleted",
-                            "line": 87,
-                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "source",
-                            "line": 88,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -242,7 +218,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 93,
+                            "line": 91,
                             "message": "Cannot access value for name controller"
                         },
                         {
@@ -250,7 +226,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 94,
+                            "line": 92,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -258,12 +234,44 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 95,
+                            "line": 93,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
                             "codegenResult": 2,
                             "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 100,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 101,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 109,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 101,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 102,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 109,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
                             "line": 102,
@@ -271,10 +279,82 @@
                         },
                         {
                             "codegenResult": 2,
+                            "column": 61,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 103,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 109,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 103,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 74,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 104,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 122,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 104,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 63,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 106,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 104,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 106,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 64,
+                            "durationMicroseconds": 0,
+                            "functionName": "checked",
+                            "line": 107,
+                            "message": "Cannot access value for name viewSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 106,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 107,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 1000,
+                            "functionName": "onTriggered",
+                            "line": 114,
+                            "message": "Cannot access value for name centerWorkspace"
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 103,
+                            "line": 115,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -282,7 +362,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 104,
+                            "line": 116,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -290,15 +370,15 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onTriggered",
-                            "line": 109,
-                            "message": "Cannot access value for name controller"
+                            "line": 121,
+                            "message": "Cannot access value for name centerWorkspace"
                         },
                         {
                             "codegenResult": 2,
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 110,
+                            "line": 122,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -306,7 +386,95 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "source",
-                            "line": 111,
+                            "line": 123,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 128,
+                            "message": "Cannot access value for name centerWorkspace"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCompleted",
+                            "line": 129,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 130,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 134,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 140,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 141,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCompleted",
+                            "line": 142,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 143,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "onTriggered",
+                            "line": 150,
+                            "message": "Cannot access value for name controller"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCompleted",
+                            "line": 151,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 152,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         }
                     ],

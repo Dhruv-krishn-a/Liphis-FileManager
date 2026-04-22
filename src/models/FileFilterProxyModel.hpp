@@ -64,9 +64,6 @@ protected:
                   const QModelIndex &source_right) const override;
 
 private:
-    void beginFilterChange();
-    void endFilterChange();
-
     bool m_showHidden{false};
     qlonglong m_minSize{-1};
     qlonglong m_maxSize{-1};

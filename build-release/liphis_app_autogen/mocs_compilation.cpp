@@ -2,6 +2,7 @@
 #include "UVLADIE3JM/moc_AnalysisController.cpp"
 #include "UVLADIE3JM/moc_AppController.cpp"
 #include "UVLADIE3JM/moc_CommandManager.cpp"
+#include "UVLADIE3JM/moc_DocumentIntelligenceController.cpp"
 #include "UVLADIE3JM/moc_TerminalManager.cpp"
 #include "UVLADIE3JM/moc_ThumbnailManager.cpp"
 #include "M4YTXQ7V2H/moc_FileFilterProxyModel.cpp"

@@ -266,6 +266,7 @@ AppController::AppController(QObject *parent)
 {
     m_proxyModel.setSourceModel(&m_fileModel);
     loadRecentSearches();
+    m_lastUserInitiatedOp.start();
 
     m_gitStatusTimer = new QTimer(this);
     m_gitStatusTimer->setSingleShot(true);
@@ -287,9 +288,18 @@ AppController::AppController(QObject *parent)
     });
 
     // File Watcher
+    m_dirChangeTimer = new QTimer(this);
+    m_dirChangeTimer->setSingleShot(true);
+    m_dirChangeTimer->setInterval(45);
+    connect(m_dirChangeTimer, &QTimer::timeout, this, [this]() {
+        // Avoid thrashing: if we just performed an operation, our model updates already cover it.
+        if (m_lastUserInitiatedOp.isValid() && m_lastUserInitiatedOp.elapsed() < 140) return;
+        reloadCurrentDirectoryModel(/*preserveSelection*/ true);
+    });
+
     connect(&m_watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString &path) {
         if (path == m_currentPath) {
-            refresh();
+            m_dirChangeTimer->start();
         }
     });
 }
@@ -427,11 +437,23 @@ void AppController::openPath(const QString &path)
     const QUrl asUrl(resolvedPath);
     if (asUrl.isValid() && asUrl.isLocalFile()) {
         resolvedPath = asUrl.toLocalFile();
+    } else if (asUrl.isValid() && asUrl.scheme() == "trash") {
+        resolvedPath = asUrl.toString();
     } else if (resolvedPath.startsWith("file://")) {
         resolvedPath.remove(0, QString("file://").size());
     }
 
     if (resolvedPath.isEmpty() || resolvedPath == m_currentPath) return;
+
+    if (isTrashPath(resolvedPath)) {
+        if (m_historyIndex < m_history.size() - 1) m_history.resize(m_historyIndex + 1);
+        m_history.append("trash:///");
+        m_historyIndex++;
+        emit canGoBackChanged();
+        emit canGoForwardChanged();
+        loadPathInternal("trash:///");
+        return;
+    }
 
     QFileInfo fi(resolvedPath);
     if (!fi.isDir()) {
@@ -643,6 +665,11 @@ QString AppController::getMimeType(const QString &path)
 
 void AppController::loadPathInternal(const QString &path)
 {
+    if (isTrashPath(path)) {
+        loadTrashInternal();
+        return;
+    }
+
     const std::uint64_t generation = ++m_operationGeneration;
     m_loading = true;
     m_searchInProgress = false;
@@ -703,6 +730,162 @@ void AppController::loadPathInternal(const QString &path)
                 }
             }, Qt::QueuedConnection);
         }
+    });
+}
+
+void AppController::reloadCurrentDirectoryModel(bool preserveSelection)
+{
+    if (m_currentPath.isEmpty() || isTrashPath(m_currentPath)) return;
+    QFileInfo fi(m_currentPath);
+    if (!fi.isDir() || !fi.isReadable()) return;
+
+    const QStringList prevSelected = preserveSelection ? m_selectedPaths : QStringList{};
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, path = m_currentPath, prevSelected, preserveSelection]() {
+        if (!safeThis) return;
+        std::vector<FileMeta> entries = FileSystemEngine::listDirectorySync(path.toStdString(), 5000);
+        QMetaObject::invokeMethod(safeThis, [safeThis, entries = std::move(entries), prevSelected, preserveSelection]() mutable {
+            if (!safeThis) return;
+            safeThis->m_fileModel.setEntries(std::move(entries));
+            emit safeThis->availableExtensionsChanged();
+            safeThis->m_gitStatusTimer->start();
+
+            if (!preserveSelection) {
+                safeThis->clearSelection();
+                return;
+            }
+
+            QStringList kept;
+            for (const QString &p : prevSelected) {
+                if (QFileInfo::exists(p)) kept.append(p);
+            }
+            if (kept != safeThis->m_selectedPaths) {
+                safeThis->m_selectedPaths = kept;
+                safeThis->m_selectedPath = kept.isEmpty() ? "" : kept.last();
+                safeThis->m_selectionRevision++;
+                emit safeThis->selectedPathChanged();
+                emit safeThis->selectedPathsChanged();
+            }
+        }, Qt::QueuedConnection);
+    });
+}
+
+void AppController::removeFromSelection(const QStringList &paths)
+{
+    if (paths.isEmpty() || m_selectedPaths.isEmpty()) return;
+    bool changed = false;
+    for (const QString &p : paths) {
+        const int before = m_selectedPaths.size();
+        m_selectedPaths.removeAll(p);
+        if (m_selectedPaths.size() != before) changed = true;
+    }
+    if (!changed) return;
+    const QString next = m_selectedPaths.isEmpty() ? QString() : m_selectedPaths.last();
+    if (next != m_selectedPath) {
+        m_selectedPath = next;
+        emit selectedPathChanged();
+    }
+    m_selectionRevision++;
+    emit selectedPathsChanged();
+}
+
+void AppController::addEntriesForPaths(const QStringList &paths, bool selectAdded)
+{
+    if (paths.isEmpty()) return;
+    std::vector<FileMeta> newEntries;
+    newEntries.reserve(static_cast<size_t>(paths.size()));
+
+    QStringList addedPaths;
+    for (const QString &path : paths) {
+        if (path.isEmpty()) continue;
+        QFileInfo fi(path);
+        if (!fi.exists()) continue;
+        if (fi.absolutePath() != m_currentPath) continue;
+        if (m_fileModel.metadataForPath(path).isEmpty() == false) continue;
+        newEntries.push_back(FileSystemEngine::getFileMeta(path.toStdString()));
+        addedPaths << path;
+    }
+
+    if (!newEntries.empty()) {
+        m_fileModel.insertBatch(std::move(newEntries));
+        emit availableExtensionsChanged();
+    }
+
+    if (m_thumbnailManager) {
+        for (const QString &p : addedPaths) {
+            m_thumbnailManager->requestThumbnail(p);
+        }
+    }
+
+    if (selectAdded && !addedPaths.isEmpty()) {
+        m_selectedPaths = addedPaths;
+        m_selectedPath = addedPaths.last();
+        m_selectionRevision++;
+        emit selectedPathChanged();
+        emit selectedPathsChanged();
+    }
+}
+
+bool AppController::isTrashPath(const QString &path) const
+{
+    const QString p = path.trimmed();
+    return p == "trash:///" || p.startsWith("trash:");
+}
+
+static QString userTrashFilesDir()
+{
+    return QDir::homePath() + "/.local/share/Trash/files";
+}
+
+static QString userTrashInfoDir()
+{
+    return QDir::homePath() + "/.local/share/Trash/info";
+}
+
+void AppController::loadTrashInternal()
+{
+    const std::uint64_t generation = ++m_operationGeneration;
+    m_loading = true;
+    emit loadingChanged();
+
+    m_cancelRequested = true;
+    if (!m_currentPath.isEmpty()) m_watcher.removePath(m_currentPath);
+    m_currentPath = "trash:///";
+    emit currentPathChanged();
+    emit titleChanged();
+    clearSelection();
+    m_fileModel.clear();
+
+    const QString trashDir = userTrashFilesDir();
+    QPointer<AppController> safeThis(this);
+    m_cancelRequested = false;
+
+    ThreadPool::instance().submit([safeThis, trashDir, generation]() {
+        if (!safeThis) return;
+        QDir dir(trashDir);
+        QFileInfoList list = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Hidden, QDir::Name);
+        std::vector<FileMeta> entries;
+        entries.reserve(static_cast<size_t>(list.size()));
+
+        for (const QFileInfo &fi : list) {
+            FileMeta m;
+            m.name = fi.fileName().toStdString();
+            m.path = fi.absoluteFilePath().toStdString();
+            m.isDir = fi.isDir();
+            m.size = static_cast<std::uint64_t>(fi.size());
+            m.mtime = static_cast<std::uint64_t>(fi.lastModified().toSecsSinceEpoch());
+            m.ctime = static_cast<std::uint64_t>(fi.metadataChangeTime().toSecsSinceEpoch());
+            m.atime = static_cast<std::uint64_t>(fi.lastRead().toSecsSinceEpoch());
+            entries.emplace_back(std::move(m));
+        }
+
+        QMetaObject::invokeMethod(safeThis, [safeThis, generation, entries = std::move(entries)]() mutable {
+            if (!safeThis || safeThis->m_operationGeneration.load() != generation) return;
+            safeThis->m_fileModel.setEntries(std::move(entries));
+            safeThis->m_loading = false;
+            emit safeThis->loadingChanged();
+            emit safeThis->availableExtensionsChanged();
+        }, Qt::QueuedConnection);
     });
 }
 
@@ -861,8 +1044,9 @@ void AppController::startGlobalSearch(const QString &pattern)
                 if (hasRg) {
                     QProcess rg;
                     QStringList args;
-                    args << "--files-with-matches" << "--smart-case" << "--hidden"
+                    args << "--files-with-matches" << "--smart-case"
                          << "-g" << "!.git/*" << "-g" << "!node_modules/*" << "-g" << "!.cache/*";
+                    if (parsed.showHidden) args << "--hidden";
                     args << parsed.term << rootPath;
                     rg.start("rg", args);
                     if (rg.waitForStarted()) {
@@ -1053,7 +1237,8 @@ void AppController::createFolder(const QString &name)
     if (name.isEmpty() || m_currentPath.isEmpty()) return;
     QString fullPath = m_currentPath + "/" + name;
     m_historyStack.push(std::make_unique<CreateFolderCommand>(fullPath.toStdString()));
-    refresh();
+    m_lastUserInitiatedOp.restart();
+    addEntriesForPaths({fullPath}, /*selectAdded*/ true);
 }
 
 void AppController::createFile(const QString &name)
@@ -1061,7 +1246,8 @@ void AppController::createFile(const QString &name)
     if (name.isEmpty() || m_currentPath.isEmpty()) return;
     QString fullPath = m_currentPath + "/" + name;
     m_historyStack.push(std::make_unique<CreateFileCommand>(fullPath.toStdString()));
-    refresh();
+    m_lastUserInitiatedOp.restart();
+    addEntriesForPaths({fullPath}, /*selectAdded*/ true);
 }
 
 void AppController::renameItem(const QString &oldPath, const QString &newName)
@@ -1070,7 +1256,16 @@ void AppController::renameItem(const QString &oldPath, const QString &newName)
     QFileInfo fi(oldPath);
     QString newPath = fi.absolutePath() + "/" + newName;
     m_historyStack.push(std::make_unique<RenameCommand>(oldPath.toStdString(), newPath.toStdString()));
-    refresh();
+    m_lastUserInitiatedOp.restart();
+    const bool oldInCurrent = (fi.absolutePath() == m_currentPath);
+    const bool newInCurrent = (QFileInfo(newPath).absolutePath() == m_currentPath);
+    if (oldInCurrent) {
+        m_fileModel.removeItems({oldPath});
+        removeFromSelection({oldPath});
+    }
+    if (newInCurrent) {
+        addEntriesForPaths({newPath}, /*selectAdded*/ true);
+    }
 }
 
 void AppController::bulkRename(const QStringList &paths, const QString &prefix, const QString &suffix, const QString &find, const QString &replace)
@@ -1089,7 +1284,11 @@ void AppController::deleteItem(const QString &path)
     const QString target = safePath(path);
     if (target.isEmpty()) return;
     auto res = FileSystemEngine::deletePath(target.toStdString());
-    if (res.success) { refresh(); emit operationSuccess("Deleted"); }
+    if (res.success) { 
+        m_fileModel.removeItems({path});
+        removeFromSelection({path});
+        emit operationSuccess("Deleted"); 
+    }
     else emit operationError(QString::fromStdString(res.message));
 }
 
@@ -1106,9 +1305,10 @@ void AppController::deleteItems(const QStringList &paths)
             if (!res.success) { allSuccess = false; lastError = QString::fromStdString(res.message); }
         }
         if (safeThis) {
-            QMetaObject::invokeMethod(safeThis, [safeThis, allSuccess, lastError]() {
+            QMetaObject::invokeMethod(safeThis, [safeThis, allSuccess, lastError, paths]() {
                 if (safeThis) {
-                    safeThis->refresh();
+                    safeThis->m_fileModel.removeItems(paths);
+                    safeThis->removeFromSelection(paths);
                     if (allSuccess) emit safeThis->operationSuccess("Deleted multiple items");
                     else emit safeThis->operationError("Some items could not be deleted: " + lastError);
                 }
@@ -1164,7 +1364,20 @@ void AppController::pasteItem()
         m_historyStack.push(std::make_unique<MoveCommand>(moves));
         m_clipboardPaths.clear();
         emit clipboardChanged();
-        refresh();
+        m_lastUserInitiatedOp.restart();
+        QStringList removedFromCurrent;
+        QStringList addedToCurrent;
+        for (const QString &src : srcs) {
+            QFileInfo srcInfo(src);
+            const QString dest = QDir(destDir).filePath(srcInfo.fileName());
+            if (srcInfo.absolutePath() == m_currentPath) removedFromCurrent << srcInfo.absoluteFilePath();
+            if (QFileInfo(dest).absolutePath() == m_currentPath) addedToCurrent << dest;
+        }
+        if (!removedFromCurrent.isEmpty()) {
+            m_fileModel.removeItems(removedFromCurrent);
+            removeFromSelection(removedFromCurrent);
+        }
+        addEntriesForPaths(addedToCurrent, /*selectAdded*/ !addedToCurrent.isEmpty());
         return;
     }
 
@@ -1194,11 +1407,18 @@ void AppController::pasteItem()
         }
 
         if (safeThis) {
-            QMetaObject::invokeMethod(safeThis, [safeThis, isCut, allSuccess, lastError]() {
+            QMetaObject::invokeMethod(safeThis, [safeThis, srcs, destDir, isCut, allSuccess, lastError]() {
                 if (safeThis) {
                     emit safeThis->operationProgress(1.0);
                     if (allSuccess) {
-                        safeThis->refresh();
+                        safeThis->m_lastUserInitiatedOp.restart();
+                        QStringList added;
+                        for (const QString &src : srcs) {
+                            QFileInfo srcInfo(src);
+                            const QString dest = QDir(destDir).filePath(srcInfo.fileName());
+                            added << dest;
+                        }
+                        safeThis->addEntriesForPaths(added, /*selectAdded*/ !added.isEmpty());
                         if (isCut) { safeThis->m_clipboardPaths.clear(); emit safeThis->clipboardChanged(); }
                         emit safeThis->operationSuccess("Paste successful");
                     } else emit safeThis->operationError("Paste failed: " + lastError);
@@ -1418,7 +1638,135 @@ void AppController::trashItems(const QStringList &paths)
     QPointer<AppController> safeThis(this);
     ThreadPool::instance().submit([safeThis, paths]() {
         for (const QString &path : paths) FileSystemEngine::moveToTrash(path.toStdString());
-        if (safeThis) { QMetaObject::invokeMethod(safeThis, [safeThis]() { if (safeThis) { safeThis->refresh(); emit safeThis->operationSuccess("Moved to Trash"); } }, Qt::QueuedConnection); }
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, paths]() {
+                if (safeThis) {
+                    safeThis->m_fileModel.removeItems(paths);
+                    safeThis->removeFromSelection(paths);
+                    safeThis->m_lastUserInitiatedOp.restart();
+                    emit safeThis->operationSuccess("Moved to Trash");
+                }
+            }, Qt::QueuedConnection);
+        }
+    });
+}
+
+static QString readTrashInfoOriginalPath(const QString &trashedAbsolutePath)
+{
+    const QFileInfo fi(trashedAbsolutePath);
+    const QString infoPath = QDir(userTrashInfoDir()).filePath(fi.fileName() + ".trashinfo");
+    QFile f(infoPath);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) return {};
+    QTextStream in(&f);
+    while (!in.atEnd()) {
+        const QString line = in.readLine();
+        if (!line.startsWith("Path=")) continue;
+        const QString encoded = line.mid(QString("Path=").size()).trimmed();
+        // Spec stores percent-escaped path, not a file:// URL
+        return QUrl::fromPercentEncoding(encoded.toUtf8());
+    }
+    return {};
+}
+
+void AppController::restoreFromTrash(const QStringList &paths)
+{
+    if (paths.isEmpty()) return;
+
+    // If we are in the Trash view, restore from the user's trash directory.
+    if (isTrashPath(m_currentPath)) {
+        QPointer<AppController> safeThis(this);
+        ThreadPool::instance().submit([safeThis, paths]() {
+            bool allSuccess = true;
+            QString lastError;
+
+            for (const QString &trashedPath : paths) {
+                const QString original = readTrashInfoOriginalPath(trashedPath);
+                if (original.isEmpty()) {
+                    allSuccess = false;
+                    lastError = "Missing .trashinfo for " + trashedPath;
+                    continue;
+                }
+
+                QString dest = original;
+                if (QFileInfo::exists(dest)) {
+                    QFileInfo dfi(dest);
+                    const QString base = dfi.completeBaseName();
+                    const QString ext = dfi.completeSuffix();
+                    const QString suffix = ext.isEmpty() ? "" : ("." + ext);
+                    dest = dfi.absolutePath() + "/" + base + " (restored)" + suffix;
+                }
+
+                const auto res = FileSystemEngine::movePath(trashedPath.toStdString(), dest.toStdString());
+                if (!res.success) {
+                    allSuccess = false;
+                    lastError = QString::fromStdString(res.message);
+                }
+
+                // Clean up the .trashinfo if present
+                const QFileInfo fi(trashedPath);
+                const QString infoPath = QDir(userTrashInfoDir()).filePath(fi.fileName() + ".trashinfo");
+                QFile::remove(infoPath);
+            }
+
+            if (safeThis) {
+                QMetaObject::invokeMethod(safeThis, [safeThis, allSuccess, lastError, paths]() {
+                    if (!safeThis) return;
+                    safeThis->m_fileModel.removeItems(paths);
+                    safeThis->removeFromSelection(paths);
+                    safeThis->m_lastUserInitiatedOp.restart();
+                    if (allSuccess) emit safeThis->operationSuccess("Items restored");
+                    else emit safeThis->operationError("Some items could not be restored: " + lastError);
+                }, Qt::QueuedConnection);
+            }
+        });
+        return;
+    }
+
+    // Fallback: use gio (useful if we got trash:// URIs from elsewhere)
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, paths]() {
+        for (const QString &path : paths) {
+            QProcess::execute("gio", {"trash", "--restore", path});
+        }
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, paths]() {
+                if (!safeThis) return;
+                safeThis->m_fileModel.removeItems(paths);
+                safeThis->removeFromSelection(paths);
+                safeThis->m_lastUserInitiatedOp.restart();
+                emit safeThis->operationSuccess("Items restored");
+            }, Qt::QueuedConnection);
+        }
+    });
+}
+
+void AppController::emptyTrash()
+{
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis]() {
+        if (safeThis && safeThis->isTrashPath(safeThis->m_currentPath)) {
+            QDir files(userTrashFilesDir());
+            QDir info(userTrashInfoDir());
+            for (const QFileInfo &fi : files.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Hidden)) {
+                FileSystemEngine::deletePath(fi.absoluteFilePath().toStdString());
+            }
+            for (const QFileInfo &fi : info.entryInfoList({"*.trashinfo"}, QDir::Files | QDir::Hidden)) {
+                FileSystemEngine::deletePath(fi.absoluteFilePath().toStdString());
+            }
+        } else {
+            // gio trash --empty is the standard way to empty trash on Linux
+            QProcess::execute("gio", {"trash", "--empty"});
+        }
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis]() {
+                if (safeThis) {
+                    safeThis->m_lastUserInitiatedOp.restart();
+                    if (safeThis->isTrashPath(safeThis->m_currentPath)) safeThis->loadTrashInternal();
+                    else safeThis->refresh();
+                    emit safeThis->operationSuccess("Trash emptied");
+                }
+            }, Qt::QueuedConnection);
+        }
     });
 }
 
@@ -1711,6 +2059,8 @@ void AppController::dropItems(const QStringList &paths, const QString &targetDir
     
     QPointer<AppController> safeThis(this);
     ThreadPool::instance().submit([safeThis, paths, targetDir, isCopy]() {
+        QStringList added;
+        QStringList removed;
         for (const QString &src : paths) {
             QString cleanSrc = src;
             if (cleanSrc.startsWith("file://")) cleanSrc = QUrl(src).toLocalFile();
@@ -1722,12 +2072,20 @@ void AppController::dropItems(const QStringList &paths, const QString &targetDir
                 FileSystemEngine::copyPath(cleanSrc.toStdString(), dest.toStdString(), nullptr);
             } else {
                 FileSystemEngine::movePath(cleanSrc.toStdString(), dest.toStdString());
+                removed << fi.absoluteFilePath();
             }
+            added << dest;
         }
         
         if (safeThis) {
-            QMetaObject::invokeMethod(safeThis, [safeThis]() {
-                if (safeThis) safeThis->refresh();
+            QMetaObject::invokeMethod(safeThis, [safeThis, added, removed]() {
+                if (!safeThis) return;
+                safeThis->m_lastUserInitiatedOp.restart();
+                if (!removed.isEmpty()) {
+                    safeThis->m_fileModel.removeItems(removed);
+                    safeThis->removeFromSelection(removed);
+                }
+                safeThis->addEntriesForPaths(added, /*selectAdded*/ false);
             }, Qt::QueuedConnection);
         }
     });
@@ -1777,7 +2135,18 @@ void AppController::duplicateItem(const QString &path)
     QPointer<AppController> safeThis(this);
     ThreadPool::instance().submit([safeThis, path, newPath]() {
         auto res = FileSystemEngine::copyPath(path.toStdString(), newPath.toStdString());
-        if (safeThis) { QMetaObject::invokeMethod(safeThis, [safeThis, res]() { if (safeThis) { if (res.success) { safeThis->refresh(); emit safeThis->operationSuccess("Duplicated"); } else emit safeThis->operationError(QString::fromStdString(res.message)); } }, Qt::QueuedConnection); }
+        if (safeThis) {
+            QMetaObject::invokeMethod(safeThis, [safeThis, res, newPath]() {
+                if (!safeThis) return;
+                if (res.success) {
+                    safeThis->m_lastUserInitiatedOp.restart();
+                    safeThis->addEntriesForPaths({newPath}, /*selectAdded*/ true);
+                    emit safeThis->operationSuccess("Duplicated");
+                } else {
+                    emit safeThis->operationError(QString::fromStdString(res.message));
+                }
+            }, Qt::QueuedConnection);
+        }
     });
 }
 

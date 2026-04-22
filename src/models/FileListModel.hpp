@@ -47,6 +47,7 @@ public:
     void clear();
     void setEntries(std::vector<FileMeta> &&entries);
     void insertBatch(std::vector<FileMeta> &&batch);
+    void removeItems(const QStringList &paths);
     void updateThumbnail(const QString &filePath,
                          const QString &thumbPath);
 

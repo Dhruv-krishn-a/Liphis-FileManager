@@ -156,7 +156,8 @@ ApplicationWindow {
     function shouldSkipGlobalHotkeys() {
         let item = appWindow.activeFocusItem
         while (item) {
-            if (item.hasOwnProperty("cursorPosition") || item.hasOwnProperty("selectedText") || item.hasOwnProperty("echoMode")) {
+            // Only skip if the focus is actually inside a text input component
+            if (item.hasOwnProperty("cursorPosition") && item.hasOwnProperty("selectionText")) {
                 return true
             }
             item = item.parent
@@ -177,13 +178,15 @@ ApplicationWindow {
 
     Component.onCompleted: {
         loadHotkeyOverrides()
-        appWindow.width = Math.max(960, uiSettings.windowWidth)
-        appWindow.height = Math.max(640, uiSettings.windowHeight)
-        appWindow.theme.isDark = uiSettings.darkMode
-        appWindow.detailsVisible = uiSettings.detailsPanelVisible
-        appWindow.terminalVisible = uiSettings.terminalPanelVisible
-        appWindow.sidebarExpanded = uiSettings.sidebarExpanded
-        appWindow.docIntelEnabled = uiSettings.docIntelEnabled
+        // Window size and theme can stay separate or be moved to generalSettings if desired
+        appWindow.width = 1200 
+        appWindow.height = 800
+        appWindow.theme.isDark = false 
+        
+        // Use generalSettings for panel states
+        appWindow.detailsVisible = generalSettings.inspectorExpanded
+        appWindow.terminalVisible = false
+        appWindow.docIntelEnabled = true
 
         // Register Commands
         // View & Navigation
@@ -191,6 +194,7 @@ ApplicationWindow {
         registerAppCommand("view.list", "View", "Switch to List View", "layout-list", "Ctrl+2", function() { if (activeController) activeController.viewMode = "list" })
         registerAppCommand("view.tree", "View", "Switch to Tree View", "layout-tree", "Ctrl+3", function() { if (activeController) activeController.viewMode = "tree" })
         registerAppCommand("view.zoom_in", "View", "Zoom In", "zoom-in", "Ctrl++", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.zoomIn() })
+        registerAppCommand("view.zoom_in_alt", "View", "Zoom In (Alt)", "zoom-in", "Ctrl+=", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.zoomIn() })
         registerAppCommand("view.zoom_out", "View", "Zoom Out", "zoom-out", "Ctrl+-", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.zoomOut() })
         registerAppCommand("view.zoom_reset", "View", "Reset Zoom", "zoom-reset", "Ctrl+0", function() { if (centerWorkspace.activeView) centerWorkspace.activeView.resetZoom() })
         registerAppCommand("view.toggle_hidden", "View", "Toggle Hidden Files", "eye", "Ctrl+H", function() { if (activeController) activeController.showHiddenFiles = !activeController.showHiddenFiles })
@@ -201,13 +205,13 @@ ApplicationWindow {
         registerAppCommand("sort.size", "Sort", "Sort by Size", "database", "", function() { if (activeController) activeController.fileModel.setSortBy("size") })
 
         // UI Customization
-        registerAppCommand("ui.toggle_sidebar", "UI", "Toggle Sidebar", "layout-sidebar", "Ctrl+B", function() { appWindow.sidebarExpanded = !appWindow.sidebarExpanded })
+        registerAppCommand("ui.toggle_sidebar", "UI", "Toggle Sidebar", "layout-sidebar", "Ctrl+B", function() { generalSettings.sidebarExpanded = !generalSettings.sidebarExpanded })
         registerAppCommand("ui.toggle_inspector", "UI", "Toggle Inspector Panel", "info-circle", "Ctrl+I", function() { appWindow.detailsVisible = !appWindow.detailsVisible })
         registerAppCommand("ui.toggle_terminal", "UI", "Toggle Terminal", "terminal", "Ctrl+`", function() { appWindow.terminalVisible = !appWindow.terminalVisible })
         registerAppCommand("ui.toggle_theme", "UI", "Toggle Dark/Light Mode", "background", "", function() { appWindow.theme.isDark = !appWindow.theme.isDark })
         registerAppCommand("ui.zen_mode", "UI", "Toggle Zen Mode", "app-window", "", function() { 
-            appWindow.sidebarExpanded = !appWindow.sidebarExpanded;
-            appWindow.detailsVisible = !appWindow.detailsVisible;
+            generalSettings.sidebarExpanded = false;
+            appWindow.detailsVisible = false;
             appWindow.terminalVisible = false;
         })
         registerAppCommand("ui.open_palette", "UI", "Open Command Palette", "search", "Ctrl+P", function() { commandPalette.open() })
@@ -222,6 +226,9 @@ ApplicationWindow {
         registerAppCommand("file.terminal", "File", "Open Terminal Here", "terminal", "", function() { if (activeController) activeController.openInTerminal(activeController.currentPath) })
         registerAppCommand("file.code", "File", "Open in VS Code", "brand-vscode", "", function() { if (activeController) activeController.openInCode(activeController.currentPath) })
         registerAppCommand("file.copy_path", "File", "Copy Path to Clipboard", "copy", "", function() { if (activeController) activeController.copyToClipboard(activeController.currentPath) })
+        registerAppCommand("file.copy", "File", "Copy Selected Items", "copy", "Ctrl+C", function() { if (activeController) activeController.copyItem("") })
+        registerAppCommand("file.cut", "File", "Cut Selected Items", "cut", "Ctrl+X", function() { if (activeController) activeController.cutItem("") })
+        registerAppCommand("file.trash", "File", "Move to Trash", "trash", "Delete", function() { if (activeController && activeController.selectedPaths.length > 0) activeController.trashItems(activeController.selectedPaths) })
         registerAppCommand("file.select_all", "File", "Select All", "select-all", "Ctrl+A", function() { if (activeController) activeController.selectAll() })
         registerAppCommand("file.clear_selection", "File", "Clear Selection", "x", "", function() { if (activeController) activeController.clearSelection() })
         registerAppCommand("file.paste", "File", "Paste from Clipboard", "clipboard", "Ctrl+V", function() { if (activeController) activeController.pasteItem() })
@@ -290,15 +297,15 @@ ApplicationWindow {
         refreshHotkeyEntries()
     }
 
-    onWidthChanged: uiSettings.windowWidth = width
-    onHeightChanged: uiSettings.windowHeight = height
-    onDetailsVisibleChanged: uiSettings.detailsPanelVisible = detailsVisible
-    onTerminalVisibleChanged: uiSettings.terminalPanelVisible = terminalVisible
-    onSidebarExpandedChanged: uiSettings.sidebarExpanded = sidebarExpanded
-    onDocIntelEnabledChanged: uiSettings.docIntelEnabled = docIntelEnabled
+    onWidthChanged: {} 
+    onHeightChanged: {}
+    onDetailsVisibleChanged: {}
+    onTerminalVisibleChanged: {}
+    onSidebarExpandedChanged: {}
+    onDocIntelEnabledChanged: {}
     Connections {
         target: appWindow.theme
-        function onIsDarkChanged() { uiSettings.darkMode = appWindow.theme.isDark }
+        function onIsDarkChanged() {}
     }
 
     Connections {
@@ -335,8 +342,6 @@ ApplicationWindow {
     Connections {
         target: activeController
         function onOpenWithRequested(path) { showOpenWith(path, activeController) }
-        function onOperationError(msg) { toastManager.show(msg, true) }
-        function onOperationSuccess(msg) { toastManager.show(msg, false) }
     }
 
     function showDirectoryMenu(path, controllerObj) {
@@ -415,8 +420,6 @@ ApplicationWindow {
     Connections {
         target: (activeController && activeController.openPath !== undefined) ? activeController : null
         enabled: !!activeController
-        function onOperationSuccess(message) { toastManager.show(message, false) }
-        function onOperationError(message) { toastManager.show(message, true) }
         function onAnalyseRequested(path) {
             analyseDialog.resetDialog()
             analysisController.analyseFolder(path)
@@ -503,26 +506,27 @@ ApplicationWindow {
         anchors.fill: parent
         spacing: 0
 
-        RowLayout {
+        SplitView {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 0
+            orientation: Qt.Horizontal
+            handle: Rectangle { implicitWidth: 1; color: theme.border }
 
             LeftSidebar {
                 id: leftSidebar
-                Layout.preferredWidth: appWindow.sidebarExpanded ? theme.sidebarWidth : 64
+                SplitView.preferredWidth: generalSettings.sidebarExpanded ? theme.sidebarWidth : 64
+                SplitView.minimumWidth: 64
+                SplitView.maximumWidth: 400
                 activeController: appWindow.activeController
-                Behavior on Layout.preferredWidth {
-                    NumberAnimation { duration: 250; easing.type: Easing.InOutQuad }
-                }
+                
                 Layout.fillHeight: true
                 theme: appWindow.theme
                 placesModel: globalPlacesModel
                 docIntelController: docIntelController
                 activePath: (activeController && activeController.currentPath !== undefined) ? activeController.currentPath : ""
                 homePath: appWindow.homePath
-                expanded: appWindow.sidebarExpanded
-                onToggleExpanded: appWindow.sidebarExpanded = !appWindow.sidebarExpanded
+                expanded: generalSettings.sidebarExpanded
+                onToggleExpanded: generalSettings.sidebarExpanded = !generalSettings.sidebarExpanded
                 onPathActivated: (path) => {
                     if (activeController) activeController.openPath(path)
                 }
@@ -543,36 +547,29 @@ ApplicationWindow {
                 }
             }
 
-            SplitView {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                orientation: Qt.Horizontal
-                handle: Rectangle { implicitWidth: 1; color: theme.border }
+            CenterWorkspace {
+                id: centerWorkspace
+                SplitView.fillWidth: true
+                theme: appWindow.theme
+                homePath: appWindow.homePath
+                terminalVisible: appWindow.terminalVisible
+                itemMenuHandler: appWindow.showItemMenu
+                docIntelController: docIntelController
+                toastManager: toastManager
+                onControllerChanged: (controller) => appWindow.activeController = controller
+            }
 
-                CenterWorkspace {
-                    id: centerWorkspace
-                    SplitView.fillWidth: true
-                    theme: appWindow.theme
-                    homePath: appWindow.homePath
-                    terminalVisible: appWindow.terminalVisible
-                    itemMenuHandler: appWindow.showItemMenu
-                    docIntelController: docIntelController
-                    toastManager: toastManager
-                    onControllerChanged: (controller) => appWindow.activeController = controller
-                }
-
-                InspectorPanel {
-                    id: inspectorPanel
-                    visible: appWindow.detailsVisible
-                    SplitView.preferredWidth: theme.inspectorWidth
-                    SplitView.minimumWidth: 220
-                    SplitView.maximumWidth: 560
-                    theme: appWindow.theme
-                    activeController: appWindow.activeController
-                    docIntelController: docIntelController
-                    onAnalyseFolderRequested: (path) => {
-                        if (activeController) activeController.analyseFolder(path)
-                    }
+            InspectorPanel {
+                id: inspectorPanel
+                visible: appWindow.detailsVisible
+                SplitView.preferredWidth: theme.inspectorWidth
+                SplitView.minimumWidth: 220
+                SplitView.maximumWidth: 560
+                theme: appWindow.theme
+                activeController: appWindow.activeController
+                docIntelController: docIntelController
+                onAnalyseFolderRequested: (path) => {
+                    if (activeController) activeController.analyseFolder(path)
                 }
             }
         }

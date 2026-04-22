@@ -132,6 +132,7 @@ Item {
         sourceSize.width: Math.max(32, Math.round(root.width * 1.5))
         sourceSize.height: Math.max(32, Math.round(root.height * 1.5))
         fillMode: Image.PreserveAspectFit
+        verticalAlignment: Image.AlignBottom
         smooth: root.width > 32
         mipmap: true
         antialiasing: true

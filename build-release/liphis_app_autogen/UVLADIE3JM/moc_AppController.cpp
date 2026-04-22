@@ -68,6 +68,8 @@ template <> constexpr inline auto AppController::qt_create_metaobjectdata<qt_met
         "openWithRequested",
         "canUndoChanged",
         "canRedoChanged",
+        "folderSizeResolved",
+        "size",
         "operationError",
         "message",
         "operationSuccess",
@@ -141,10 +143,13 @@ template <> constexpr inline auto AppController::qt_create_metaobjectdata<qt_met
         "openInTerminal",
         "copyToClipboard",
         "trashItems",
+        "restoreFromTrash",
+        "emptyTrash",
         "analyseFolder",
         "runGitCommand",
         "cmd",
         "getFolderMetadata",
+        "requestFolderSize",
         "compressItems",
         "extractItem",
         "connectRemote",
@@ -268,337 +273,351 @@ template <> constexpr inline auto AppController::qt_create_metaobjectdata<qt_met
         QtMocHelpers::SignalData<void()>(28, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'canRedoChanged'
         QtMocHelpers::SignalData<void()>(29, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'folderSizeResolved'
+        QtMocHelpers::SignalData<void(const QString &, qlonglong)>(30, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 }, { QMetaType::LongLong, 31 },
+        }}),
         // Signal 'operationError'
-        QtMocHelpers::SignalData<void(const QString &)>(30, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 31 },
+        QtMocHelpers::SignalData<void(const QString &)>(32, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 33 },
         }}),
         // Signal 'operationSuccess'
-        QtMocHelpers::SignalData<void(const QString &)>(32, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 31 },
+        QtMocHelpers::SignalData<void(const QString &)>(34, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 33 },
         }}),
         // Signal 'operationProgress'
-        QtMocHelpers::SignalData<void(float)>(33, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Float, 34 },
+        QtMocHelpers::SignalData<void(float)>(35, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Float, 36 },
         }}),
         // Method 'undo'
-        QtMocHelpers::MethodData<void()>(35, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(37, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'redo'
-        QtMocHelpers::MethodData<void()>(36, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(38, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'viewMode'
-        QtMocHelpers::MethodData<QString() const>(37, 2, QMC::AccessPublic, QMetaType::QString),
+        QtMocHelpers::MethodData<QString() const>(39, 2, QMC::AccessPublic, QMetaType::QString),
         // Method 'setViewMode'
-        QtMocHelpers::MethodData<void(const QString &)>(38, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 39 },
+        QtMocHelpers::MethodData<void(const QString &)>(40, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 41 },
         }}),
         // Method 'openPath'
-        QtMocHelpers::MethodData<void(const QString &)>(40, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(42, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'openWith'
-        QtMocHelpers::MethodData<void(const QString &)>(41, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(43, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'openWithApp'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(42, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 }, { QMetaType::QString, 43 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(44, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 }, { QMetaType::QString, 45 },
         }}),
         // Method 'getAssociatedApps'
-        QtMocHelpers::MethodData<QVariantList(const QString &)>(44, 2, QMC::AccessPublic, 0x80000000 | 45, {{
+        QtMocHelpers::MethodData<QVariantList(const QString &)>(46, 2, QMC::AccessPublic, 0x80000000 | 47, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'getAllApplications'
-        QtMocHelpers::MethodData<QVariantList()>(46, 2, QMC::AccessPublic, 0x80000000 | 45),
+        QtMocHelpers::MethodData<QVariantList()>(48, 2, QMC::AccessPublic, 0x80000000 | 47),
         // Method 'setDefaultApp'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(47, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 48 }, { QMetaType::QString, 49 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(49, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 50 }, { QMetaType::QString, 51 },
         }}),
         // Method 'getMimeType'
-        QtMocHelpers::MethodData<QString(const QString &)>(50, 2, QMC::AccessPublic, QMetaType::QString, {{
+        QtMocHelpers::MethodData<QString(const QString &)>(52, 2, QMC::AccessPublic, QMetaType::QString, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'goUp'
-        QtMocHelpers::MethodData<void()>(51, 2, QMC::AccessPublic, QMetaType::Void),
-        // Method 'goBack'
-        QtMocHelpers::MethodData<void()>(52, 2, QMC::AccessPublic, QMetaType::Void),
-        // Method 'goForward'
         QtMocHelpers::MethodData<void()>(53, 2, QMC::AccessPublic, QMetaType::Void),
-        // Method 'refresh'
+        // Method 'goBack'
         QtMocHelpers::MethodData<void()>(54, 2, QMC::AccessPublic, QMetaType::Void),
+        // Method 'goForward'
+        QtMocHelpers::MethodData<void()>(55, 2, QMC::AccessPublic, QMetaType::Void),
+        // Method 'refresh'
+        QtMocHelpers::MethodData<void()>(56, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'setSearchText'
-        QtMocHelpers::MethodData<void(const QString &)>(55, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 56 },
-        }}),
-        // Method 'startGlobalSearch'
         QtMocHelpers::MethodData<void(const QString &)>(57, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 58 },
         }}),
-        // Method 'applySearchQuery'
+        // Method 'startGlobalSearch'
         QtMocHelpers::MethodData<void(const QString &)>(59, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 60 },
         }}),
-        // Method 'saveSearchQuery'
+        // Method 'applySearchQuery'
         QtMocHelpers::MethodData<void(const QString &)>(61, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 60 },
+            { QMetaType::QString, 62 },
+        }}),
+        // Method 'saveSearchQuery'
+        QtMocHelpers::MethodData<void(const QString &)>(63, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 62 },
         }}),
         // Method 'cancelSearch'
-        QtMocHelpers::MethodData<void()>(62, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(64, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'createFolder'
-        QtMocHelpers::MethodData<void(const QString &)>(63, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 64 },
+        QtMocHelpers::MethodData<void(const QString &)>(65, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 66 },
         }}),
         // Method 'createFile'
-        QtMocHelpers::MethodData<void(const QString &)>(65, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 64 },
+        QtMocHelpers::MethodData<void(const QString &)>(67, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 66 },
         }}),
         // Method 'renameItem'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(66, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 67 }, { QMetaType::QString, 68 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(68, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 69 }, { QMetaType::QString, 70 },
         }}),
         // Method 'bulkRename'
-        QtMocHelpers::MethodData<void(const QStringList &, const QString &, const QString &, const QString &, const QString &)>(69, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QStringList, 70 }, { QMetaType::QString, 71 }, { QMetaType::QString, 72 }, { QMetaType::QString, 73 },
-            { QMetaType::QString, 74 },
+        QtMocHelpers::MethodData<void(const QStringList &, const QString &, const QString &, const QString &, const QString &)>(71, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QStringList, 72 }, { QMetaType::QString, 73 }, { QMetaType::QString, 74 }, { QMetaType::QString, 75 },
+            { QMetaType::QString, 76 },
         }}),
         // Method 'deleteItem'
-        QtMocHelpers::MethodData<void(const QString &)>(75, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 },
-        }}),
-        // Method 'deleteItems'
-        QtMocHelpers::MethodData<void(const QStringList &)>(76, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QStringList, 70 },
-        }}),
-        // Method 'copyItem'
         QtMocHelpers::MethodData<void(const QString &)>(77, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
+        // Method 'deleteItems'
+        QtMocHelpers::MethodData<void(const QStringList &)>(78, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QStringList, 72 },
+        }}),
+        // Method 'copyItem'
+        QtMocHelpers::MethodData<void(const QString &)>(79, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 },
+        }}),
         // Method 'cutItem'
-        QtMocHelpers::MethodData<void(const QString &)>(78, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(80, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'pasteItem'
-        QtMocHelpers::MethodData<void()>(79, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(81, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'clearClipboard'
-        QtMocHelpers::MethodData<void()>(80, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(82, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'requestThumbnail'
-        QtMocHelpers::MethodData<void(const QString &)>(81, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 },
-        }}),
-        // Method 'selectPath'
-        QtMocHelpers::MethodData<void(const QString &)>(82, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 },
-        }}),
-        // Method 'toggleSelection'
         QtMocHelpers::MethodData<void(const QString &)>(83, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
+        // Method 'selectPath'
+        QtMocHelpers::MethodData<void(const QString &)>(84, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 },
+        }}),
+        // Method 'toggleSelection'
+        QtMocHelpers::MethodData<void(const QString &)>(85, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 },
+        }}),
         // Method 'clearSelection'
-        QtMocHelpers::MethodData<void()>(84, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(86, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'selectAll'
-        QtMocHelpers::MethodData<void()>(85, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::MethodData<void()>(87, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'selectRangeByIndexes'
-        QtMocHelpers::MethodData<void(int, int)>(86, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 87 }, { QMetaType::Int, 88 },
+        QtMocHelpers::MethodData<void(int, int)>(88, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 89 }, { QMetaType::Int, 90 },
         }}),
         // Method 'pathAtIndex'
-        QtMocHelpers::MethodData<QString(int) const>(89, 2, QMC::AccessPublic, QMetaType::QString, {{
-            { QMetaType::Int, 90 },
+        QtMocHelpers::MethodData<QString(int) const>(91, 2, QMC::AccessPublic, QMetaType::QString, {{
+            { QMetaType::Int, 92 },
         }}),
         // Method 'nameAtIndex'
-        QtMocHelpers::MethodData<QString(int) const>(91, 2, QMC::AccessPublic, QMetaType::QString, {{
-            { QMetaType::Int, 90 },
+        QtMocHelpers::MethodData<QString(int) const>(93, 2, QMC::AccessPublic, QMetaType::QString, {{
+            { QMetaType::Int, 92 },
         }}),
         // Method 'indexOfPath'
-        QtMocHelpers::MethodData<int(const QString &) const>(92, 2, QMC::AccessPublic, QMetaType::Int, {{
+        QtMocHelpers::MethodData<int(const QString &) const>(94, 2, QMC::AccessPublic, QMetaType::Int, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'startRename'
-        QtMocHelpers::MethodData<void(const QString &)>(93, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(95, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'metadataForPath'
-        QtMocHelpers::MethodData<QVariantMap(const QString &) const>(94, 2, QMC::AccessPublic, 0x80000000 | 95, {{
+        QtMocHelpers::MethodData<QVariantMap(const QString &) const>(96, 2, QMC::AccessPublic, 0x80000000 | 97, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'requestThumbnailsForRange'
-        QtMocHelpers::MethodData<void(int, int)>(96, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 97 }, { QMetaType::Int, 98 },
+        QtMocHelpers::MethodData<void(int, int)>(98, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 99 }, { QMetaType::Int, 100 },
         }}),
         // Method 'getFilePreview'
-        QtMocHelpers::MethodData<QString(const QString &)>(99, 2, QMC::AccessPublic, QMetaType::QString, {{
+        QtMocHelpers::MethodData<QString(const QString &)>(101, 2, QMC::AccessPublic, QMetaType::QString, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'openInTerminal'
-        QtMocHelpers::MethodData<void(const QString &)>(100, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(102, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'copyToClipboard'
-        QtMocHelpers::MethodData<void(const QString &)>(101, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 56 },
+        QtMocHelpers::MethodData<void(const QString &)>(103, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 58 },
         }}),
         // Method 'trashItems'
-        QtMocHelpers::MethodData<void(const QStringList &)>(102, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QStringList, 70 },
+        QtMocHelpers::MethodData<void(const QStringList &)>(104, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QStringList, 72 },
         }}),
+        // Method 'restoreFromTrash'
+        QtMocHelpers::MethodData<void(const QStringList &)>(105, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QStringList, 72 },
+        }}),
+        // Method 'emptyTrash'
+        QtMocHelpers::MethodData<void()>(106, 2, QMC::AccessPublic, QMetaType::Void),
         // Method 'analyseFolder'
-        QtMocHelpers::MethodData<void(const QString &)>(103, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(107, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'runGitCommand'
-        QtMocHelpers::MethodData<QString(const QString &, const QString &)>(104, 2, QMC::AccessPublic, QMetaType::QString, {{
-            { QMetaType::QString, 105 }, { QMetaType::QString, 14 },
+        QtMocHelpers::MethodData<QString(const QString &, const QString &)>(108, 2, QMC::AccessPublic, QMetaType::QString, {{
+            { QMetaType::QString, 109 }, { QMetaType::QString, 14 },
         }}),
         // Method 'getFolderMetadata'
-        QtMocHelpers::MethodData<QVariantMap(const QString &)>(106, 2, QMC::AccessPublic, 0x80000000 | 95, {{
+        QtMocHelpers::MethodData<QVariantMap(const QString &)>(110, 2, QMC::AccessPublic, 0x80000000 | 97, {{
             { QMetaType::QString, 14 },
         }}),
-        // Method 'compressItems'
-        QtMocHelpers::MethodData<void(const QStringList &)>(107, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QStringList, 70 },
-        }}),
-        // Method 'extractItem'
-        QtMocHelpers::MethodData<void(const QString &)>(108, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 },
-        }}),
-        // Method 'connectRemote'
-        QtMocHelpers::MethodData<void(const QString &)>(109, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 110 },
-        }}),
-        // Method 'openInCode'
+        // Method 'requestFolderSize'
         QtMocHelpers::MethodData<void(const QString &)>(111, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
+        // Method 'compressItems'
+        QtMocHelpers::MethodData<void(const QStringList &)>(112, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QStringList, 72 },
+        }}),
+        // Method 'extractItem'
+        QtMocHelpers::MethodData<void(const QString &)>(113, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 },
+        }}),
+        // Method 'connectRemote'
+        QtMocHelpers::MethodData<void(const QString &)>(114, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 115 },
+        }}),
+        // Method 'openInCode'
+        QtMocHelpers::MethodData<void(const QString &)>(116, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 },
+        }}),
         // Method 'addToBookmarks'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(112, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 }, { QMetaType::QString, 64 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(117, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 }, { QMetaType::QString, 66 },
         }}),
         // Method 'removeFromBookmarks'
-        QtMocHelpers::MethodData<void(int)>(113, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 90 },
+        QtMocHelpers::MethodData<void(int)>(118, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 92 },
         }}),
         // Method 'removeBookmarkByPath'
-        QtMocHelpers::MethodData<void(const QString &)>(114, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(119, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'isBookmarked'
-        QtMocHelpers::MethodData<bool(const QString &) const>(115, 2, QMC::AccessPublic, QMetaType::Bool, {{
+        QtMocHelpers::MethodData<bool(const QString &) const>(120, 2, QMC::AccessPublic, QMetaType::Bool, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'toggleBookmark'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(116, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 }, { QMetaType::QString, 64 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(121, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 }, { QMetaType::QString, 66 },
         }}),
         // Method 'openAsRoot'
-        QtMocHelpers::MethodData<void(const QString &)>(117, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(122, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'openInNewWindow'
-        QtMocHelpers::MethodData<void(const QString &)>(118, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(123, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'computeChecksum'
-        QtMocHelpers::MethodData<QString(const QString &)>(119, 2, QMC::AccessPublic, QMetaType::QString, {{
+        QtMocHelpers::MethodData<QString(const QString &)>(124, 2, QMC::AccessPublic, QMetaType::QString, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'duplicateItem'
-        QtMocHelpers::MethodData<void(const QString &)>(120, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(125, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'createSymlink'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(121, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 122 }, { QMetaType::QString, 123 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(126, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 127 }, { QMetaType::QString, 128 },
         }}),
         // Method 'makeExecutable'
-        QtMocHelpers::MethodData<void(const QString &)>(124, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(129, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'setPermissions'
-        QtMocHelpers::MethodData<void(const QString &, const QString &)>(125, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 14 }, { QMetaType::QString, 39 },
+        QtMocHelpers::MethodData<void(const QString &, const QString &)>(130, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 14 }, { QMetaType::QString, 41 },
         }}),
         // Method 'setWallpaper'
-        QtMocHelpers::MethodData<void(const QString &)>(126, 2, QMC::AccessPublic, QMetaType::Void, {{
+        QtMocHelpers::MethodData<void(const QString &)>(131, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 14 },
         }}),
         // Method 'mountRemote'
-        QtMocHelpers::MethodData<void(const QString &)>(127, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 110 },
+        QtMocHelpers::MethodData<void(const QString &)>(132, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 115 },
         }}),
         // Method 'dropItems'
-        QtMocHelpers::MethodData<void(const QStringList &, const QString &, bool)>(128, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QStringList, 70 }, { QMetaType::QString, 129 }, { QMetaType::Bool, 130 },
+        QtMocHelpers::MethodData<void(const QStringList &, const QString &, bool)>(133, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QStringList, 72 }, { QMetaType::QString, 134 }, { QMetaType::Bool, 135 },
         }}),
         // Method 'setThumbnailManager'
-        QtMocHelpers::MethodData<void(ThumbnailManager *)>(131, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 132, 133 },
+        QtMocHelpers::MethodData<void(ThumbnailManager *)>(136, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 137, 138 },
         }}),
         // Method 'setPlacesModel'
-        QtMocHelpers::MethodData<void(PlacesModel *)>(134, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 135, 136 },
+        QtMocHelpers::MethodData<void(PlacesModel *)>(139, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 140, 141 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
         // property 'fileModel'
-        QtMocHelpers::PropertyData<QObject*>(137, QMetaType::QObjectStar, QMC::DefaultPropertyFlags | QMC::Constant),
+        QtMocHelpers::PropertyData<QObject*>(142, QMetaType::QObjectStar, QMC::DefaultPropertyFlags | QMC::Constant),
         // property 'treeModel'
-        QtMocHelpers::PropertyData<QObject*>(138, QMetaType::QObjectStar, QMC::DefaultPropertyFlags | QMC::Constant),
+        QtMocHelpers::PropertyData<QObject*>(143, QMetaType::QObjectStar, QMC::DefaultPropertyFlags | QMC::Constant),
         // property 'placesModel'
-        QtMocHelpers::PropertyData<QObject*>(139, QMetaType::QObjectStar, QMC::DefaultPropertyFlags, 15),
+        QtMocHelpers::PropertyData<QObject*>(144, QMetaType::QObjectStar, QMC::DefaultPropertyFlags, 15),
         // property 'currentPath'
-        QtMocHelpers::PropertyData<QString>(140, QMetaType::QString, QMC::DefaultPropertyFlags, 0),
+        QtMocHelpers::PropertyData<QString>(145, QMetaType::QString, QMC::DefaultPropertyFlags, 0),
         // property 'loading'
-        QtMocHelpers::PropertyData<bool>(141, QMetaType::Bool, QMC::DefaultPropertyFlags, 1),
+        QtMocHelpers::PropertyData<bool>(146, QMetaType::Bool, QMC::DefaultPropertyFlags, 1),
         // property 'selectedPath'
-        QtMocHelpers::PropertyData<QString>(142, QMetaType::QString, QMC::DefaultPropertyFlags, 2),
+        QtMocHelpers::PropertyData<QString>(147, QMetaType::QString, QMC::DefaultPropertyFlags, 2),
         // property 'selectedPaths'
-        QtMocHelpers::PropertyData<QStringList>(143, QMetaType::QStringList, QMC::DefaultPropertyFlags, 3),
+        QtMocHelpers::PropertyData<QStringList>(148, QMetaType::QStringList, QMC::DefaultPropertyFlags, 3),
         // property 'selectionRevision'
-        QtMocHelpers::PropertyData<int>(144, QMetaType::Int, QMC::DefaultPropertyFlags, 3),
+        QtMocHelpers::PropertyData<int>(149, QMetaType::Int, QMC::DefaultPropertyFlags, 3),
         // property 'hasSelection'
-        QtMocHelpers::PropertyData<bool>(145, QMetaType::Bool, QMC::DefaultPropertyFlags, 3),
+        QtMocHelpers::PropertyData<bool>(150, QMetaType::Bool, QMC::DefaultPropertyFlags, 3),
         // property 'canGoBack'
-        QtMocHelpers::PropertyData<bool>(146, QMetaType::Bool, QMC::DefaultPropertyFlags, 4),
+        QtMocHelpers::PropertyData<bool>(151, QMetaType::Bool, QMC::DefaultPropertyFlags, 4),
         // property 'canGoForward'
-        QtMocHelpers::PropertyData<bool>(147, QMetaType::Bool, QMC::DefaultPropertyFlags, 5),
+        QtMocHelpers::PropertyData<bool>(152, QMetaType::Bool, QMC::DefaultPropertyFlags, 5),
         // property 'homePath'
-        QtMocHelpers::PropertyData<QString>(148, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Constant),
+        QtMocHelpers::PropertyData<QString>(153, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Constant),
         // property 'title'
-        QtMocHelpers::PropertyData<QString>(149, QMetaType::QString, QMC::DefaultPropertyFlags, 8),
+        QtMocHelpers::PropertyData<QString>(154, QMetaType::QString, QMC::DefaultPropertyFlags, 8),
         // property 'showHiddenFiles'
-        QtMocHelpers::PropertyData<bool>(150, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 6),
+        QtMocHelpers::PropertyData<bool>(155, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 6),
         // property 'hasClipboard'
-        QtMocHelpers::PropertyData<bool>(151, QMetaType::Bool, QMC::DefaultPropertyFlags, 7),
+        QtMocHelpers::PropertyData<bool>(156, QMetaType::Bool, QMC::DefaultPropertyFlags, 7),
         // property 'clipboardPaths'
-        QtMocHelpers::PropertyData<QStringList>(152, QMetaType::QStringList, QMC::DefaultPropertyFlags, 7),
+        QtMocHelpers::PropertyData<QStringList>(157, QMetaType::QStringList, QMC::DefaultPropertyFlags, 7),
         // property 'isCutOp'
-        QtMocHelpers::PropertyData<bool>(153, QMetaType::Bool, QMC::DefaultPropertyFlags, 7),
+        QtMocHelpers::PropertyData<bool>(158, QMetaType::Bool, QMC::DefaultPropertyFlags, 7),
         // property 'iconSize'
-        QtMocHelpers::PropertyData<int>(154, QMetaType::Int, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 9),
+        QtMocHelpers::PropertyData<int>(159, QMetaType::Int, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 9),
         // property 'viewMode'
-        QtMocHelpers::PropertyData<QString>(37, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 10),
+        QtMocHelpers::PropertyData<QString>(39, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 10),
         // property 'availableExtensions'
-        QtMocHelpers::PropertyData<QStringList>(155, QMetaType::QStringList, QMC::DefaultPropertyFlags, 12),
+        QtMocHelpers::PropertyData<QStringList>(160, QMetaType::QStringList, QMC::DefaultPropertyFlags, 12),
         // property 'gitStatus'
-        QtMocHelpers::PropertyData<QVariantMap>(156, 0x80000000 | 95, QMC::DefaultPropertyFlags | QMC::EnumOrFlag, 13),
+        QtMocHelpers::PropertyData<QVariantMap>(161, 0x80000000 | 97, QMC::DefaultPropertyFlags | QMC::EnumOrFlag, 13),
         // property 'bookmarksRevision'
-        QtMocHelpers::PropertyData<int>(157, QMetaType::Int, QMC::DefaultPropertyFlags, 16),
+        QtMocHelpers::PropertyData<int>(162, QMetaType::Int, QMC::DefaultPropertyFlags, 16),
         // property 'searchMode'
-        QtMocHelpers::PropertyData<QString>(158, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 17),
+        QtMocHelpers::PropertyData<QString>(163, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 17),
         // property 'searchScope'
-        QtMocHelpers::PropertyData<QString>(159, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 18),
+        QtMocHelpers::PropertyData<QString>(164, QMetaType::QString, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 18),
         // property 'searchInProgress'
-        QtMocHelpers::PropertyData<bool>(160, QMetaType::Bool, QMC::DefaultPropertyFlags, 19),
+        QtMocHelpers::PropertyData<bool>(165, QMetaType::Bool, QMC::DefaultPropertyFlags, 19),
         // property 'activeSearchTerm'
-        QtMocHelpers::PropertyData<QString>(161, QMetaType::QString, QMC::DefaultPropertyFlags, 21),
+        QtMocHelpers::PropertyData<QString>(166, QMetaType::QString, QMC::DefaultPropertyFlags, 21),
         // property 'searchContent'
-        QtMocHelpers::PropertyData<bool>(162, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 20),
+        QtMocHelpers::PropertyData<bool>(167, QMetaType::Bool, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet, 20),
         // property 'recentSearches'
-        QtMocHelpers::PropertyData<QStringList>(163, QMetaType::QStringList, QMC::DefaultPropertyFlags, 22),
+        QtMocHelpers::PropertyData<QStringList>(168, QMetaType::QStringList, QMC::DefaultPropertyFlags, 22),
         // property 'canUndo'
-        QtMocHelpers::PropertyData<bool>(164, QMetaType::Bool, QMC::DefaultPropertyFlags, 25),
+        QtMocHelpers::PropertyData<bool>(169, QMetaType::Bool, QMC::DefaultPropertyFlags, 25),
         // property 'canRedo'
-        QtMocHelpers::PropertyData<bool>(165, QMetaType::Bool, QMC::DefaultPropertyFlags, 26),
+        QtMocHelpers::PropertyData<bool>(170, QMetaType::Bool, QMC::DefaultPropertyFlags, 26),
         // property 'undoDescription'
-        QtMocHelpers::PropertyData<QString>(166, QMetaType::QString, QMC::DefaultPropertyFlags, 25),
+        QtMocHelpers::PropertyData<QString>(171, QMetaType::QString, QMC::DefaultPropertyFlags, 25),
     };
     QtMocHelpers::UintData qt_enums {
     };
@@ -647,106 +666,110 @@ void AppController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 24: _t->openWithRequested((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
         case 25: _t->canUndoChanged(); break;
         case 26: _t->canRedoChanged(); break;
-        case 27: _t->operationError((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 28: _t->operationSuccess((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 29: _t->operationProgress((*reinterpret_cast<std::add_pointer_t<float>>(_a[1]))); break;
-        case 30: _t->undo(); break;
-        case 31: _t->redo(); break;
-        case 32: { QString _r = _t->viewMode();
+        case 27: _t->folderSizeResolved((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<qlonglong>>(_a[2]))); break;
+        case 28: _t->operationError((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 29: _t->operationSuccess((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 30: _t->operationProgress((*reinterpret_cast<std::add_pointer_t<float>>(_a[1]))); break;
+        case 31: _t->undo(); break;
+        case 32: _t->redo(); break;
+        case 33: { QString _r = _t->viewMode();
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 33: _t->setViewMode((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 34: _t->openPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 35: _t->openWith((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 36: _t->openWithApp((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 37: { QVariantList _r = _t->getAssociatedApps((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 34: _t->setViewMode((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 35: _t->openPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 36: _t->openWith((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 37: _t->openWithApp((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 38: { QVariantList _r = _t->getAssociatedApps((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QVariantList*>(_a[0]) = std::move(_r); }  break;
-        case 38: { QVariantList _r = _t->getAllApplications();
+        case 39: { QVariantList _r = _t->getAllApplications();
             if (_a[0]) *reinterpret_cast<QVariantList*>(_a[0]) = std::move(_r); }  break;
-        case 39: _t->setDefaultApp((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 40: { QString _r = _t->getMimeType((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 40: _t->setDefaultApp((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 41: { QString _r = _t->getMimeType((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 41: _t->goUp(); break;
-        case 42: _t->goBack(); break;
-        case 43: _t->goForward(); break;
-        case 44: _t->refresh(); break;
-        case 45: _t->setSearchText((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 46: _t->startGlobalSearch((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 47: _t->applySearchQuery((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 48: _t->saveSearchQuery((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 49: _t->cancelSearch(); break;
-        case 50: _t->createFolder((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 51: _t->createFile((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 52: _t->renameItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 53: _t->bulkRename((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[3])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[4])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[5]))); break;
-        case 54: _t->deleteItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 55: _t->deleteItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
-        case 56: _t->copyItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 57: _t->cutItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 58: _t->pasteItem(); break;
-        case 59: _t->clearClipboard(); break;
-        case 60: _t->requestThumbnail((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 61: _t->selectPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 62: _t->toggleSelection((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 63: _t->clearSelection(); break;
-        case 64: _t->selectAll(); break;
-        case 65: _t->selectRangeByIndexes((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<int>>(_a[2]))); break;
-        case 66: { QString _r = _t->pathAtIndex((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])));
+        case 42: _t->goUp(); break;
+        case 43: _t->goBack(); break;
+        case 44: _t->goForward(); break;
+        case 45: _t->refresh(); break;
+        case 46: _t->setSearchText((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 47: _t->startGlobalSearch((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 48: _t->applySearchQuery((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 49: _t->saveSearchQuery((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 50: _t->cancelSearch(); break;
+        case 51: _t->createFolder((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 52: _t->createFile((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 53: _t->renameItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 54: _t->bulkRename((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[3])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[4])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[5]))); break;
+        case 55: _t->deleteItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 56: _t->deleteItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 57: _t->copyItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 58: _t->cutItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 59: _t->pasteItem(); break;
+        case 60: _t->clearClipboard(); break;
+        case 61: _t->requestThumbnail((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 62: _t->selectPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 63: _t->toggleSelection((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 64: _t->clearSelection(); break;
+        case 65: _t->selectAll(); break;
+        case 66: _t->selectRangeByIndexes((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<int>>(_a[2]))); break;
+        case 67: { QString _r = _t->pathAtIndex((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 67: { QString _r = _t->nameAtIndex((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])));
+        case 68: { QString _r = _t->nameAtIndex((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 68: { int _r = _t->indexOfPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 69: { int _r = _t->indexOfPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<int*>(_a[0]) = std::move(_r); }  break;
-        case 69: _t->startRename((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 70: { QVariantMap _r = _t->metadataForPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 70: _t->startRename((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 71: { QVariantMap _r = _t->metadataForPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QVariantMap*>(_a[0]) = std::move(_r); }  break;
-        case 71: _t->requestThumbnailsForRange((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<int>>(_a[2]))); break;
-        case 72: { QString _r = _t->getFilePreview((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 72: _t->requestThumbnailsForRange((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<int>>(_a[2]))); break;
+        case 73: { QString _r = _t->getFilePreview((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 73: _t->openInTerminal((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 74: _t->copyToClipboard((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 75: _t->trashItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
-        case 76: _t->analyseFolder((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 77: { QString _r = _t->runGitCommand((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])));
+        case 74: _t->openInTerminal((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 75: _t->copyToClipboard((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 76: _t->trashItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 77: _t->restoreFromTrash((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 78: _t->emptyTrash(); break;
+        case 79: _t->analyseFolder((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 80: { QString _r = _t->runGitCommand((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])));
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 78: { QVariantMap _r = _t->getFolderMetadata((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 81: { QVariantMap _r = _t->getFolderMetadata((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QVariantMap*>(_a[0]) = std::move(_r); }  break;
-        case 79: _t->compressItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
-        case 80: _t->extractItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 81: _t->connectRemote((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 82: _t->openInCode((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 83: _t->addToBookmarks((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 84: _t->removeFromBookmarks((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
-        case 85: _t->removeBookmarkByPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 86: { bool _r = _t->isBookmarked((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 82: _t->requestFolderSize((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 83: _t->compressItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1]))); break;
+        case 84: _t->extractItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 85: _t->connectRemote((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 86: _t->openInCode((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 87: _t->addToBookmarks((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 88: _t->removeFromBookmarks((*reinterpret_cast<std::add_pointer_t<int>>(_a[1]))); break;
+        case 89: _t->removeBookmarkByPath((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 90: { bool _r = _t->isBookmarked((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<bool*>(_a[0]) = std::move(_r); }  break;
-        case 87: _t->toggleBookmark((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 88: _t->openAsRoot((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 89: _t->openInNewWindow((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 90: { QString _r = _t->computeChecksum((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
+        case 91: _t->toggleBookmark((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 92: _t->openAsRoot((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 93: _t->openInNewWindow((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 94: { QString _r = _t->computeChecksum((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])));
             if (_a[0]) *reinterpret_cast<QString*>(_a[0]) = std::move(_r); }  break;
-        case 91: _t->duplicateItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 92: _t->createSymlink((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 93: _t->makeExecutable((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 94: _t->setPermissions((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
-        case 95: _t->setWallpaper((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 96: _t->mountRemote((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 97: _t->dropItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast<std::add_pointer_t<bool>>(_a[3]))); break;
-        case 98: _t->setThumbnailManager((*reinterpret_cast<std::add_pointer_t<ThumbnailManager*>>(_a[1]))); break;
-        case 99: _t->setPlacesModel((*reinterpret_cast<std::add_pointer_t<PlacesModel*>>(_a[1]))); break;
+        case 95: _t->duplicateItem((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 96: _t->createSymlink((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 97: _t->makeExecutable((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 98: _t->setPermissions((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
+        case 99: _t->setWallpaper((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 100: _t->mountRemote((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 101: _t->dropItems((*reinterpret_cast<std::add_pointer_t<QStringList>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast<std::add_pointer_t<bool>>(_a[3]))); break;
+        case 102: _t->setThumbnailManager((*reinterpret_cast<std::add_pointer_t<ThumbnailManager*>>(_a[1]))); break;
+        case 103: _t->setPlacesModel((*reinterpret_cast<std::add_pointer_t<PlacesModel*>>(_a[1]))); break;
         default: ;
         }
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
-        case 98:
+        case 102:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 0:
                 *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< ThumbnailManager* >(); break;
             }
             break;
-        case 99:
+        case 103:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
             case 0:
@@ -810,11 +833,13 @@ void AppController::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
             return;
         if (QtMocHelpers::indexOfMethod<void (AppController::*)()>(_a, &AppController::canRedoChanged, 26))
             return;
-        if (QtMocHelpers::indexOfMethod<void (AppController::*)(const QString & )>(_a, &AppController::operationError, 27))
+        if (QtMocHelpers::indexOfMethod<void (AppController::*)(const QString & , qlonglong )>(_a, &AppController::folderSizeResolved, 27))
             return;
-        if (QtMocHelpers::indexOfMethod<void (AppController::*)(const QString & )>(_a, &AppController::operationSuccess, 28))
+        if (QtMocHelpers::indexOfMethod<void (AppController::*)(const QString & )>(_a, &AppController::operationError, 28))
             return;
-        if (QtMocHelpers::indexOfMethod<void (AppController::*)(float )>(_a, &AppController::operationProgress, 29))
+        if (QtMocHelpers::indexOfMethod<void (AppController::*)(const QString & )>(_a, &AppController::operationSuccess, 29))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (AppController::*)(float )>(_a, &AppController::operationProgress, 30))
             return;
     }
     if (_c == QMetaObject::ReadProperty) {
@@ -887,14 +912,14 @@ int AppController::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 100)
+        if (_id < 104)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 100;
+        _id -= 104;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 100)
+        if (_id < 104)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 100;
+        _id -= 104;
     }
     if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
             || _c == QMetaObject::ResetProperty || _c == QMetaObject::BindableProperty
@@ -1068,20 +1093,26 @@ void AppController::canRedoChanged()
 }
 
 // SIGNAL 27
-void AppController::operationError(const QString & _t1)
+void AppController::folderSizeResolved(const QString & _t1, qlonglong _t2)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 27, nullptr, _t1);
+    QMetaObject::activate<void>(this, &staticMetaObject, 27, nullptr, _t1, _t2);
 }
 
 // SIGNAL 28
-void AppController::operationSuccess(const QString & _t1)
+void AppController::operationError(const QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 28, nullptr, _t1);
 }
 
 // SIGNAL 29
-void AppController::operationProgress(float _t1)
+void AppController::operationSuccess(const QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 29, nullptr, _t1);
+}
+
+// SIGNAL 30
+void AppController::operationProgress(float _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 30, nullptr, _t1);
 }
 QT_WARNING_POP

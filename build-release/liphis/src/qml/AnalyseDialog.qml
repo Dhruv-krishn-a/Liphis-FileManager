@@ -46,7 +46,20 @@ Dialog {
         currentItem = item
     }
 
-    function finish() {
+    function finish(result) {
+        var listedTotal = 0
+        for (var i = 0; i < listModel.count; ++i) {
+            var node = listModel.get(i)
+            listedTotal += (node && node.size !== undefined) ? Number(node.size) : 0
+        }
+        if (result && result.size !== undefined) {
+            liveSize = Math.max(Number(result.size), listedTotal)
+        } else {
+            liveSize = listedTotal
+        }
+        if (result && result.fileCount !== undefined) {
+            liveFiles = result.fileCount
+        }
         isScanning = false
     }
 

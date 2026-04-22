@@ -7,6 +7,9 @@ Rectangle {
 
     property var theme
     property var activeController
+    readonly property int selectedCount: (root.activeController && root.activeController.selectedPaths
+                                          && root.activeController.selectedPaths.length !== undefined)
+                                         ? root.activeController.selectedPaths.length : 0
 
     height: theme.statusBarHeight
     color: theme.surfaceRaised
@@ -32,15 +35,15 @@ Rectangle {
         }
 
         Text {
-            visible: root.activeController && root.activeController.selectedPaths.length > 0
-            text: root.activeController ? qsTr("%1 items selected").arg(root.activeController.selectedPaths.length) : ""
+            visible: selectedCount > 0
+            text: qsTr("%1 items selected").arg(selectedCount)
             color: theme.accent
             font.pixelSize: 11
             font.bold: true
         }
 
         Button {
-            visible: root.activeController && root.activeController.selectedPaths.length > 0
+            visible: selectedCount > 0
             text: "Clear"
             flat: true
             font.pixelSize: 10

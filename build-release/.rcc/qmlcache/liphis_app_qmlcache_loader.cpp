@@ -96,6 +96,13 @@ namespace _qt_qml_liphis_src_qml_CenterWorkspace_qml {
         reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
     };
 }
+namespace _qt_qml_liphis_src_qml_DocumentCenterPage_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
 namespace _qt_qml_liphis_src_qml_InspectorPanel_qml { 
     extern const unsigned char qmlData[];
     extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
@@ -167,6 +174,34 @@ namespace _qt_qml_liphis_src_qml_PropertiesDialog_qml {
     };
 }
 namespace _qt_qml_liphis_src_qml_AnalyseDialog_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
+namespace _qt_qml_liphis_src_qml_DocumentInboxDialog_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
+namespace _qt_qml_liphis_src_qml_DocumentDuplicatesDialog_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
+namespace _qt_qml_liphis_src_qml_DocumentHealthDialog_qml { 
+    extern const unsigned char qmlData[];
+    extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
+    const QQmlPrivate::CachedQmlUnit unit = {
+        reinterpret_cast<const QV4::CompiledData::Unit*>(&qmlData), &aotBuiltFunctions[0], nullptr
+    };
+}
+namespace _qt_qml_liphis_src_qml_CanonicalNamingDialog_qml { 
     extern const unsigned char qmlData[];
     extern const QQmlPrivate::AOTCompiledFunction aotBuiltFunctions[];
     const QQmlPrivate::CachedQmlUnit unit = {
@@ -249,6 +284,7 @@ Registry::Registry() {
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/LeftSidebar.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_LeftSidebar_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/TabStrip.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_TabStrip_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/CenterWorkspace.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_CenterWorkspace_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/DocumentCenterPage.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_DocumentCenterPage_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/InspectorPanel.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_InspectorPanel_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/StatusBar.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_StatusBar_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/FileIcon.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_FileIcon_qml::unit);
@@ -260,6 +296,10 @@ Registry::Registry() {
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/FileView.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_FileView_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/PropertiesDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_PropertiesDialog_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/AnalyseDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_AnalyseDialog_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/DocumentInboxDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_DocumentInboxDialog_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/DocumentDuplicatesDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_DocumentDuplicatesDialog_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/DocumentHealthDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_DocumentHealthDialog_qml::unit);
+    resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/CanonicalNamingDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_CanonicalNamingDialog_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/ToastManager.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_ToastManager_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/BulkRenameDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_BulkRenameDialog_qml::unit);
     resourcePathToCachedUnit.insert(QStringLiteral("/qt/qml/liphis/src/qml/ConnectRemoteDialog.qml"), &QmlCacheGeneratedCode::_qt_qml_liphis_src_qml_ConnectRemoteDialog_qml::unit);

@@ -10,7 +10,7 @@
                             "column": 37,
                             "durationMicroseconds": 0,
                             "functionName": "compact",
-                            "line": 12,
+                            "line": 13,
                             "message": ""
                         },
                         {
@@ -18,23 +18,71 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "hasSelection",
-                            "line": 14,
+                            "line": 15,
                             "message": "Cannot load property hasSelection from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::activeController with type QVariant."
                         },
                         {
                             "codegenResult": 2,
                             "column": 28,
                             "durationMicroseconds": 0,
-                            "functionName": "metadata",
-                            "line": 17,
-                            "message": "Cannot load property selectedPath from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::activeController with type QVariant."
+                            "functionName": "gitLines",
+                            "line": 26,
+                            "message": "Cannot generate efficient code for storing an array in a non-sequence type"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "panelInset",
+                            "line": 28,
+                            "message": "Cannot load property space8 from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::theme with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "bodyFont",
+                            "line": 29,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "titleFont",
+                            "line": 30,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "chipHeight",
+                            "line": 31,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "actionButtonHeight",
+                            "line": 32,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "previewAllowed",
+                            "line": 33,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
                             "codegenResult": 2,
                             "column": 12,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 26,
+                            "line": 73,
                             "message": "Cannot load property surface from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::theme with type QVariant."
                         },
                         {
@@ -42,7 +90,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "formatSize",
-                            "line": 30,
+                            "line": 77,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -50,31 +98,287 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "formatDate",
-                            "line": 42,
+                            "line": 89,
                             "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "onMetadataChanged",
+                            "line": 94,
+                            "message": "Cannot load property mimeType from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
                             "codegenResult": 2,
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "runGit",
-                            "line": 47,
+                            "line": 105,
                             "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "formatGitLines",
+                            "line": 112,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "gitLineColor",
+                            "line": 117,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "gitLineBackground",
+                            "line": 137,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "gitLineBold",
+                            "line": 152,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "refreshMetadata",
+                            "line": 164,
+                            "message": "Cannot load property metadataForPath from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::activeController with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "refreshTimeline",
+                            "line": 185,
+                            "message": "Cannot load property path from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "detailsRows",
+                            "line": 193,
+                            "message": "function without return type annotation returns QVariantList. This may prevent proper compilation to Cpp."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onActiveControllerChanged",
+                            "line": 221,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onHasSelectionChanged",
+                            "line": 222,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitHeight",
+                            "line": 47,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 48,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 19,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 52,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 53,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "horizontalAlignment",
+                            "line": 56,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 57,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 58,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 54,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "weight",
+                            "line": 55,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 60,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 61,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 20,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 64,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 67,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 27,
+                            "line": 74,
                             "message": "Cannot load property border from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::theme with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCompleted",
+                            "line": 220,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 225,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onCurrentPathChanged",
+                            "line": 226,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onSelectedPathChanged",
+                            "line": 227,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onSelectedPathsChanged",
+                            "line": 228,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onFolderSizeResolved",
+                            "line": 229,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 238,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 239,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onGroupsChanged",
+                            "line": 240,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "contentWidth",
-                            "line": 54,
+                            "line": 245,
                             "message": ""
                         },
                         {
@@ -82,7 +386,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 53,
+                            "line": 244,
                             "message": ""
                         },
                         {
@@ -90,7 +394,7 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 58,
+                            "line": 249,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -98,7 +402,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "spacing",
-                            "line": 63,
+                            "line": 254,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -106,7 +410,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalCenter",
-                            "line": 59,
+                            "line": 250,
                             "message": ""
                         },
                         {
@@ -114,7 +418,7 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "top",
-                            "line": 60,
+                            "line": 251,
                             "message": ""
                         },
                         {
@@ -122,7 +426,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "topMargin",
-                            "line": 61,
+                            "line": 252,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -130,7 +434,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "bottomMargin",
-                            "line": 62,
+                            "line": 253,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -138,7 +442,7 @@
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 68,
+                            "line": 259,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -146,15 +450,39 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 69,
+                            "line": 260,
                             "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 30,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacing",
+                            "line": 264,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 72,
+                            "line": 263,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 63,
+                            "durationMicroseconds": 0,
+                            "functionName": "leftMargin",
+                            "line": 263,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 101,
+                            "durationMicroseconds": 0,
+                            "functionName": "rightMargin",
+                            "line": 263,
                             "message": ""
                         },
                         {
@@ -162,7 +490,15 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "name",
-                            "line": 75,
+                            "line": 266,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "iconSize",
+                            "line": 267,
                             "message": ""
                         },
                         {
@@ -170,7 +506,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 77,
+                            "line": 268,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -178,7 +514,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 80,
+                            "line": 271,
                             "message": ""
                         },
                         {
@@ -186,23 +522,39 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 81,
+                            "line": 272,
                             "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 273,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 89,
+                            "line": 280,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 282,
+                            "message": "Cannot access value for name generalSettings"
                         },
                         {
                             "codegenResult": 2,
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 97,
+                            "line": 289,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -210,7 +562,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 98,
+                            "line": 290,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -218,7 +570,7 @@
                             "column": 45,
                             "durationMicroseconds": 0,
                             "functionName": "preferredHeight",
-                            "line": 94,
+                            "line": 286,
                             "message": ""
                         },
                         {
@@ -226,7 +578,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 99,
+                            "line": 291,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -234,7 +586,7 @@
                             "column": 33,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 106,
+                            "line": 298,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -242,7 +594,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 107,
+                            "line": 299,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -250,31 +602,63 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 104,
+                            "line": 296,
                             "message": ""
                         },
                         {
                             "codegenResult": 0,
-                            "column": 35,
+                            "column": 38,
                             "durationMicroseconds": 0,
-                            "functionName": "fillMode",
-                            "line": 113,
+                            "functionName": "interactive",
+                            "line": 307,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "boundsBehavior",
+                            "line": 308,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 33,
+                            "column": 25,
                             "durationMicroseconds": 0,
-                            "functionName": "source",
-                            "line": 114,
-                            "message": "Cannot load property thumbnail from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                            "functionName": "clampZoom",
+                            "line": 313,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 25,
+                            "durationMicroseconds": 0,
+                            "functionName": "reset",
+                            "line": 314,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "contentWidth",
+                            "line": 316,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "contentHeight",
+                            "line": 317,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 111,
+                            "line": 304,
                             "message": ""
                         },
                         {
@@ -282,15 +666,119 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "margins",
-                            "line": 112,
+                            "line": 305,
                             "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "source",
+                            "line": 321,
+                            "message": "Cannot load property thumbnail from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "fillMode",
+                            "line": 323,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 327,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "height",
+                            "line": 328,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "xScale",
+                            "line": 335,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "yScale",
+                            "line": 336,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "acceptedModifiers",
+                            "line": 341,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 342,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "onWheel",
+                            "line": 342,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "acceptedButtons",
+                            "line": 351,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDoubleTapped",
+                            "line": 352,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 357,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "height",
+                            "line": 358,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "isDir",
-                            "line": 121,
+                            "line": 359,
                             "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
@@ -298,7 +786,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "iconName",
-                            "line": 122,
+                            "line": 360,
                             "message": "Cannot load property iconName from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
@@ -306,87 +794,79 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 123,
+                            "line": 361,
                             "message": ""
                         },
                         {
-                            "codegenResult": 2,
+                            "codegenResult": 0,
                             "column": 38,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 124,
-                            "message": "Cannot load property status from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::parent with type QQuickItem."
+                            "line": 362,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 118,
+                            "line": 356,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 369,
+                            "message": "Cannot access value for name previewText"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 24,
-                            "durationMicroseconds": 0,
-                            "functionName": "theme",
-                            "line": 131,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 29,
-                            "durationMicroseconds": 0,
-                            "functionName": "radius",
-                            "line": 137,
-                            "message": "Cannot access value for name theme"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 28,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 138,
-                            "message": "Cannot access value for name theme"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 37,
-                            "durationMicroseconds": 0,
-                            "functionName": "implicitHeight",
-                            "line": 141,
-                            "message": "Cannot access value for name theme"
-                        },
-                        {
-                            "codegenResult": 2,
                             "column": 35,
                             "durationMicroseconds": 0,
+                            "functionName": "wrapMode",
+                            "line": 371,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 372,
+                            "message": "Cannot access value for name previewText"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 139,
+                            "line": 373,
                             "message": "Cannot access value for name theme"
                         },
                         {
-                            "codegenResult": 0,
-                            "column": 38,
+                            "codegenResult": 2,
+                            "column": 41,
                             "durationMicroseconds": 0,
-                            "functionName": "top",
-                            "line": 145,
-                            "message": ""
+                            "functionName": "selectionColor",
+                            "line": 374,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "selectedTextColor",
+                            "line": 375,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
                             "column": 39,
                             "durationMicroseconds": 0,
-                            "functionName": "left",
-                            "line": 146,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 40,
-                            "durationMicroseconds": 0,
-                            "functionName": "right",
-                            "line": 147,
+                            "functionName": "fill",
+                            "line": 367,
                             "message": ""
                         },
                         {
@@ -394,15 +874,103 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "margins",
-                            "line": 148,
+                            "line": 368,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 382,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 384,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 29,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 389,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 390,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitHeight",
+                            "line": 393,
                             "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 35,
                             "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 391,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "spacing",
+                            "line": 401,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "top",
+                            "line": 397,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 39,
+                            "durationMicroseconds": 0,
+                            "functionName": "left",
+                            "line": 398,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "right",
+                            "line": 399,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "margins",
+                            "line": 400,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 152,
+                            "line": 404,
                             "message": "Cannot load property name from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
@@ -410,7 +978,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 153,
+                            "line": 405,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -418,7 +986,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 156,
+                            "line": 408,
                             "message": ""
                         },
                         {
@@ -426,7 +994,7 @@
                             "column": 45,
                             "durationMicroseconds": 0,
                             "functionName": "pixelSize",
-                            "line": 154,
+                            "line": 406,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -434,7 +1002,7 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "weight",
-                            "line": 155,
+                            "line": 407,
                             "message": ""
                         },
                         {
@@ -442,7 +1010,7 @@
                             "column": 41,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 163,
+                            "line": 415,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -450,7 +1018,7 @@
                             "column": 40,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 164,
+                            "line": 416,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -458,7 +1026,7 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "implicitWidth",
-                            "line": 168,
+                            "line": 420,
                             "message": ""
                         },
                         {
@@ -466,7 +1034,7 @@
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 165,
+                            "line": 417,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -474,7 +1042,7 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 172,
+                            "line": 424,
                             "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
@@ -482,7 +1050,7 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 173,
+                            "line": 425,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -490,7 +1058,7 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 175,
+                            "line": 427,
                             "message": ""
                         },
                         {
@@ -498,7 +1066,7 @@
                             "column": 55,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 171,
+                            "line": 423,
                             "message": ""
                         },
                         {
@@ -506,7 +1074,7 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 179,
+                            "line": 431,
                             "message": "Cannot load property fileCount from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
@@ -514,7 +1082,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 180,
+                            "line": 432,
                             "message": "Cannot load property fileCount from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
                         },
                         {
@@ -522,31 +1090,79 @@
                             "column": 40,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 181,
+                            "line": 433,
                             "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 435,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 49,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 434,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 441,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 446,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "alignment",
+                            "line": 444,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 445,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 79,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 186,
+                            "line": 449,
                             "message": "Cannot access value for name theme"
                         },
                         {
-                            "codegenResult": 2,
+                            "codegenResult": 0,
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 189,
-                            "message": "Cannot load property size from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                            "line": 452,
+                            "message": ""
                         },
                         {
                             "codegenResult": 0,
                             "column": 51,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 201,
+                            "line": 460,
                             "message": ""
                         },
                         {
@@ -554,7 +1170,7 @@
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 206,
+                            "line": 465,
                             "message": "Cannot access value for name modelData"
                         },
                         {
@@ -562,15 +1178,31 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 207,
+                            "line": 466,
                             "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 64,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 464,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 467,
+                            "message": "Cannot access value for name root"
                         },
                         {
                             "codegenResult": 2,
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 212,
+                            "line": 471,
                             "message": "Cannot access value for name modelData"
                         },
                         {
@@ -578,7 +1210,7 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 213,
+                            "line": 472,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -586,15 +1218,39 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "elide",
-                            "line": 215,
+                            "line": 474,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 51,
+                            "durationMicroseconds": 0,
+                            "functionName": "wrapMode",
+                            "line": 475,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 59,
+                            "durationMicroseconds": 0,
+                            "functionName": "maximumLineCount",
+                            "line": 476,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 473,
+                            "message": "Cannot access value for name root"
                         },
                         {
                             "codegenResult": 0,
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 225,
+                            "line": 486,
                             "message": ""
                         },
                         {
@@ -602,7 +1258,279 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 227,
+                            "line": 488,
+                            "message": "Cannot load property path from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 499,
+                            "message": "Cannot load property versionCount from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::timelineData with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 503,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 505,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 504,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 508,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 510,
+                            "message": "Cannot access value for name activeController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 513,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 514,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "alignment",
+                            "line": 511,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredWidth",
+                            "line": 512,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "columns",
+                            "line": 520,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnSpacing",
+                            "line": 521,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "rowSpacing",
+                            "line": 522,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 527,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 528,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 534,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 535,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 542,
+                            "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 543,
+                            "message": "Cannot access value for name docIntelController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "columnSpan",
+                            "line": 541,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 550,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "model",
+                            "line": 554,
+                            "message": "Cannot load property versions from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::timelineData with type QVariant."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 563,
+                            "message": "Cannot load property path from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::modelData with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 568,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 43,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 573,
+                            "message": "Cannot access value for name modelData"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 574,
+                            "message": "Cannot access value for name theme"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 576,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 46,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 582,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitHeight",
+                            "line": 583,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitWidth",
+                            "line": 584,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 586,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 585,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 598,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 600,
                             "message": "Cannot load property gitStatus from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::activeController with type QVariant."
                         },
                         {
@@ -610,7 +1538,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 238,
+                            "line": 611,
                             "message": "Cannot generate efficient code for storing an array in a non-sequence type"
                         },
                         {
@@ -618,23 +1546,47 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 246,
+                            "line": 619,
                             "message": "Cannot access value for name modelData"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 44,
+                            "column": 49,
                             "durationMicroseconds": 0,
-                            "functionName": "onClicked",
-                            "line": 251,
+                            "functionName": "implicitHeight",
+                            "line": 623,
                             "message": "Cannot access value for name root"
                         },
                         {
                             "codegenResult": 2,
                             "column": 44,
                             "durationMicroseconds": 0,
+                            "functionName": "onClicked",
+                            "line": 627,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 50,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 625,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 626,
+                            "message": "Cannot access value for name modelData"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 254,
+                            "line": 630,
                             "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::parent with type QQuickItem."
                         },
                         {
@@ -642,7 +1594,7 @@
                             "column": 51,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 255,
+                            "line": 631,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -650,7 +1602,7 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 258,
+                            "line": 634,
                             "message": "Cannot load property text from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::parent with type QQuickItem."
                         },
                         {
@@ -658,7 +1610,7 @@
                             "column": 62,
                             "durationMicroseconds": 0,
                             "functionName": "font",
-                            "line": 258,
+                            "line": 634,
                             "message": "Cannot load property font from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::parent with type QQuickItem."
                         },
                         {
@@ -666,7 +1618,7 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 259,
+                            "line": 635,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -674,7 +1626,7 @@
                             "column": 79,
                             "durationMicroseconds": 0,
                             "functionName": "horizontalAlignment",
-                            "line": 259,
+                            "line": 635,
                             "message": ""
                         },
                         {
@@ -682,7 +1634,7 @@
                             "column": 117,
                             "durationMicroseconds": 0,
                             "functionName": "verticalAlignment",
-                            "line": 259,
+                            "line": 635,
                             "message": ""
                         },
                         {
@@ -690,39 +1642,31 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 266,
+                            "line": 642,
                             "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 32,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 269,
-                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 49,
+                            "column": 41,
                             "durationMicroseconds": 0,
-                            "functionName": "preferredHeight",
-                            "line": 268,
+                            "functionName": "implicitHeight",
+                            "line": 644,
                             "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 39,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 271,
-                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
                             "column": 43,
                             "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 275,
+                            "functionName": "left",
+                            "line": 649,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "right",
+                            "line": 650,
                             "message": ""
                         },
                         {
@@ -730,7 +1674,7 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 282,
+                            "line": 656,
                             "message": ""
                         },
                         {
@@ -738,23 +1682,71 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 283,
+                            "line": 657,
                             "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "elide",
+                            "line": 661,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 658,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 292,
-                            "message": ""
+                            "line": 668,
+                            "message": "Cannot generate efficient code for storing an array in a non-sequence type"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 674,
+                            "message": "Cannot load property hovered from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::parent with type QQuickItem."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 682,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 43,
+                            "column": 40,
                             "durationMicroseconds": 0,
-                            "functionName": "text",
-                            "line": 302,
+                            "functionName": "model",
+                            "line": 690,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredHeight",
+                            "line": 688,
+                            "message": "Cannot access value for name gitLines"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "width",
+                            "line": 694,
                             "message": ""
                         },
                         {
@@ -762,15 +1754,103 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 306,
-                            "message": "Cannot access value for name theme"
+                            "line": 695,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "radius",
+                            "line": 696,
+                            "message": "Cannot generate efficient code for internal conversion with incompatible or ambiguous types: QJSValue -> (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::color with type QColor (stored as QVariant)"
                         },
                         {
                             "codegenResult": 0,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitHeight",
+                            "line": 697,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
                             "column": 47,
                             "durationMicroseconds": 0,
+                            "functionName": "text",
+                            "line": 706,
+                            "message": "Cannot access value for name modelData"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 707,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 51,
+                            "durationMicroseconds": 0,
                             "functionName": "wrapMode",
-                            "line": 309,
+                            "line": 711,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 53,
+                            "durationMicroseconds": 0,
+                            "functionName": "textFormat",
+                            "line": 712,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "left",
+                            "line": 701,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "right",
+                            "line": 702,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 65,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalCenter",
+                            "line": 705,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 57,
+                            "durationMicroseconds": 0,
+                            "functionName": "pixelSize",
+                            "line": 709,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 52,
+                            "durationMicroseconds": 0,
+                            "functionName": "bold",
+                            "line": 710,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 73,
+                            "durationMicroseconds": 0,
+                            "functionName": "policy",
+                            "line": 715,
                             "message": ""
                         },
                         {
@@ -778,23 +1858,39 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 319,
+                            "line": 724,
                             "message": "Cannot load property isDir from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 33,
+                            "durationMicroseconds": 0,
+                            "functionName": "implicitHeight",
+                            "line": 726,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 323,
+                            "line": 731,
                             "message": "Cannot load property path from (component in /home/dhruv/Liphis/src/qml/InspectorPanel.qml)::metadata with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 729,
+                            "message": ""
                         },
                         {
                             "codegenResult": 2,
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 325,
+                            "line": 733,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -802,7 +1898,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 326,
+                            "line": 734,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -810,7 +1906,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 327,
+                            "line": 735,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -818,15 +1914,15 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "centerIn",
-                            "line": 331,
+                            "line": 739,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 63,
+                            "column": 68,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 333,
+                            "line": 741,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -834,7 +1930,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 335,
+                            "line": 743,
                             "message": ""
                         },
                         {
@@ -842,7 +1938,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 336,
+                            "line": 744,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -850,7 +1946,7 @@
                             "column": 41,
                             "durationMicroseconds": 0,
                             "functionName": "pixelSize",
-                            "line": 337,
+                            "line": 745,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -858,8 +1954,16 @@
                             "column": 38,
                             "durationMicroseconds": 0,
                             "functionName": "weight",
-                            "line": 338,
+                            "line": 746,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 41,
+                            "durationMicroseconds": 0,
+                            "functionName": "preferredHeight",
+                            "line": 753,
+                            "message": "Cannot access value for name theme"
                         }
                     ],
                     "filePath": "/home/dhruv/Liphis/src/qml/InspectorPanel.qml"

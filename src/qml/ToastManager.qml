@@ -42,33 +42,33 @@ Item {
             model: toastModel
             delegate: Rectangle {
                 id: toastRect
-                width: Math.min(500, msgText.implicitWidth + 60)
-                height: 48
-                radius: 24
+                width: Math.min(400, msgText.implicitWidth + 40)
+                height: 32
+                radius: 16
                 color: theme.surfaceElevated
                 border.color: model.isError ? theme.error : theme.accent
                 border.width: 1
                 
                 layer.enabled: true
                 layer.effect: DropShadow {
-                    radius: 8
+                    radius: 6
                     color: model.isError
-                        ? Qt.rgba(theme.error.r, theme.error.g, theme.error.b, 0.20)
-                        : Qt.rgba(theme.accent.r, theme.accent.g, theme.accent.b, 0.14)
-                    samples: 12
-                    verticalOffset: 2
+                        ? Qt.rgba(theme.error.r, theme.error.g, theme.error.b, 0.15)
+                        : Qt.rgba(theme.accent.r, theme.accent.g, theme.accent.b, 0.10)
+                    samples: 10
+                    verticalOffset: 1
                 }
 
                 RowLayout {
-                    anchors.centerIn: parent; spacing: 10
+                    anchors.centerIn: parent; spacing: 8
                     Icon { 
                         name: model.isError ? "close" : "info"
-                        iconSize: 18; color: model.isError ? theme.error : theme.accent
+                        iconSize: 14; color: model.isError ? theme.error : theme.accent
                     }
                     Text {
                         id: msgText
                         text: model.message
-                        color: theme.textPrimary; font.pixelSize: 13; font.weight: Font.Medium
+                        color: theme.textPrimary; font.pixelSize: 12; font.weight: Font.Normal
                     }
                 }
                 

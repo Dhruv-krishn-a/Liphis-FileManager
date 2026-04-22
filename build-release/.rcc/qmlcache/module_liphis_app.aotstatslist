@@ -11,6 +11,7 @@
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/LeftSidebar_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/TabStrip_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.cpp.aotstats
+/home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/InspectorPanel_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/StatusBar_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/FileIcon_qml.cpp.aotstats
@@ -22,6 +23,10 @@
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/FileView_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/PropertiesDialog_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/AnalyseDialog_qml.cpp.aotstats
+/home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.aotstats
+/home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.aotstats
+/home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.aotstats
+/home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/ToastManager_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.cpp.aotstats
 /home/dhruv/Liphis/build-release/.rcc/qmlcache/liphis_app_src/qml/ConnectRemoteDialog_qml.cpp.aotstats

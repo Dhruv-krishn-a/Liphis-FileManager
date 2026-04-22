@@ -14,11 +14,22 @@ ItemDelegate {
     property bool expanded: true
 
     signal actionClicked()
+    signal rightClicked()
 
     height: 32
     padding: 0
     ToolTip.visible: hovered && !expanded
     ToolTip.text: root.text
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: (mouse) => {
+            if (mouse.button === Qt.RightButton) {
+                root.rightClicked()
+            }
+        }
+    }
 
     background: Rectangle {
         anchors.fill: parent

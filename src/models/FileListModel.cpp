@@ -68,7 +68,10 @@ void FileListModel::setSortBy(const QString &field, bool ascending)
     if (m_sortField == field && m_sortAscending == ascending) return;
     m_sortField = field;
     m_sortAscending = ascending;
+    beginResetModel();
     applySort();
+    endResetModel();
+    emit countChanged();
 }
 
 void FileListModel::applySort()
@@ -128,8 +131,6 @@ void FileListModel::applySort()
     });
 
     rebuildPathMap();
-    beginResetModel();
-    endResetModel();
 }
 
 QVariant FileListModel::data(const QModelIndex &index, int role) const
@@ -175,8 +176,8 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const
     case GroupRole:
         return entry.group ? QString::fromStdString(*entry.group) : "";
     case ThumbnailRole: {
-        if (isSupportedImage(path)) {
-             return QString("image://thumbs/%1").arg(path);
+        if (!entry.thumbnailPath.empty()) {
+            return QString::fromStdString(entry.thumbnailPath);
         }
         return QString();
     }
@@ -269,7 +270,6 @@ void FileListModel::setEntries(std::vector<FileMeta> &&entries)
     beginResetModel();
     m_entries = std::move(entries);
     applySort();
-    rebuildPathMap();
     endResetModel();
     emit countChanged();
 }
@@ -316,6 +316,24 @@ void FileListModel::insertBatch(std::vector<FileMeta> &&batch)
     emit countChanged();
 }
 
+void FileListModel::removeItems(const QStringList &paths)
+{
+    if (paths.isEmpty()) return;
+
+    for (const QString &path : paths) {
+        std::string p = path.toStdString();
+        auto it = m_pathToIndex.find(p);
+        if (it != m_pathToIndex.end()) {
+            int row = static_cast<int>(it->second);
+            beginRemoveRows(QModelIndex(), row, row);
+            m_entries.erase(m_entries.begin() + row);
+            rebuildPathMap();
+            endRemoveRows();
+        }
+    }
+    emit countChanged();
+}
+
 void FileListModel::updateThumbnail(const QString &filePath,
                                     const QString &thumbPath)
 {
@@ -354,11 +372,8 @@ QVariantMap FileListModel::metadataForPath(const QString &path) const
             m["iconName"] = db.mimeTypeForName(m["mimeType"].toString()).iconName();
         }
 
-        if (!entry.isDir && isSupportedImage(path))
-            m["thumbnail"] = QString("image://thumbs/%1").arg(path);
-        else {
-            m["thumbnail"] = QString();
-        }
+        if (!entry.thumbnailPath.empty()) m["thumbnail"] = QString::fromStdString(entry.thumbnailPath);
+        else m["thumbnail"] = QString();
         return m;
     }
     return {};

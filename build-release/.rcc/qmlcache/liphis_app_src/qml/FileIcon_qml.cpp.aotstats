@@ -15,34 +15,26 @@
                         },
                         {
                             "codegenResult": 0,
-                            "column": 15,
+                            "column": 44,
                             "durationMicroseconds": 0,
-                            "functionName": "name",
-                            "line": 18,
+                            "functionName": "isCustomFolder",
+                            "line": 15,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 48,
+                            "durationMicroseconds": 0,
+                            "functionName": "customFolderIcon",
+                            "line": 16,
+                            "message": "Cannot load property isDark from (component in /home/dhruv/Liphis/src/qml/FileIcon.qml)::theme with type QVariant."
                         },
                         {
                             "codegenResult": 0,
                             "column": 17,
                             "durationMicroseconds": 0,
-                            "functionName": "filled",
-                            "line": 19,
-                            "message": ""
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 16,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 20,
-                            "message": "Cannot access value for name isDir"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 23,
-                            "durationMicroseconds": 0,
-                            "functionName": "fill",
-                            "line": 17,
+                            "functionName": "source",
+                            "line": 26,
                             "message": ""
                         },
                         {
@@ -50,7 +42,79 @@
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
+                            "line": 27,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 19,
+                            "durationMicroseconds": 0,
+                            "functionName": "fillMode",
                             "line": 28,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "verticalAlignment",
+                            "line": 29,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 25,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 15,
+                            "durationMicroseconds": 0,
+                            "functionName": "name",
+                            "line": 37,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "filled",
+                            "line": 38,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 39,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 40,
+                            "message": "Cannot access value for name isDir"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "fill",
+                            "line": 36,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "visible",
+                            "line": 48,
                             "message": ""
                         },
                         {
@@ -58,7 +122,7 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 29,
+                            "line": 49,
                             "message": ""
                         },
                         {
@@ -66,7 +130,7 @@
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "height",
-                            "line": 30,
+                            "line": 50,
                             "message": ""
                         },
                         {
@@ -74,7 +138,7 @@
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "radius",
-                            "line": 31,
+                            "line": 51,
                             "message": ""
                         },
                         {
@@ -82,7 +146,7 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 39,
+                            "line": 59,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -90,7 +154,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "right",
-                            "line": 32,
+                            "line": 52,
                             "message": ""
                         },
                         {
@@ -98,7 +162,7 @@
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "bottom",
-                            "line": 33,
+                            "line": 53,
                             "message": ""
                         },
                         {
@@ -106,7 +170,7 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "rightMargin",
-                            "line": 34,
+                            "line": 54,
                             "message": ""
                         },
                         {
@@ -114,7 +178,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "bottomMargin",
-                            "line": 35,
+                            "line": 55,
                             "message": ""
                         },
                         {
@@ -122,7 +186,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 37,
+                            "line": 57,
                             "message": "Cannot access value for name theme"
                         }
                     ],

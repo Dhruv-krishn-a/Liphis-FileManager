@@ -74,6 +74,58 @@
                     "lineNumber": 67,
                     "name": "executeCommandById",
                     "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "id",
+                            "type": "QString"
+                        },
+                        {
+                            "name": "shortcut",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 4,
+                    "lineNumber": 68,
+                    "name": "updateCommandShortcut",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "index": 5,
+                    "lineNumber": 69,
+                    "name": "clearCommands",
+                    "returnType": "void"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "shortcut",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 6,
+                    "isConst": true,
+                    "lineNumber": 70,
+                    "name": "isValidShortcut",
+                    "returnType": "bool"
+                },
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "shortcut",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 7,
+                    "isConst": true,
+                    "lineNumber": 71,
+                    "name": "normalizeShortcut",
+                    "returnType": "QString"
                 }
             ],
             "object": true,
@@ -118,7 +170,7 @@
                 {
                     "access": "public",
                     "index": 0,
-                    "lineNumber": 70,
+                    "lineNumber": 74,
                     "name": "filterChanged",
                     "returnType": "void"
                 }

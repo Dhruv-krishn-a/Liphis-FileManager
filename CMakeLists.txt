@@ -114,6 +114,8 @@ qt_add_qml_module(liphis_app
         LiphisApp-Logo.png
         src/qml/assets/logo-light.png
         src/qml/assets/logo-dark.png
+        src/qml/assets/folder-light.png
+        src/qml/assets/folder-dark.png
         src/qml/assets/icons/outline/arrow-left.svg
         src/qml/assets/icons/outline/arrow-right.svg
         src/qml/assets/icons/outline/arrow-up.svg

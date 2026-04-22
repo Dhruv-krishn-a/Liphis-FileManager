@@ -7,6 +7,8 @@
 #include <QVariantMap>
 #include <QHash>
 #include <QSet>
+#include <QElapsedTimer>
+#include <QTimer>
 
 #include "FileListModel.hpp"
 #include "FileTreeModel.hpp"
@@ -154,6 +156,8 @@ public:
     Q_INVOKABLE void openInTerminal(const QString &path);
     Q_INVOKABLE void copyToClipboard(const QString &text);
     Q_INVOKABLE void trashItems(const QStringList &paths);
+    Q_INVOKABLE void restoreFromTrash(const QStringList &paths);
+    Q_INVOKABLE void emptyTrash();
     Q_INVOKABLE void analyseFolder(const QString &path);
     Q_INVOKABLE QString runGitCommand(const QString &cmd, const QString &path);
     Q_INVOKABLE QVariantMap getFolderMetadata(const QString &path);
@@ -216,6 +220,11 @@ signals:
 
 private:
     void loadPathInternal(const QString &path); 
+    void reloadCurrentDirectoryModel(bool preserveSelection);
+    void removeFromSelection(const QStringList &paths);
+    void addEntriesForPaths(const QStringList &paths, bool selectAdded = false);
+    bool isTrashPath(const QString &path) const;
+    void loadTrashInternal();
 
     FileListModel m_fileModel;
     FileTreeModel m_treeModel;
@@ -230,6 +239,8 @@ private:
 
     ThumbnailManager* m_thumbnailManager = nullptr;
     QFileSystemWatcher m_watcher;
+    QTimer* m_dirChangeTimer = nullptr;
+    QElapsedTimer m_lastUserInitiatedOp;
 
     QString m_selectedPath;
     QStringList m_selectedPaths;

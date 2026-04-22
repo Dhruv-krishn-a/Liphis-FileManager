@@ -795,6 +795,30 @@ build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.cpp.s
 .PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.cpp.s
 
+build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.o
+
+# target to build an object file
+build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.o
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.i: build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.i
+
+# target to preprocess a source file
+build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.i
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.s: build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.s
+
+# target to generate assembly for a file
+build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.cpp.s
+
 build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.cpp.o
 .PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.o
 
@@ -890,6 +914,102 @@ build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.s: build
 build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.cpp.s
 .PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.cpp.s
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.o
+
+# target to build an object file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.o
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.i: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.i
+
+# target to preprocess a source file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.i
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.s: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.s
+
+# target to generate assembly for a file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.cpp.s
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.o
+
+# target to build an object file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.o
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.i: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.i
+
+# target to preprocess a source file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.i
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.s: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.s
+
+# target to generate assembly for a file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.cpp.s
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.o
+
+# target to build an object file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.o
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.i: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.i
+
+# target to preprocess a source file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.i
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.s: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.s
+
+# target to generate assembly for a file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.cpp.s
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.o
+
+# target to build an object file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.o
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.o
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.i: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.i
+
+# target to preprocess a source file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.i
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.i
+
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.s: build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.s
+
+# target to generate assembly for a file
+build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.s
+.PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.cpp.s
 
 build-release/.rcc/qmlcache/liphis_app_src/qml/FileContextMenu_qml.o: build-release/.rcc/qmlcache/liphis_app_src/qml/FileContextMenu_qml.cpp.o
 .PHONY : build-release/.rcc/qmlcache/liphis_app_src/qml/FileContextMenu_qml.o
@@ -1659,6 +1779,30 @@ src/CommandManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/src/CommandManager.cpp.s
 .PHONY : src/CommandManager.cpp.s
 
+src/DocumentIntelligenceController.o: src/DocumentIntelligenceController.cpp.o
+.PHONY : src/DocumentIntelligenceController.o
+
+# target to build an object file
+src/DocumentIntelligenceController.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/src/DocumentIntelligenceController.cpp.o
+.PHONY : src/DocumentIntelligenceController.cpp.o
+
+src/DocumentIntelligenceController.i: src/DocumentIntelligenceController.cpp.i
+.PHONY : src/DocumentIntelligenceController.i
+
+# target to preprocess a source file
+src/DocumentIntelligenceController.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/src/DocumentIntelligenceController.cpp.i
+.PHONY : src/DocumentIntelligenceController.cpp.i
+
+src/DocumentIntelligenceController.s: src/DocumentIntelligenceController.cpp.s
+.PHONY : src/DocumentIntelligenceController.s
+
+# target to generate assembly for a file
+src/DocumentIntelligenceController.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/liphis_app.dir/build.make CMakeFiles/liphis_app.dir/src/DocumentIntelligenceController.cpp.s
+.PHONY : src/DocumentIntelligenceController.cpp.s
+
 src/SystemIconProvider.o: src/SystemIconProvider.cpp.o
 .PHONY : src/SystemIconProvider.o
 
@@ -2020,6 +2164,9 @@ help:
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.o"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.i"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/BulkRenameDialog_qml.s"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.o"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.i"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/CanonicalNamingDialog_qml.s"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.o"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.i"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/CenterWorkspace_qml.s"
@@ -2032,6 +2179,18 @@ help:
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.o"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.i"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DirectoryContextMenu_qml.s"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.o"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.i"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentCenterPage_qml.s"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.o"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.i"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentDuplicatesDialog_qml.s"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.o"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.i"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentHealthDialog_qml.s"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.o"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.i"
+	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/DocumentInboxDialog_qml.s"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/FileContextMenu_qml.o"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/FileContextMenu_qml.i"
 	@echo "... build-release/.rcc/qmlcache/liphis_app_src/qml/FileContextMenu_qml.s"
@@ -2128,6 +2287,9 @@ help:
 	@echo "... src/CommandManager.o"
 	@echo "... src/CommandManager.i"
 	@echo "... src/CommandManager.s"
+	@echo "... src/DocumentIntelligenceController.o"
+	@echo "... src/DocumentIntelligenceController.i"
+	@echo "... src/DocumentIntelligenceController.s"
 	@echo "... src/SystemIconProvider.o"
 	@echo "... src/SystemIconProvider.i"
 	@echo "... src/SystemIconProvider.s"

@@ -161,11 +161,12 @@ void PlacesModel::setupDefaultPlaces()
         QString p = QStandardPaths::writableLocation(loc);
         if (QDir(p).exists()) m_items.push_back({name, p, icon, 0});
     };
-    addLoc(QStandardPaths::DocumentsLocation, "Documents", "folder");
-    addLoc(QStandardPaths::DownloadLocation, "Downloads", "folder-download");
+    addLoc(QStandardPaths::DocumentsLocation, "Documents", "folder-code");
+    addLoc(QStandardPaths::DownloadLocation, "Downloads", "download");
     addLoc(QStandardPaths::PicturesLocation, "Pictures", "photo");
     addLoc(QStandardPaths::MoviesLocation, "Videos", "video");
     addLoc(QStandardPaths::MusicLocation, "Music", "music");
+    m_items.push_back({"Trash", "trash:///", "trash", 0});
 
     // 1. BOOKMARKS
     QSettings bSettings("Liphis", "Bookmarks");

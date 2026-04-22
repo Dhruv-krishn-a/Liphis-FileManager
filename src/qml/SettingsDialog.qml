@@ -63,6 +63,20 @@ Dialog {
         property bool showHiddenByDefault: false
         property int defaultZoom: 100
         property string iconTheme: "outline"
+
+        // Sidebar Settings
+        property bool sidebarExpanded: true
+        property bool showPlaces: true
+        property bool showBookmarks: true
+        property bool showDevices: true
+        property bool showRecent: true
+        
+        // Inspector (Right Sidebar) Settings
+        property bool inspectorEnabled: true
+        property bool inspectorExpanded: true
+        property bool showFilePreview: true
+        property bool showFileDetails: true
+        property bool showExifData: true
     }
 
     background: Rectangle {
@@ -118,6 +132,20 @@ Dialog {
                 background: Rectangle {
                     color: "transparent"
                     Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 2; color: theme.accent; visible: generalTab.checked }
+                }
+            }
+            TabButton {
+                id: sidebarsTab
+                text: "SIDEBARS"
+                font.pixelSize: 11; font.bold: true
+                contentItem: Text {
+                    text: sidebarsTab.text
+                    color: sidebarsTab.checked ? theme.accent : theme.textSecondary
+                    horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                }
+                background: Rectangle {
+                    color: "transparent"
+                    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 2; color: theme.accent; visible: sidebarsTab.checked }
                 }
             }
             TabButton {
@@ -197,7 +225,7 @@ Dialog {
                     RowLayout {
                         Layout.fillWidth: true
                         Text { text: "Icon Style"; color: theme.textPrimary; Layout.fillWidth: true }
-                        ComboBox {
+                        ThemedComboBox {
                             model: ["outline", "filled"]
                             currentIndex: generalSettings.iconTheme === "filled" ? 1 : 0
                             onActivated: generalSettings.iconTheme = currentValue
@@ -211,13 +239,35 @@ Dialog {
                     RowLayout {
                         Layout.fillWidth: true
                         Text { text: "Default View Mode"; color: theme.textPrimary; Layout.fillWidth: true }
-                        ComboBox {
+                        ThemedComboBox {
                             model: ["list", "grid", "tree"]
                             currentIndex: ["list", "grid", "tree"].indexOf(viewSettings.defaultViewMode)
                             onActivated: viewSettings.defaultViewMode = currentValue
                             Layout.preferredWidth: 120
                         }
                     }
+                }
+            }
+
+            // Sidebars Settings
+            ScrollView {
+                clip: true
+                ColumnLayout {
+                    width: parent.width; spacing: 16; anchors.margins: 20
+
+                    SectionHeader { label: "Left Sidebar (Places)" }
+                    SettingsSwitch { theme: root.theme; label: "Default Expanded"; checked: generalSettings.sidebarExpanded; onToggled: generalSettings.sidebarExpanded = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show Places"; checked: generalSettings.showPlaces; onToggled: generalSettings.showPlaces = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show Bookmarks"; checked: generalSettings.showBookmarks; onToggled: generalSettings.showBookmarks = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show Devices"; checked: generalSettings.showDevices; onToggled: generalSettings.showDevices = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show Recent Folders"; checked: generalSettings.showRecent; onToggled: generalSettings.showRecent = checked }
+
+                    SectionHeader { label: "Right Sidebar (Inspector)" }
+                    SettingsSwitch { theme: root.theme; label: "Enable Inspector Panel"; checked: generalSettings.inspectorEnabled; onToggled: generalSettings.inspectorEnabled = checked }
+                    SettingsSwitch { theme: root.theme; label: "Default Expanded"; checked: generalSettings.inspectorExpanded; onToggled: generalSettings.inspectorExpanded = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show File Preview"; checked: generalSettings.showFilePreview; onToggled: generalSettings.showFilePreview = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show File Details"; checked: generalSettings.showFileDetails; onToggled: generalSettings.showFileDetails = checked }
+                    SettingsSwitch { theme: root.theme; label: "Show EXIF/Metadata"; checked: generalSettings.showExifData; onToggled: generalSettings.showExifData = checked }
                 }
             }
 
@@ -386,5 +436,69 @@ Dialog {
         Layout.fillWidth: true; height: 36
         Text { text: label; color: theme.textPrimary; font.pixelSize: 13; Layout.fillWidth: true }
         Switch { checked: parent.checked; onToggled: parent.toggled(checked) }
+    }
+
+    component ThemedComboBox: ComboBox {
+        id: themedCombo
+        font.pixelSize: 12
+        implicitHeight: 34
+        background: Rectangle {
+            radius: 8
+            color: themedCombo.pressed ? theme.surfaceMuted : (themedCombo.hovered ? theme.hover : theme.surface)
+            border.color: themedCombo.activeFocus ? theme.accent : theme.border
+            border.width: 1
+        }
+        contentItem: Text {
+            leftPadding: 10
+            rightPadding: 22
+            text: themedCombo.displayText
+            color: theme.textPrimary
+            font.pixelSize: themedCombo.font.pixelSize
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+        }
+        indicator: Text {
+            text: "▾"
+            color: theme.textSecondary
+            font.pixelSize: 10
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
+        }
+        popup: Popup {
+            y: themedCombo.height + 4
+            width: themedCombo.width
+            implicitHeight: contentItem.implicitHeight
+            padding: 6
+            background: Rectangle {
+                radius: 8
+                color: theme.surfaceRaised
+                border.color: theme.border
+            }
+            contentItem: ListView {
+                clip: true
+                implicitHeight: contentHeight
+                model: themedCombo.popup.visible ? themedCombo.delegateModel : null
+                currentIndex: themedCombo.highlightedIndex
+                ScrollIndicator.vertical: ScrollIndicator {}
+            }
+        }
+        delegate: ItemDelegate {
+            required property var modelData
+            required property int index
+            width: themedCombo.width - 12
+            text: String(modelData)
+            highlighted: themedCombo.highlightedIndex === index
+            background: Rectangle {
+                radius: 6
+                color: parent.hovered || parent.highlighted ? theme.hover : "transparent"
+            }
+            contentItem: Text {
+                text: parent.text
+                color: theme.textPrimary
+                font.pixelSize: 12
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
     }
 }

@@ -5,5 +5,6 @@
 /home/dhruv/Liphis/build-release/liphis_app_autogen/include/../UVLADIE3JM/moc_AnalysisController.cpp.json
 /home/dhruv/Liphis/build-release/liphis_app_autogen/include/../UVLADIE3JM/moc_AppController.cpp.json
 /home/dhruv/Liphis/build-release/liphis_app_autogen/include/../UVLADIE3JM/moc_CommandManager.cpp.json
+/home/dhruv/Liphis/build-release/liphis_app_autogen/include/../UVLADIE3JM/moc_DocumentIntelligenceController.cpp.json
 /home/dhruv/Liphis/build-release/liphis_app_autogen/include/../UVLADIE3JM/moc_TerminalManager.cpp.json
 /home/dhruv/Liphis/build-release/liphis_app_autogen/include/../UVLADIE3JM/moc_ThumbnailManager.cpp.json

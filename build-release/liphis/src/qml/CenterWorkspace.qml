@@ -14,6 +14,9 @@ SplitView {
     property var itemMenuHandler: null
     property bool splitVisible: false
     property string splitPath: ""
+    property var docIntelController: null
+    property var toastManager: null
+    property var lastFileController: null
 
     signal controllerChanged(var controller)
 
@@ -34,7 +37,25 @@ SplitView {
     function addTab(path) {
         var normalized = normalizePath(path)
         if (!normalized || normalized.length === 0) return
-        tabModel.append({"title": normalized.split('/').pop() || "Root", "path": normalized})
+        tabModel.append({"title": normalized.split('/').pop() || "Root", "path": normalized, "kind": "file", "section": ""})
+        tabView.currentIndex = tabModel.count - 1
+    }
+
+    function openDocCenter(section) {
+        var targetSection = section && section.length > 0 ? section : "inbox"
+        for (var i = 0; i < tabModel.count; ++i) {
+            if (tabModel.get(i).kind === "doc_center") {
+                tabModel.setProperty(i, "section", targetSection)
+                tabView.currentIndex = i
+                return
+            }
+        }
+        tabModel.append({
+            "title": "Document Center",
+            "path": "",
+            "kind": "doc_center",
+            "section": targetSection
+        })
         tabView.currentIndex = tabModel.count - 1
     }
 
@@ -53,7 +74,7 @@ SplitView {
         if (idx >= 0 && idx < tabModel.count) {
             tabModel.remove(idx)
             if (tabModel.count === 0) {
-                tabModel.append({"title": "Home", "path": root.homePath})
+                tabModel.append({"title": "Home", "path": root.homePath, "kind": "file", "section": ""})
                 tabView.currentIndex = 0
             } else if (tabView.currentIndex >= tabModel.count) {
                 tabView.currentIndex = tabModel.count - 1
@@ -65,9 +86,28 @@ SplitView {
         if (tabView.count > tabView.currentIndex && tabView.currentIndex >= 0) {
             var view = tabRepeater.itemAt(tabView.currentIndex)
             if (view) {
-                root.activeView = view
-                root.activeController = view.controller
-                root.controllerChanged(root.activeController)
+                if (view.kind === "doc_center") {
+                    root.activeView = null
+                    if (root.lastFileController && root.activeController !== root.lastFileController) {
+                        root.activeController = root.lastFileController
+                        root.controllerChanged(root.activeController)
+                    }
+                    return
+                }
+
+                var controllerRef = null
+                if (view.item && view.item.controller !== undefined && view.item.controller !== null) {
+                    root.activeView = view.item
+                    controllerRef = view.item.controller
+                } else if (view.controller !== undefined && view.controller !== null) {
+                    root.activeView = view
+                    controllerRef = view.controller
+                }
+                if (controllerRef !== null && controllerRef.openPath !== undefined) {
+                    root.lastFileController = controllerRef
+                    root.activeController = controllerRef
+                    root.controllerChanged(root.activeController)
+                }
             }
         }
     }
@@ -89,7 +129,7 @@ SplitView {
                 onTabClosed: (index) => {
                     tabModel.remove(index)
                     if (tabModel.count === 0) {
-                        tabModel.append({"title": "Home", "path": root.homePath})
+                        tabModel.append({"title": "Home", "path": root.homePath, "kind": "file", "section": ""})
                         tabView.currentIndex = 0
                     } else if (tabView.currentIndex >= tabModel.count) {
                         tabView.currentIndex = tabModel.count - 1
@@ -124,16 +164,41 @@ SplitView {
                             id: tabRepeater
                             model: tabModel
 
+                            Loader {
+                                active: true
+                                sourceComponent: model.kind === "doc_center" ? docCenterComponent : fileViewComponent
+
+                                property int tabIndex: index
+                                property var tabModelData: model
+                                property string kind: model.kind
+                            }
+                        }
+
+                        Component {
+                            id: fileViewComponent
                             FileView {
-                                initialPath: model.path
+                                initialPath: parent.tabModelData.path
                                 theme: root.theme
                                 itemMenuHandler: root.itemMenuHandler
-                                onRequestedActive: tabView.currentIndex = index
+                                onRequestedActive: {
+                                    tabView.currentIndex = parent.tabIndex
+                                    Qt.callLater(focusFileArea)
+                                }
                                 onTabTitleChanged: (title) => {
-                                    if (index >= 0 && index < tabModel.count && title && title.length > 0) {
-                                        tabModel.setProperty(index, "title", title)
+                                    if (parent.tabIndex >= 0 && parent.tabIndex < tabModel.count && title && title.length > 0) {
+                                        tabModel.setProperty(parent.tabIndex, "title", title)
                                     }
                                 }
+                            }
+                        }
+
+                        Component {
+                            id: docCenterComponent
+                            DocumentCenterPage {
+                                theme: root.theme
+                                controller: root.docIntelController
+                                toastManager: root.toastManager
+                                section: parent.tabModelData.section
                             }
                         }
                     }
@@ -162,10 +227,10 @@ SplitView {
             }
 
             ListModel {
-                id: tabModel
-                Component.onCompleted: append({"title": "Home", "path": root.normalizePath(root.homePath)})
-            }
+            id: tabModel
+            Component.onCompleted: append({"title": "Home", "path": root.normalizePath(root.homePath), "kind": "file", "section": ""})
         }
+    }
     }
 
     // Terminal Panel

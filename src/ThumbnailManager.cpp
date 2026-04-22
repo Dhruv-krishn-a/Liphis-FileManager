@@ -12,6 +12,8 @@
 #include <QProcess>
 #include <QMutexLocker>
 #include <QThread>
+#include <QStandardPaths>
+#include <QTemporaryDir>
 
 namespace {
 QString getStandardThumbnailPath(const QString &filePath) {
@@ -27,6 +29,70 @@ QString getStandardThumbnailPath(const QString &filePath) {
     p = home + "/.cache/thumbnails/normal/" + hex + ".png";
     if (QFileInfo::exists(p)) return p;
     return QString();
+}
+
+static bool hasExe(const QString &name)
+{
+    return !QStandardPaths::findExecutable(name).isEmpty();
+}
+
+static bool generatePdfThumbPdftoppm(const QString &filePath, const QString &cachePath)
+{
+    if (!hasExe("pdftoppm")) return false;
+
+    QTemporaryDir tmp;
+    if (!tmp.isValid()) return false;
+    const QString base = tmp.filePath("liphis_pdf_thumb");
+
+    QProcess proc;
+    proc.start("pdftoppm", {"-f", "1", "-l", "1", "-singlefile", "-png", "-scale-to", "256", filePath, base});
+    if (!proc.waitForFinished(7000)) {
+        proc.kill();
+        proc.waitForFinished(1000);
+        return false;
+    }
+    const QString outPng = base + ".png";
+    if (!QFileInfo::exists(outPng)) return false;
+
+    // Ensure it ends up exactly at cachePath
+    QFile::remove(cachePath);
+    if (QFile::copy(outPng, cachePath)) return true;
+    return false;
+}
+
+static bool generateOfficeThumbLibreOffice(const QString &filePath, const QString &cachePath)
+{
+    const QString lo = QStandardPaths::findExecutable("libreoffice");
+    if (lo.isEmpty()) return false;
+
+    QTemporaryDir tmp;
+    if (!tmp.isValid()) return false;
+
+    QProcess proc;
+    proc.setWorkingDirectory(tmp.path());
+    proc.start(lo, {"--headless", "--nologo", "--nolockcheck", "--nodefault", "--nofirststartwizard",
+                    "--convert-to", "png", "--outdir", tmp.path(), filePath});
+
+    if (!proc.waitForFinished(12000)) {
+        proc.kill();
+        proc.waitForFinished(1000);
+        return false;
+    }
+
+    QDir d(tmp.path());
+    const QFileInfoList pngs = d.entryInfoList({"*.png", "*.PNG"}, QDir::Files, QDir::Time);
+    if (pngs.isEmpty()) return false;
+
+    QImageReader reader(pngs.first().absoluteFilePath());
+    reader.setAutoTransform(true);
+    reader.setScaledSize(QSize(512, 512));
+    const QImage img = reader.read();
+    if (img.isNull()) return false;
+
+    const QImage thumb = img.scaled(256, 256, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QDir outDir = QFileInfo(cachePath).dir();
+    if (!outDir.exists()) outDir.mkpath(".");
+    return thumb.save(cachePath, "PNG");
 }
 }
 
@@ -75,12 +141,27 @@ void ThumbnailManager::requestThumbnail(const QString &filePath)
     QFileInfo fi(filePath);
     if (!fi.exists() || !fi.isFile()) return;
 
-    static const QStringList imageExt = { "png","jpg","jpeg","bmp","webp","gif","svg" };
+    static const QStringList imageExt = { "png","jpg","jpeg","bmp","webp","gif" };
     static const QStringList videoExt = { "mp4","mkv","avi","mov","webm","wmv" };
+    static const QStringList pdfExt = { "pdf" };
+    static const QStringList officeExt = { "doc","docx","ppt","pptx","xls","xlsx","odt","odp","ods","rtf" };
     
     bool isImage = imageExt.contains(fi.suffix().toLower());
     bool isVideo = videoExt.contains(fi.suffix().toLower());
-    if (!isImage && !isVideo) return;
+    bool isPdf = pdfExt.contains(fi.suffix().toLower());
+    bool isOffice = officeExt.contains(fi.suffix().toLower());
+    // 1) Always check the standard system thumbnail cache first (works for many filetypes).
+    QString stdPath = getStandardThumbnailPath(filePath);
+    if (!stdPath.isEmpty()) {
+        QString url = QUrl::fromLocalFile(stdPath).toString();
+        QMetaObject::invokeMethod(this, [this, filePath, url]() {
+            emit thumbnailReady(filePath, url);
+        }, Qt::QueuedConnection);
+        return;
+    }
+
+    // 2) If not cached by the system, only generate for supported types.
+    if (!isImage && !isVideo && !isPdf && !isOffice) return;
 
     QString key = filePath;
     {
@@ -92,16 +173,6 @@ void ThumbnailManager::requestThumbnail(const QString &filePath)
             }, Qt::QueuedConnection);
             return;
         }
-    }
-
-    // 1. Check Standard System Cache (Dolphin/Thunar)
-    QString stdPath = getStandardThumbnailPath(filePath);
-    if (!stdPath.isEmpty()) {
-        QString url = QUrl::fromLocalFile(stdPath).toString();
-        QMetaObject::invokeMethod(this, [this, filePath, url]() {
-            emit thumbnailReady(filePath, url);
-        }, Qt::QueuedConnection);
-        return;
     }
 
     QString diskCachePath = cachePathFor(filePath);
@@ -163,12 +234,45 @@ void ThumbnailManager::workerGenerate(const QString &filePath, const QString &ca
 {
     QFileInfo fi(filePath);
     static const QStringList videoExt = { "mp4","mkv","avi","mov","webm","wmv" };
+    static const QStringList pdfExt = { "pdf" };
+    static const QStringList officeExt = { "doc","docx","ppt","pptx","xls","xlsx","odt","odp","ods","rtf" };
     
     if (videoExt.contains(fi.suffix().toLower())) {
         QProcess proc;
         proc.start("ffmpegthumbnailer", {"-i", filePath, "-o", cachePath, "-s", "256"});
         if (proc.waitForFinished(3000) && QFileInfo::exists(cachePath)) {
             QString url = QUrl::fromLocalFile(cachePath).toString();
+            QMetaObject::invokeMethod(this, [this, filePath, url]() { emit thumbnailReady(filePath, url); }, Qt::QueuedConnection);
+            return;
+        }
+    }
+
+    const QString suffix = fi.suffix().toLower();
+    if (pdfExt.contains(suffix)) {
+        if (generatePdfThumbPdftoppm(filePath, cachePath)) {
+            QImage *px = new QImage(cachePath);
+            if (!px->isNull()) {
+                QMutexLocker lk(&m_mutex);
+                m_memCache.insert(filePath, px, imageCost(px));
+            } else {
+                delete px;
+            }
+            const QString url = QUrl::fromLocalFile(cachePath).toString();
+            QMetaObject::invokeMethod(this, [this, filePath, url]() { emit thumbnailReady(filePath, url); }, Qt::QueuedConnection);
+            return;
+        }
+    }
+
+    if (officeExt.contains(suffix)) {
+        if (generateOfficeThumbLibreOffice(filePath, cachePath)) {
+            QImage *px = new QImage(cachePath);
+            if (!px->isNull()) {
+                QMutexLocker lk(&m_mutex);
+                m_memCache.insert(filePath, px, imageCost(px));
+            } else {
+                delete px;
+            }
+            const QString url = QUrl::fromLocalFile(cachePath).toString();
             QMetaObject::invokeMethod(this, [this, filePath, url]() { emit thumbnailReady(filePath, url); }, Qt::QueuedConnection);
             return;
         }

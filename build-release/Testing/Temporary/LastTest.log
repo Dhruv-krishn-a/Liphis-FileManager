@@ -1,37 +1,63 @@
-Start testing: Mar 25 17:35 IST
+Start testing: Apr 22 16:20 IST
 ----------------------------------------------------------
-1/1 Testing: fs_test_smoke
-1/1 Test: fs_test_smoke
+1/2 Testing: fs_test_smoke
+1/2 Test: fs_test_smoke
 Command: "/home/dhruv/Liphis/build-release/fs_test" "/home/dhruv/Liphis"
 Directory: /home/dhruv/Liphis/build-release
-"fs_test_smoke" start time: Mar 25 17:35 IST
+"fs_test_smoke" start time: Apr 22 16:20 IST
 Output:
 ----------------------------------------------------------
-Found 17 entries in: /home/dhruv/Liphis
+Found 26 entries in: /home/dhruv/Liphis
 
 D .github | /home/dhruv/Liphis/.github | size=0 | mtime=1770981649
 F LiphisApp-Logo.png | /home/dhruv/Liphis/LiphisApp-Logo.png | size=1461125 | mtime=1774255406
-D core | /home/dhruv/Liphis/core | size=0 | mtime=1774256829
-F CMakeLists.txt | /home/dhruv/Liphis/CMakeLists.txt | size=3688 | mtime=1774440114
-D .git | /home/dhruv/Liphis/.git | size=0 | mtime=1774434682
-D tests | /home/dhruv/Liphis/tests | size=0 | mtime=1770981587
-D dist | /home/dhruv/Liphis/dist | size=0 | mtime=1774440308
+F Dark Mode.png | /home/dhruv/Liphis/Dark Mode.png | size=900080 | mtime=1774452049
+F Light Mode.png | /home/dhruv/Liphis/Light Mode.png | size=727897 | mtime=1774451918
+D core | /home/dhruv/Liphis/core | size=0 | mtime=1774935414
+F CMakeLists.txt | /home/dhruv/Liphis/CMakeLists.txt | size=8659 | mtime=1776053064
+D .git | /home/dhruv/Liphis/.git | size=0 | mtime=1776854989
+D tests | /home/dhruv/Liphis/tests | size=0 | mtime=1774803036
+D dist | /home/dhruv/Liphis/dist | size=0 | mtime=1774440310
 D packaging | /home/dhruv/Liphis/packaging | size=0 | mtime=1774440117
+F Details.md | /home/dhruv/Liphis/Details.md | size=12396 | mtime=1776430281
+F PHASE_1_5_REPORT.md | /home/dhruv/Liphis/PHASE_1_5_REPORT.md | size=2504 | mtime=1775037796
 F .clang-tidy | /home/dhruv/Liphis/.clang-tidy | size=156 | mtime=1770981833
-D build | /home/dhruv/Liphis/build | size=0 | mtime=1774440227
+F .codex | /home/dhruv/Liphis/.codex | size=0 | mtime=1776430031
+D build | /home/dhruv/Liphis/build | size=0 | mtime=1776505615
 F .gitignore | /home/dhruv/Liphis/.gitignore | size=83 | mtime=1770981841
+D filled | /home/dhruv/Liphis/filled | size=0 | mtime=1774457932
 F LICENSE | /home/dhruv/Liphis/LICENSE | size=1071 | mtime=1774250518
+D assets | /home/dhruv/Liphis/assets | size=0 | mtime=1774517598
 F .clang-format | /home/dhruv/Liphis/.clang-format | size=77 | mtime=1770981828
-D build-release | /home/dhruv/Liphis/build-release | size=0 | mtime=1774440308
+D build-release | /home/dhruv/Liphis/build-release | size=0 | mtime=1776505143
 D scripts | /home/dhruv/Liphis/scripts | size=0 | mtime=1774440134
+F ABOUT.md | /home/dhruv/Liphis/ABOUT.md | size=3094 | mtime=1774513293
 F .editorconfig | /home/dhruv/Liphis/.editorconfig | size=147 | mtime=1770981836
-D src | /home/dhruv/Liphis/src | size=0 | mtime=1771241418
+D src | /home/dhruv/Liphis/src | size=0 | mtime=1775033098
+D outline | /home/dhruv/Liphis/outline | size=0 | mtime=1774457933
 <end of output>
-Test time =   0.00 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"fs_test_smoke" end time: Mar 25 17:35 IST
+"fs_test_smoke" end time: Apr 22 16:20 IST
 "fs_test_smoke" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Mar 25 17:35 IST
+2/2 Testing: unit_tests
+2/2 Test: unit_tests
+Command: "/home/dhruv/Liphis/build-release/unit_tests"
+Directory: /home/dhruv/Liphis/build-release
+"unit_tests" start time: Apr 22 16:20 IST
+Output:
+----------------------------------------------------------
+Testing AnalysisEngine...
+AnalysisEngine tests passed!
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"unit_tests" end time: Apr 22 16:20 IST
+"unit_tests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 22 16:20 IST

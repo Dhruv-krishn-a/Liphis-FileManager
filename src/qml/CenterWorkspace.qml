@@ -95,11 +95,12 @@ SplitView {
                     return
                 }
 
-                root.activeView = view
                 var controllerRef = null
                 if (view.item && view.item.controller !== undefined && view.item.controller !== null) {
+                    root.activeView = view.item
                     controllerRef = view.item.controller
                 } else if (view.controller !== undefined && view.controller !== null) {
+                    root.activeView = view
                     controllerRef = view.controller
                 }
                 if (controllerRef !== null && controllerRef.openPath !== undefined) {
@@ -179,7 +180,10 @@ SplitView {
                                 initialPath: parent.tabModelData.path
                                 theme: root.theme
                                 itemMenuHandler: root.itemMenuHandler
-                                onRequestedActive: tabView.currentIndex = parent.tabIndex
+                                onRequestedActive: {
+                                    tabView.currentIndex = parent.tabIndex
+                                    Qt.callLater(focusFileArea)
+                                }
                                 onTabTitleChanged: (title) => {
                                     if (parent.tabIndex >= 0 && parent.tabIndex < tabModel.count && title && title.length > 0) {
                                         tabModel.setProperty(parent.tabIndex, "title", title)

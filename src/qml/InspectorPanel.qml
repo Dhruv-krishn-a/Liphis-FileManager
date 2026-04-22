@@ -19,6 +19,7 @@ Rectangle {
                                             && activeController.selectionRevision >= 0)
     
     property var metadata: null
+    property string previewText: ""
 
     property string gitOutput: ""
     property string activeGitCmd: ""
@@ -29,6 +30,17 @@ Rectangle {
     readonly property int titleFont: root.compact ? 12 : 13
     readonly property int chipHeight: root.compact ? 24 : 28
     readonly property int actionButtonHeight: root.compact ? 30 : 34
+    readonly property bool previewAllowed: {
+        if (!root.hasSelection || !root.metadata) return false
+        if (root.metadata.isDir) return false
+        const mime = String(root.metadata.mimeType || "").toLowerCase()
+        const suffix = String(root.metadata.suffix || "").toLowerCase()
+        if (mime.startsWith("application/zip") || mime.startsWith("application/x-zip") || suffix === "zip") return false
+        if (mime.startsWith("application/x-7z") || suffix === "7z") return false
+        if (mime.startsWith("application/x-rar") || suffix === "rar") return false
+        if (mime.startsWith("application/x-tar") || suffix === "tar" || suffix === "gz" || suffix === "bz2" || suffix === "xz") return false
+        return true
+    }
 
     component InspectorActionButton: Button {
         id: actionButton
@@ -77,6 +89,17 @@ Rectangle {
     function formatDate(secs) {
         if (!secs) return "--"
         return new Date(secs * 1000).toLocaleString(Qt.locale(), "ddd, d MMM yyyy hh:mm ap")
+    }
+
+    onMetadataChanged: {
+        previewText = ""
+        if (!metadata || !activeController) return
+        if (!root.previewAllowed) return
+        const mt = metadata.mimeType || ""
+        activeController.requestThumbnail(metadata.path || "")
+        if (mt.startsWith("text/")) {
+            previewText = activeController.getFilePreview(metadata.path || "")
+        }
     }
 
     function runGit(cmd) {
@@ -150,11 +173,17 @@ Rectangle {
         } else {
             metadata = activeController.getFolderMetadata(activeController.currentPath)
         }
+
+        // Automatically trigger deep size calculation for folders if not already done
+        if (metadata && metadata.isDir && metadata.path && metadata.sizeComputed === false) {
+            activeController.requestFolderSize(metadata.path)
+        }
+
         refreshTimeline()
     }
 
     function refreshTimeline() {
-        if (!docIntelController || !metadata || !metadata.path) {
+        if (!docIntelController || !metadata || !metadata.path || metadata.isDir) {
             timelineData = null
             return
         }
@@ -250,6 +279,7 @@ Rectangle {
             PanelSection {
                 theme: root.theme
                 title: "PREVIEW"
+                visible: generalSettings.showFilePreview && root.previewAllowed
 
                 Rectangle {
                     Layout.fillWidth: true
@@ -269,12 +299,58 @@ Rectangle {
                         color: theme.surfaceMuted
                     }
 
-                    Image {
+                    Flickable {
+                        id: previewFlick
                         anchors.fill: parent
                         anchors.margins: root.compact ? root.panelInset : (theme ? theme.space16 : 16)
-                        fillMode: Image.PreserveAspectFit
-                        source: (root.metadata && root.metadata.thumbnail !== undefined) ? root.metadata.thumbnail : ""
-                        asynchronous: true
+                        clip: true
+                        interactive: previewImg.status === Image.Ready
+                        boundsBehavior: Flickable.DragOverBounds
+                        flickDeceleration: 4200
+                        maximumFlickVelocity: 16000
+
+                        property real zoom: 1.0
+                        function clampZoom(z) { return Math.max(1.0, Math.min(4.0, z)) }
+                        function reset() { zoom = 1.0; contentX = 0; contentY = 0 }
+
+                        contentWidth: previewImg.implicitWidth * zoom
+                        contentHeight: previewImg.implicitHeight * zoom
+
+                        Image {
+                            id: previewImg
+                            source: (root.metadata && root.metadata.thumbnail !== undefined) ? root.metadata.thumbnail : ""
+                            asynchronous: true
+                            fillMode: Image.PreserveAspectFit
+                            smooth: true
+                            cache: true
+                            mipmap: true
+                            width: Math.max(previewFlick.width, implicitWidth * previewFlick.zoom)
+                            height: Math.max(previewFlick.height, implicitHeight * previewFlick.zoom)
+                            x: 0
+                            y: 0
+
+                            transform: Scale {
+                                origin.x: 0
+                                origin.y: 0
+                                xScale: previewFlick.zoom
+                                yScale: previewFlick.zoom
+                            }
+                        }
+
+                        WheelHandler {
+                            acceptedModifiers: Qt.ControlModifier
+                            onWheel: (event) => {
+                                const delta = event.angleDelta.y
+                                const step = delta > 0 ? 0.12 : -0.12
+                                previewFlick.zoom = previewFlick.clampZoom(previewFlick.zoom + step)
+                                event.accepted = true
+                            }
+                        }
+
+                        TapHandler {
+                            acceptedButtons: Qt.LeftButton
+                            onDoubleTapped: previewFlick.reset()
+                        }
 
                         FileIcon {
                             anchors.centerIn: parent
@@ -283,8 +359,21 @@ Rectangle {
                             isDir: !!(root.metadata && root.metadata.isDir)
                             iconName: (root.metadata && root.metadata.iconName !== undefined) ? root.metadata.iconName : ""
                             theme: root.theme
-                            visible: parent.status !== Image.Ready
+                            visible: previewImg.status !== Image.Ready
                         }
+                    } // Flickable
+
+                    TextArea {
+                        anchors.fill: parent
+                        anchors.margins: root.compact ? root.panelInset : (theme ? theme.space16 : 16)
+                        visible: previewText.length > 0 && (!root.metadata || !root.metadata.thumbnail)
+                        readOnly: true
+                        wrapMode: Text.Wrap
+                        text: previewText
+                        color: theme.textPrimary
+                        selectionColor: theme.selection
+                        selectedTextColor: theme.textPrimary
+                        background: Rectangle { color: "transparent" }
                     }
                 }
             }
@@ -292,6 +381,7 @@ Rectangle {
             PanelSection {
                 theme: root.theme
                 title: "DETAILS"
+                visible: generalSettings.showFileDetails
 
                 Rectangle {
                     id: detailsCard
@@ -395,7 +485,7 @@ Rectangle {
             PanelSection {
                 theme: root.theme
                 title: "DOCUMENT LIFECYCLE"
-                visible: !!(root.metadata && root.metadata.path && docIntelController)
+                visible: !!(root.metadata && root.metadata.path && !root.metadata.isDir && docIntelController)
 
                 ColumnLayout {
                     Layout.fillWidth: true

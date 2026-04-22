@@ -38,11 +38,131 @@
                             "message": ""
                         },
                         {
+                            "codegenResult": 0,
+                            "column": 33,
+                            "durationMicroseconds": 0,
+                            "functionName": "hotkeyCatalog",
+                            "line": 33,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 33,
+                            "durationMicroseconds": 0,
+                            "functionName": "hotkeyEntries",
+                            "line": 34,
+                            "message": "Cannot generate efficient code for storing an array in a non-sequence type"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 35,
+                            "durationMicroseconds": 0,
+                            "functionName": "hotkeyOverrides",
+                            "line": 35,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "loadHotkeyOverrides",
+                            "line": 55,
+                            "message": "Cannot generate efficient code for SetUnwindHandler"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "saveHotkeyOverrides",
+                            "line": 64,
+                            "message": "Cannot generate efficient code for internal conversion into unsupported wrapper type."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "resolvedShortcut",
+                            "line": 68,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "setCommandShortcut",
+                            "line": 73,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "removeCommandShortcutOverride",
+                            "line": 103,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "resetAllCommandShortcuts",
+                            "line": 111,
+                            "message": "Cannot generate efficient code for iterator on non-list type"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "applyShortcutToCommand",
+                            "line": 120,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "registerHotkeyMeta",
+                            "line": 127,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 1000,
+                            "functionName": "refreshHotkeyEntries",
+                            "line": 136,
+                            "message": "Cannot generate efficient code for storing an array in a non-sequence type"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "shouldSkipGlobalHotkeys",
+                            "line": 156,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "registerAppCommand",
+                            "line": 168,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "ensureDocIntelReady",
+                            "line": 173,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
+                        },
+                        {
                             "codegenResult": 2,
                             "column": 21,
                             "durationMicroseconds": 0,
                             "functionName": "onWidthChanged",
-                            "line": 121,
+                            "line": 300,
                             "message": "Could not find signal \"widthChanged\"."
                         },
                         {
@@ -50,7 +170,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onHeightChanged",
-                            "line": 122,
+                            "line": 301,
                             "message": "Could not find signal \"heightChanged\"."
                         },
                         {
@@ -58,7 +178,7 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "onDetailsVisibleChanged",
-                            "line": 123,
+                            "line": 302,
                             "message": ""
                         },
                         {
@@ -66,7 +186,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "onTerminalVisibleChanged",
-                            "line": 124,
+                            "line": 303,
                             "message": ""
                         },
                         {
@@ -74,7 +194,15 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "onSidebarExpandedChanged",
-                            "line": 125,
+                            "line": 304,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "onDocIntelEnabledChanged",
+                            "line": 305,
                             "message": ""
                         },
                         {
@@ -82,7 +210,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "normalizePath",
-                            "line": 133,
+                            "line": 320,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -90,7 +218,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "resolveHomePath",
-                            "line": 144,
+                            "line": 331,
                             "message": "Cannot load property homePath from (component in /home/dhruv/Liphis/src/qml/AppShell.qml)::activeController with type QVariant."
                         },
                         {
@@ -98,7 +226,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "addTab",
-                            "line": 151,
+                            "line": 338,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -106,7 +234,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "showDirectoryMenu",
-                            "line": 162,
+                            "line": 347,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -114,7 +242,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "showOpenWith",
-                            "line": 169,
+                            "line": 354,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -122,7 +250,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "showBulkRename",
-                            "line": 174,
+                            "line": 359,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -130,7 +258,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "showPropertiesForPath",
-                            "line": 179,
+                            "line": 364,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -138,7 +266,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "isMediaFile",
-                            "line": 191,
+                            "line": 376,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -146,7 +274,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "showItemMenu",
-                            "line": 198,
+                            "line": 383,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -154,15 +282,15 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onActiveControllerChanged",
-                            "line": 220,
-                            "message": "Cannot access value for name globalThumbnailManager"
+                            "line": 405,
+                            "message": "Cannot load property setThumbnailManager from (component in /home/dhruv/Liphis/src/qml/AppShell.qml)::activeController with type QVariant."
                         },
                         {
                             "codegenResult": 2,
                             "column": 28,
-                            "durationMicroseconds": 5000,
+                            "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 43,
+                            "line": 179,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -170,23 +298,39 @@
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "target",
-                            "line": 127,
+                            "line": 307,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 9,
+                            "durationMicroseconds": 0,
+                            "functionName": "onIsDarkChanged",
+                            "line": 308,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 17,
+                            "durationMicroseconds": 0,
+                            "functionName": "target",
+                            "line": 312,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
                         },
                         {
                             "codegenResult": 2,
                             "column": 9,
                             "durationMicroseconds": 0,
-                            "functionName": "onIsDarkChanged",
-                            "line": 128,
-                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                            "functionName": "onOperationNotice",
+                            "line": 313,
+                            "message": "Functions without type annotations won't be compiled"
                         },
                         {
                             "codegenResult": 2,
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 131,
+                            "line": 318,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -194,7 +338,7 @@
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "target",
-                            "line": 156,
+                            "line": 343,
                             "message": "Cannot access value for name activeController"
                         },
                         {
@@ -202,23 +346,7 @@
                             "column": 9,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenWithRequested",
-                            "line": 157,
-                            "message": "Functions without type annotations won't be compiled"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 9,
-                            "durationMicroseconds": 0,
-                            "functionName": "onOperationError",
-                            "line": 158,
-                            "message": "Functions without type annotations won't be compiled"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 9,
-                            "durationMicroseconds": 0,
-                            "functionName": "onOperationSuccess",
-                            "line": 159,
+                            "line": 344,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -226,7 +354,7 @@
                             "column": 17,
                             "durationMicroseconds": 0,
                             "functionName": "target",
-                            "line": 239,
+                            "line": 421,
                             "message": "Cannot access value for name activeController"
                         },
                         {
@@ -234,31 +362,15 @@
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "enabled",
-                            "line": 240,
+                            "line": 422,
                             "message": "Cannot access value for name activeController"
                         },
                         {
                             "codegenResult": 2,
                             "column": 9,
                             "durationMicroseconds": 0,
-                            "functionName": "onOperationSuccess",
-                            "line": 241,
-                            "message": "Functions without type annotations won't be compiled"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 9,
-                            "durationMicroseconds": 0,
-                            "functionName": "onOperationError",
-                            "line": 242,
-                            "message": "Functions without type annotations won't be compiled"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 9,
-                            "durationMicroseconds": 0,
                             "functionName": "onAnalyseRequested",
-                            "line": 243,
+                            "line": 423,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -266,7 +378,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onNodeFound",
-                            "line": 251,
+                            "line": 431,
                             "message": "Could not find signal \"nodeFound\"."
                         },
                         {
@@ -274,7 +386,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onNodeFound",
-                            "line": 251,
+                            "line": 431,
                             "message": "Could not find signal \"nodeFound\"."
                         },
                         {
@@ -282,7 +394,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onAnalysisProgress",
-                            "line": 252,
+                            "line": 432,
                             "message": "Could not find signal \"analysisProgress\"."
                         },
                         {
@@ -290,7 +402,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onAnalysisProgress",
-                            "line": 252,
+                            "line": 432,
                             "message": "Could not find signal \"analysisProgress\"."
                         },
                         {
@@ -298,7 +410,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onAnalysisFinished",
-                            "line": 253,
+                            "line": 433,
                             "message": "Could not find signal \"analysisFinished\"."
                         },
                         {
@@ -306,15 +418,23 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onAnalysisFinished",
-                            "line": 253,
+                            "line": 433,
                             "message": "Could not find signal \"analysisFinished\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 18,
+                            "durationMicroseconds": 0,
+                            "functionName": "enabled",
+                            "line": 438,
+                            "message": "Could not find property \"enabled\"."
                         },
                         {
                             "codegenResult": 2,
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 258,
+                            "line": 443,
                             "message": "Cannot access value for name appWindow"
                         },
                         {
@@ -322,7 +442,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "activeController",
-                            "line": 259,
+                            "line": 444,
                             "message": "Cannot access value for name appWindow"
                         },
                         {
@@ -330,7 +450,7 @@
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "detailsVisible",
-                            "line": 260,
+                            "line": 445,
                             "message": "Cannot access value for name appWindow"
                         },
                         {
@@ -338,7 +458,7 @@
                             "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "terminalVisible",
-                            "line": 261,
+                            "line": 446,
                             "message": "Cannot access value for name appWindow"
                         },
                         {
@@ -346,7 +466,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "onDetailsToggleRequested",
-                            "line": 262,
+                            "line": 447,
                             "message": "Cannot access value for name appWindow"
                         },
                         {
@@ -354,7 +474,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "onTerminalToggleRequested",
-                            "line": 263,
+                            "line": 448,
                             "message": "Cannot access value for name appWindow"
                         },
                         {
@@ -362,63 +482,47 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "onSettingsRequested",
-                            "line": 264,
+                            "line": 449,
                             "message": "Cannot access value for name settingsDialog"
                         },
                         {
-                            "codegenResult": 0,
-                            "column": 20,
+                            "codegenResult": 2,
+                            "column": 16,
                             "durationMicroseconds": 0,
-                            "functionName": "sequences",
-                            "line": 268,
+                            "functionName": "model",
+                            "line": 454,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "sequence",
+                            "line": 457,
+                            "message": "Cannot load property shortcut from (component in /home/dhruv/Liphis/src/qml/AppShell.qml)::modelData with type QVariant."
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 22,
+                            "durationMicroseconds": 0,
+                            "functionName": "context",
+                            "line": 458,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 22,
+                            "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "onActivated",
-                            "line": 269,
-                            "message": "Cannot access value for name headerBar"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "onActivated",
-                            "line": 274,
-                            "message": "Cannot access value for name headerBar"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "onActivated",
-                            "line": 279,
-                            "message": "Cannot retrieve a non-object type by ID: centerWorkspace"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 22,
-                            "durationMicroseconds": 0,
-                            "functionName": "onActivated",
-                            "line": 284,
-                            "message": "Cannot retrieve a non-object type by ID: commandPalette"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 20,
-                            "durationMicroseconds": 0,
-                            "functionName": "sequences",
-                            "line": 291,
-                            "message": ""
+                            "line": 459,
+                            "message": "Cannot access value for name appWindow"
                         },
                         {
                             "codegenResult": 0,
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "context",
-                            "line": 292,
+                            "line": 469,
                             "message": ""
                         },
                         {
@@ -426,23 +530,39 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "onActivated",
-                            "line": 293,
-                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                            "line": 470,
+                            "message": "Cannot retrieve a non-object type by ID: settingsDialog"
                         },
                         {
                             "codegenResult": 0,
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 328,
+                            "line": 506,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
+                            "durationMicroseconds": 0,
+                            "functionName": "orientation",
+                            "line": 512,
+                            "message": "Could not find property \"orientation\"."
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 58,
+                            "durationMicroseconds": 0,
+                            "functionName": "color",
+                            "line": 513,
+                            "message": "Cannot access value for name theme"
                         },
                         {
                             "codegenResult": 2,
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "activeController",
-                            "line": 339,
+                            "line": 520,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -450,7 +570,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 344,
+                            "line": 523,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -458,15 +578,23 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "placesModel",
-                            "line": 345,
+                            "line": 524,
                             "message": "Cannot access value for name globalPlacesModel"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "docIntelController",
+                            "line": 525,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
                         },
                         {
                             "codegenResult": 2,
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "activePath",
-                            "line": 346,
+                            "line": 526,
                             "message": "Cannot load property currentPath from (component in /home/dhruv/Liphis/src/qml/AppShell.qml)::activeController with type QVariant."
                         },
                         {
@@ -474,7 +602,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "homePath",
-                            "line": 347,
+                            "line": 527,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -482,175 +610,199 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "expanded",
-                            "line": 348,
-                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                            "line": 528,
+                            "message": "Cannot access value for name generalSettings"
                         },
                         {
                             "codegenResult": 2,
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "onToggleExpanded",
-                            "line": 349,
+                            "line": 529,
+                            "message": "Cannot access value for name generalSettings"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "onPathActivated",
+                            "line": 530,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 34,
+                            "durationMicroseconds": 0,
+                            "functionName": "onPathActivated",
+                            "line": 530,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "onRemoveBookmarkRequested",
+                            "line": 533,
+                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 44,
+                            "durationMicroseconds": 0,
+                            "functionName": "onRemoveBookmarkRequested",
+                            "line": 533,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenDocInboxRequested",
+                            "line": 536,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 34,
+                            "column": 47,
                             "durationMicroseconds": 0,
-                            "functionName": "onPathActivated",
-                            "line": 350,
-                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 34,
-                            "durationMicroseconds": 0,
-                            "functionName": "onPathActivated",
-                            "line": 350,
-                            "message": ""
+                            "functionName": "onOpenDocDuplicatesRequested",
+                            "line": 540,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 44,
+                            "column": 43,
                             "durationMicroseconds": 0,
-                            "functionName": "onRemoveBookmarkRequested",
-                            "line": 353,
-                            "message": "Cannot generate efficient code for call to untyped JavaScript function"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 44,
-                            "durationMicroseconds": 0,
-                            "functionName": "onRemoveBookmarkRequested",
-                            "line": 353,
-                            "message": ""
+                            "functionName": "onOpenDocHealthRequested",
+                            "line": 544,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 40,
+                            "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "preferredWidth",
-                            "line": 338,
-                            "message": "Cannot retrieve a non-object type by ID: appWindow"
-                        },
-                        {
-                            "codegenResult": 0,
-                            "column": 67,
-                            "durationMicroseconds": 0,
-                            "functionName": "type",
-                            "line": 341,
-                            "message": ""
+                            "line": 517,
+                            "message": "Could not find property \"preferredWidth\"."
                         },
                         {
                             "codegenResult": 2,
-                            "column": 30,
-                            "durationMicroseconds": 0,
-                            "functionName": "orientation",
-                            "line": 361,
-                            "message": "Could not find property \"orientation\"."
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 62,
-                            "durationMicroseconds": 0,
-                            "functionName": "color",
-                            "line": 362,
-                            "message": "Cannot access value for name theme"
-                        },
-                        {
-                            "codegenResult": 2,
-                            "column": 28,
+                            "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 367,
+                            "line": 553,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 31,
+                            "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "homePath",
-                            "line": 368,
+                            "line": 554,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 38,
+                            "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "terminalVisible",
-                            "line": 369,
+                            "line": 555,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 38,
+                            "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "itemMenuHandler",
-                            "line": 370,
+                            "line": 556,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 42,
+                            "column": 37,
                             "durationMicroseconds": 0,
-                            "functionName": "onControllerChanged",
-                            "line": 371,
-                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                            "functionName": "docIntelController",
+                            "line": 557,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 42,
+                            "column": 31,
                             "durationMicroseconds": 0,
-                            "functionName": "onControllerChanged",
-                            "line": 371,
+                            "functionName": "toastManager",
+                            "line": 558,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 30,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "onControllerChanged",
+                            "line": 559,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 38,
+                            "durationMicroseconds": 0,
+                            "functionName": "onControllerChanged",
+                            "line": 559,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 26,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 376,
+                            "line": 564,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 28,
+                            "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 380,
+                            "line": 568,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 39,
+                            "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "activeController",
-                            "line": 381,
+                            "line": 569,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
                             "codegenResult": 2,
-                            "column": 47,
+                            "column": 37,
+                            "durationMicroseconds": 0,
+                            "functionName": "docIntelController",
+                            "line": 570,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "onAnalyseFolderRequested",
-                            "line": 382,
+                            "line": 571,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
                             "codegenResult": 0,
-                            "column": 47,
+                            "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "onAnalyseFolderRequested",
-                            "line": 382,
+                            "line": 571,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 47,
+                            "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "preferredWidth",
-                            "line": 377,
+                            "line": 565,
                             "message": "Could not find property \"preferredWidth\"."
                         },
                         {
@@ -658,7 +810,7 @@
                             "column": 20,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 391,
+                            "line": 579,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -666,7 +818,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "activeController",
-                            "line": 392,
+                            "line": 580,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -674,7 +826,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 398,
+                            "line": 586,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -682,7 +834,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "activeController",
-                            "line": 399,
+                            "line": 587,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -690,7 +842,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "onChangePermissionsRequested",
-                            "line": 400,
+                            "line": 588,
                             "message": "Cannot generate efficient code for call to untyped JavaScript function"
                         },
                         {
@@ -698,7 +850,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "onChangePermissionsRequested",
-                            "line": 400,
+                            "line": 588,
                             "message": ""
                         },
                         {
@@ -706,7 +858,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "analysisController",
-                            "line": 407,
+                            "line": 595,
                             "message": "Cannot retrieve a non-object type by ID: analysisController"
                         },
                         {
@@ -714,7 +866,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "toastManager",
-                            "line": 408,
+                            "line": 596,
                             "message": ""
                         },
                         {
@@ -722,7 +874,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 409,
+                            "line": 597,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -730,7 +882,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "propsDialog",
-                            "line": 414,
+                            "line": 602,
                             "message": "Cannot retrieve a non-object type by ID: propsDialog"
                         },
                         {
@@ -738,7 +890,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "toastManager",
-                            "line": 415,
+                            "line": 603,
                             "message": ""
                         },
                         {
@@ -746,7 +898,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 416,
+                            "line": 604,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -754,7 +906,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "propsDialog",
-                            "line": 421,
+                            "line": 609,
                             "message": "Cannot retrieve a non-object type by ID: propsDialog"
                         },
                         {
@@ -762,7 +914,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 422,
+                            "line": 610,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -770,7 +922,7 @@
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenInNewTab",
-                            "line": 423,
+                            "line": 611,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -778,7 +930,7 @@
                             "column": 25,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenInNewTab",
-                            "line": 423,
+                            "line": 611,
                             "message": ""
                         },
                         {
@@ -786,7 +938,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenInNewWindow",
-                            "line": 424,
+                            "line": 612,
                             "message": "Cannot access value for name activeController"
                         },
                         {
@@ -794,7 +946,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenInNewWindow",
-                            "line": 424,
+                            "line": 612,
                             "message": ""
                         },
                         {
@@ -802,7 +954,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenInSplitView",
-                            "line": 425,
+                            "line": 613,
                             "message": "Cannot retrieve a non-object type by ID: centerWorkspace"
                         },
                         {
@@ -810,7 +962,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "onOpenInSplitView",
-                            "line": 425,
+                            "line": 613,
                             "message": ""
                         },
                         {
@@ -818,7 +970,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 430,
+                            "line": 618,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -826,7 +978,7 @@
                             "column": 22,
                             "durationMicroseconds": 0,
                             "functionName": "propsDialog",
-                            "line": 435,
+                            "line": 623,
                             "message": "Cannot retrieve a non-object type by ID: propsDialog"
                         },
                         {
@@ -834,7 +986,7 @@
                             "column": 23,
                             "durationMicroseconds": 0,
                             "functionName": "toastManager",
-                            "line": 436,
+                            "line": 624,
                             "message": ""
                         },
                         {
@@ -842,7 +994,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 437,
+                            "line": 625,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -850,7 +1002,7 @@
                             "column": 19,
                             "durationMicroseconds": 0,
                             "functionName": "darkMode",
-                            "line": 442,
+                            "line": 630,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -858,7 +1010,7 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 447,
+                            "line": 635,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -866,15 +1018,71 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 452,
+                            "line": 640,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 24,
+                            "durationMicroseconds": 0,
+                            "functionName": "hotkeyEntries",
+                            "line": 641,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "setShortcutForCommand",
+                            "line": 642,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "setShortcutForCommand",
+                            "line": 642,
+                            "message": "Cannot generate efficient code for LoadClosure"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "clearShortcutOverride",
+                            "line": 643,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "clearShortcutOverride",
+                            "line": 643,
+                            "message": "Cannot generate efficient code for LoadClosure"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "resetAllShortcuts",
+                            "line": 644,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 28,
+                            "durationMicroseconds": 0,
+                            "functionName": "resetAllShortcuts",
+                            "line": 644,
+                            "message": "Cannot generate efficient code for LoadClosure"
                         },
                         {
                             "codegenResult": 2,
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 457,
+                            "line": 649,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -882,7 +1090,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onConnectRequested",
-                            "line": 462,
+                            "line": 654,
                             "message": "Cannot access value for name activeController"
                         },
                         {
@@ -890,7 +1098,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onConnectRequested",
-                            "line": 462,
+                            "line": 654,
                             "message": ""
                         },
                         {
@@ -898,7 +1106,7 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 467,
+                            "line": 659,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
                         },
                         {
@@ -906,8 +1114,120 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 472,
+                            "line": 664,
                             "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 669,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "controller",
+                            "line": 670,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "toastManager",
+                            "line": 671,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 676,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "controller",
+                            "line": 677,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 682,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "controller",
+                            "line": 683,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 27,
+                            "durationMicroseconds": 0,
+                            "functionName": "activeController",
+                            "line": 684,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 0,
+                            "column": 23,
+                            "durationMicroseconds": 0,
+                            "functionName": "toastManager",
+                            "line": 685,
+                            "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 16,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 690,
+                            "message": "Cannot retrieve a non-object type by ID: appWindow"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 21,
+                            "durationMicroseconds": 0,
+                            "functionName": "controller",
+                            "line": 691,
+                            "message": "Cannot retrieve a non-object type by ID: docIntelController"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 31,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenInboxRequested",
+                            "line": 692,
+                            "message": "Cannot retrieve a non-object type by ID: docInboxDialog"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 36,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenDuplicatesRequested",
+                            "line": 693,
+                            "message": "Cannot retrieve a non-object type by ID: docDuplicatesDialog"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 32,
+                            "durationMicroseconds": 0,
+                            "functionName": "onOpenNamingRequested",
+                            "line": 694,
+                            "message": "Cannot retrieve a non-object type by ID: canonicalNamingDialog"
                         }
                     ],
                     "filePath": "/home/dhruv/Liphis/src/qml/AppShell.qml"

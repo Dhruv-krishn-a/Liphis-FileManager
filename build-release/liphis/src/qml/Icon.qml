@@ -44,6 +44,9 @@ Item {
 
     function localAsset(iconName) {
         var n = iconName || ""
+        if (n === "arrow-left") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-left.svg"
+        if (n === "arrow-right") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-right.svg"
+        if (n === "arrow-up") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-up.svg"
         if (n === "back") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-left.svg"
         if (n === "forward") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-right.svg"
         if (n === "up") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-up.svg"
@@ -54,7 +57,8 @@ Item {
         if (n === "star-filled") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/star.svg"
         if (n === "user-bookmarks") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/bookmark.svg"
         if (n === "close" || n === "window-close") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/x.svg"
-        if (n === "folder" || n === "folder-open" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder.svg"
+        if (n === "folder-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-open.svg"
+        if (n === "folder" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder.svg"
         if (n === "info" || n === "dialog-information") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/info-circle.svg"
         if (n === "terminal" || n === "utilities-terminal") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/terminal.svg"
         if (n === "edit-copy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/copy.svg"
@@ -103,12 +107,15 @@ Item {
         if (n === "download") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/download.svg"
         if (n === "chevron-right") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/chevron-right.svg"
         if (n === "chevron-down") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/chevron-down.svg"
+        if (n === "mouse-pointer" || n === "pointer") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pointer.svg"
+        if (n === "settings" || n === "preferences-system") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/settings.svg"
         return ""
     }
 
     function filledAsset(iconName) {
         var n = iconName || ""
-        if (n === "folder" || n === "folder-open" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/folder.svg"
+        if (n === "folder-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/folder-open.svg"
+        if (n === "folder" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/folder.svg"
         if (n === "star") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/star.svg"
         return ""
     }
@@ -125,6 +132,7 @@ Item {
         sourceSize.width: Math.max(32, Math.round(root.width * 1.5))
         sourceSize.height: Math.max(32, Math.round(root.height * 1.5))
         fillMode: Image.PreserveAspectFit
+        verticalAlignment: Image.AlignBottom
         smooth: root.width > 32
         mipmap: true
         antialiasing: true

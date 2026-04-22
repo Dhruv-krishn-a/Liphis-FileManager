@@ -121,11 +121,36 @@ Menu {
     }
     MenuItem { 
         text: "Move to Trash"
+        visible: controller ? !controller.currentPath.startsWith("trash:") : true
         Component.onCompleted: root.compact(this)
         onTriggered: {
             if (!controller) return;
             if (controller.selectedPaths.length > 1) controller.trashItems(controller.selectedPaths);
             else controller.trashItems([root.targetPath]);
+        }
+        icon.source: root.iconSource("user-trash")
+    }
+
+    MenuItem {
+        text: "Restore"
+        visible: controller ? controller.currentPath.startsWith("trash:") : false
+        Component.onCompleted: root.compact(this)
+        onTriggered: {
+            if (!controller) return;
+            if (controller.selectedPaths.length > 0) controller.restoreFromTrash(controller.selectedPaths);
+            else controller.restoreFromTrash([root.targetPath]);
+        }
+        icon.source: root.iconSource("document-open")
+    }
+
+    MenuItem {
+        text: "Delete Permanently"
+        visible: controller ? controller.currentPath.startsWith("trash:") : false
+        Component.onCompleted: root.compact(this)
+        onTriggered: {
+            if (!controller) return;
+            if (controller.selectedPaths.length > 1) controller.deleteItems(controller.selectedPaths);
+            else controller.deleteItems([root.targetPath]);
         }
         icon.source: root.iconSource("user-trash")
     }

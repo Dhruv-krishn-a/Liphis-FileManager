@@ -1,2 +1,3 @@
-fs_test_smoke 4 0.000559412
+fs_test_smoke 6 0.00163546
+unit_tests 2 0.0041256
 ---

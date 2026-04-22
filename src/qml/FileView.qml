@@ -10,42 +10,15 @@ Item {
     id: root
     focus: true
     activeFocusOnTab: true
-
-    PinchHandler {
-        id: ph
-        target: null
-        property real startZoom: 100
-        onActiveChanged: if (active) startZoom = pendingZoomLevel
-        onScaleChanged: {
-            var newZoom = Math.max(50, Math.min(300, startZoom * scale))
-            if (Math.abs(newZoom - pendingZoomLevel) > 5) {
-                queueZoom(newZoom)
-            }
-        }
-    }
-
-    WheelHandler {
-        acceptedModifiers: Qt.ControlModifier
-        onWheel: (event) => {
-            if (event.angleDelta.y > 0) zoomIn()
-            else zoomOut()
-        }
-    }
+    Keys.priority: Keys.BeforeItem
 
     DropArea {
         anchors.fill: parent
         onDropped: (drop) => {
             if (drop.hasText) {
                 let paths = drop.text.split("\n")
-                controller.dropItems(paths, controller.currentPath, (drop.supportedActions & Qt.CopyAction) && (drop.proposedAction === Qt.CopyAction))
+                controller.dropItems(paths, controller.currentPath, (drop.supportedActions & Qt.CopyAction) && (drop.proposedAction === Qt.ProposedAction))
             }
-        }
-    }
-
-    WheelHandler {
-        onWheel: (event) => {
-            if (event.angleDelta.x > 0) controller.goBack()
-            else if (event.angleDelta.x < 0) controller.goForward()
         }
     }
 
@@ -65,7 +38,7 @@ Item {
     property int zoomLevel: generalSettings ? generalSettings.defaultZoom : 100 // Percentage
     property int pendingZoomLevel: zoomLevel
     readonly property int baseCellSize: 100
-    readonly property int baseIconSize: 56
+    readonly property int baseIconSize: 92
     readonly property int baseListHeight: 44
 
     readonly property real zoomScale: zoomLevel / 100.0
@@ -78,7 +51,16 @@ Item {
     }
     function zoomIn() { queueZoom(pendingZoomLevel + 10) }
     function zoomOut() { queueZoom(pendingZoomLevel - 10) }
-    function resetZoom() { queueZoom(100) }
+    function resetZoom() { queueZoom(generalSettings ? generalSettings.defaultZoom : 100) }
+
+    Timer {
+        id: zoomApplyTimer
+        interval: 32 // Debounce to prevent layout thrashing
+        repeat: false
+        onTriggered: {
+            if (zoomLevel !== pendingZoomLevel) zoomLevel = pendingZoomLevel
+        }
+    }
 
     function focusFileArea() {
         root.forceActiveFocus()
@@ -109,6 +91,12 @@ Item {
         if (index < 0) return
         if (controller.viewMode === "grid") gv.positionViewAtIndex(index, GridView.Contain)
         else lv.positionViewAtIndex(index, ListView.Contain)
+    }
+
+    function activeFlickable() {
+        if (controller.viewMode === "grid") return gv
+        if (controller.viewMode === "tree") return treeView
+        return lv
     }
 
     function applySelection(index, modifiers) {
@@ -271,15 +259,6 @@ Item {
         onTriggered: root.requestVisibleThumbnails()
     }
 
-    Timer {
-        id: zoomApplyTimer
-        interval: 24
-        repeat: false
-        onTriggered: {
-            if (zoomLevel !== pendingZoomLevel) zoomLevel = pendingZoomLevel
-        }
-    }
-
     Keys.onPressed: (event) => {
         if (!controller) return
         if (event.modifiers === Qt.ControlModifier && event.key === Qt.Key_A) {
@@ -313,7 +292,7 @@ Item {
             return
         }
         
-        if (event.key === Qt.Key_Escape || event.key === 16777250) {
+        if (event.key === Qt.Key_Escape) {
             if (controller && controller.hasSelection) {
                 controller.clearSelection()
                 appWindow.toastManager.show("Selection cleared", false)
@@ -385,11 +364,12 @@ Item {
             if (launchPath && launchPath.length > 0) openPath(launchPath);
             root.tabTitleChanged(controller.title)
             root.requestedActive()
-            root.forceActiveFocus()
+            Qt.callLater(root.forceActiveFocus)
         }
         onRenameRequested: (path) => renamingPath = path
         onCurrentPathChanged: {
             root.tabTitleChanged(controller.title)
+            Qt.callLater(root.forceActiveFocus)
         }
         onOperationSuccess: (msg) => {
             if (msg.indexOf("Compressing") !== -1 || msg.indexOf("Extracting") !== -1) {
@@ -475,6 +455,8 @@ Item {
             id: listRoot
             width: lv.width; height: baseListHeight * root.zoomScale
             readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPaths.includes(model.path)
+            readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
+            readonly property bool clipboardCut: !!(controller && controller.isCutOp)
             readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
             opacity: isHidden ? 0.6 : 1.0
 
@@ -482,6 +464,13 @@ Item {
                 anchors.fill: parent; anchors.margins: 2; radius: theme ? theme.radiusSmall : 6
                 color: listRoot.isActuallySelected ? theme.selection : (listMA.containsMouse ? theme.hover : "transparent")
                 visible: listRoot.isActuallySelected || listMA.containsMouse
+            }
+            Rectangle {
+                anchors.fill: parent; anchors.margins: 2; radius: theme ? theme.radiusSmall : 6
+                visible: listRoot.inClipboard
+                color: listRoot.clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.16) : Qt.rgba(0.15, 0.55, 0.85, 0.12)
+                border.width: 1
+                border.color: listRoot.clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.55) : Qt.rgba(0.15, 0.55, 0.85, 0.45)
             }
 
             RowLayout {
@@ -632,34 +621,32 @@ Item {
             MouseArea {
                 id: listMA; anchors.fill: parent; hoverEnabled: true; acceptedButtons: Qt.LeftButton | Qt.RightButton
                 drag.target: dragProxy
+                drag.threshold: 12
                 
                 Item { id: dragProxy; Drag.active: listMA.drag.active; Drag.source: listRoot; Drag.supportedActions: Qt.CopyAction | Qt.MoveAction; Drag.keys: ["text/uri-list"]; Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") } }
-
-                onClicked: (mouse) => {
+                onPressed: (mouse) => {
+                    if (mouse.button !== Qt.LeftButton) return
                     var idx = controller.indexOfPath(model.path)
                     if (mouse.modifiers & Qt.ShiftModifier) {
                         if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
                         controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
-                    } else if (mouse.modifiers & Qt.ControlModifier) controller.toggleSelection(model.path)
-                    else {
-                        if (!listMA.drag.active) controller.selectPath(model.path)
+                    } else if (mouse.modifiers & Qt.ControlModifier) {
+                        controller.toggleSelection(model.path)
+                    } else {
+                        controller.selectPath(model.path)
                     }
-                    root.keyboardIndex = controller.indexOfPath(model.path)
+                    root.keyboardIndex = idx
                     if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
+                }
+
+                onClicked: (mouse) => {
+                    var idx = controller.indexOfPath(model.path)
+                    root.keyboardIndex = idx
                     root.forceActiveFocus()
                     if (mouse.button === Qt.RightButton) {
                         if (typeof itemMenuHandler === "function") itemMenuHandler(model, controller)
                     } else if (mouse.button === Qt.LeftButton && generalSettings.singleClick) {
                         controller.openPath(model.path)
-                    }
-                }
-                onWheel: (wheel) => {
-                    if (wheel.modifiers & Qt.ControlModifier) {
-                        if (wheel.angleDelta.y > 0) zoomIn()
-                        else zoomOut()
-                        wheel.accepted = true
-                    } else {
-                        wheel.accepted = false
                     }
                 }
                 onDoubleClicked: if (!generalSettings.singleClick) controller.openPath(model.path)
@@ -675,6 +662,12 @@ Item {
                     }
                 }
             }
+
+            Component.onCompleted: {
+                if (model.path && (!model.thumbnail || model.thumbnail === "")) {
+                    controller.requestThumbnail(model.path)
+                }
+            }
         }
     }
 
@@ -684,6 +677,8 @@ Item {
             id: gridRoot
             width: gv.cellWidth; height: gv.cellHeight
             readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPaths.includes(model.path)
+            readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
+            readonly property bool clipboardCut: !!(controller && controller.isCutOp)
             readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
             opacity: isHidden ? 0.6 : 1.0
 
@@ -692,15 +687,23 @@ Item {
                 color: gridRoot.isActuallySelected ? theme.selection : (gridMA.containsMouse ? theme.hover : "transparent")
                 visible: gridRoot.isActuallySelected || gridMA.containsMouse
             }
+            Rectangle {
+                anchors.fill: parent; anchors.margins: 4; radius: theme ? theme.radius : 8
+                visible: gridRoot.inClipboard
+                color: gridRoot.clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.16) : Qt.rgba(0.15, 0.55, 0.85, 0.12)
+                border.width: 1
+                border.color: gridRoot.clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.55) : Qt.rgba(0.15, 0.55, 0.85, 0.45)
+            }
 
             ColumnLayout {
-                anchors.fill: parent; anchors.margins: 12 * (zoomLevel / 100.0); spacing: 8 * (zoomLevel / 100.0)
+                anchors.fill: parent; anchors.margins: Math.max(2, 4 * (zoomLevel / 100.0)); spacing: 0
                 Item {
                     Layout.fillWidth: true; Layout.fillHeight: true
                     FileIcon { 
-                        anchors.centerIn: parent; 
-                        width: baseIconSize * (zoomLevel / 100.0); 
-                        height: baseIconSize * (zoomLevel / 100.0); 
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.bottom: parent.bottom
+                        width: Math.min(parent.width, baseIconSize * (zoomLevel / 100.0)); 
+                        height: Math.min(parent.height, baseIconSize * (zoomLevel / 100.0)); 
                         isDir: (model.isDir !== undefined ? model.isDir : false); 
                         iconName: (model.iconName !== undefined ? model.iconName : ""); 
                         theme: root.theme; 
@@ -716,13 +719,13 @@ Item {
                     text: (model.name !== undefined ? root.displayName(model.name) : "")
                     textFormat: Text.PlainText
                     Layout.fillWidth: true
-                    Layout.preferredHeight: gridRoot.isActuallySelected ? (30 * (zoomLevel / 100.0)) : (16 * (zoomLevel / 100.0))
+                    Layout.preferredHeight: font.pixelSize * 1.4
                     horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignTop
                     elide: Text.ElideRight
                     wrapMode: gridRoot.isActuallySelected ? Text.WrapAnywhere : Text.NoWrap
                     maximumLineCount: gridRoot.isActuallySelected ? 2 : 1
-                    clip: true
-                    color: root.colTextPrimary; font.pixelSize: Math.max(8, 12 * (zoomLevel / 100.0)); font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
+                    color: root.colTextPrimary; font.pixelSize: 7 + (5 * (zoomLevel / 100.0)); font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
                 ToolTip.visible: gridMA.containsMouse
                 ToolTip.text: (model.path !== undefined ? String(model.path) : "")
@@ -731,34 +734,32 @@ Item {
             MouseArea {
                 id: gridMA; anchors.fill: parent; hoverEnabled: true; acceptedButtons: Qt.LeftButton | Qt.RightButton
                 drag.target: gridDragProxy
+                drag.threshold: 12
                 
                 Item { id: gridDragProxy; Drag.active: gridMA.drag.active; Drag.source: gridRoot; Drag.supportedActions: Qt.CopyAction | Qt.MoveAction; Drag.keys: ["text/uri-list"]; Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") } }
-
-                onClicked: (mouse) => {
+                onPressed: (mouse) => {
+                    if (mouse.button !== Qt.LeftButton) return
                     var idx = controller.indexOfPath(model.path)
                     if (mouse.modifiers & Qt.ShiftModifier) {
                         if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
                         controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
-                    } else if (mouse.modifiers & Qt.ControlModifier) controller.toggleSelection(model.path)
-                    else {
-                        if (!gridMA.drag.active) controller.selectPath(model.path)
+                    } else if (mouse.modifiers & Qt.ControlModifier) {
+                        controller.toggleSelection(model.path)
+                    } else {
+                        controller.selectPath(model.path)
                     }
-                    root.keyboardIndex = controller.indexOfPath(model.path)
+                    root.keyboardIndex = idx
                     if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
+                }
+
+                onClicked: (mouse) => {
+                    var idx = controller.indexOfPath(model.path)
+                    root.keyboardIndex = idx
                     root.forceActiveFocus()
                     if (mouse.button === Qt.RightButton) {
                         if (typeof itemMenuHandler === "function") itemMenuHandler(model, controller)
                     } else if (mouse.button === Qt.LeftButton && generalSettings.singleClick) {
                         controller.openPath(model.path)
-                    }
-                }
-                onWheel: (wheel) => {
-                    if (wheel.modifiers & Qt.ControlModifier) {
-                        if (wheel.angleDelta.y > 0) zoomIn()
-                        else zoomOut()
-                        wheel.accepted = true
-                    } else {
-                        wheel.accepted = false
                     }
                 }
                 onDoubleClicked: if (!generalSettings.singleClick) controller.openPath(model.path)
@@ -774,6 +775,12 @@ Item {
                     }
                 }
             }
+
+            Component.onCompleted: {
+                if (model.path && (!model.thumbnail || model.thumbnail === "")) {
+                    controller.requestThumbnail(model.path)
+                }
+            }
         }
     }
 
@@ -787,6 +794,11 @@ Item {
         ListView {
             id: lv; model: controller.fileModel; clip: true; delegate: listDelegate
             focus: true
+            boundsBehavior: Flickable.StopAtBounds
+            flickDeceleration: 2600
+            maximumFlickVelocity: 16000
+            interactive: true
+            flickableDirection: Flickable.AutoFlickDirection
             Keys.onEscapePressed: (event) => {
                 if (controller) {
                     controller.clearSelection()
@@ -796,8 +808,10 @@ Item {
             reuseItems: true
             cacheBuffer: 420
             onContentYChanged: thumbsDebounce.restart()
+            onContentXChanged: thumbsDebounce.restart()
             onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded; active: true }
+            ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
             
             headerPositioning: ListView.OverlayHeader
             header: Rectangle {
@@ -912,19 +926,26 @@ Item {
         GridView {
             id: gv; model: controller.fileModel; clip: true; delegate: gridDelegate
             focus: true
+            boundsBehavior: Flickable.StopAtBounds
+            flickDeceleration: 2600
+            maximumFlickVelocity: 16000
+            interactive: true
+            flickableDirection: Flickable.AutoFlickDirection
             Keys.onEscapePressed: (event) => {
                 if (controller) {
                     controller.clearSelection()
                     event.accepted = true
                 }
             }
-            cellWidth: Math.max(80, baseCellSize * root.zoomScale)
-            cellHeight: Math.max(80, baseCellSize * root.zoomScale)
+            cellWidth: Math.max(84, baseCellSize * root.zoomScale)
+            cellHeight: Math.max(76, baseCellSize * root.zoomScale)
             reuseItems: true
             cacheBuffer: 520
             onContentYChanged: thumbsDebounce.restart()
+            onContentXChanged: thumbsDebounce.restart()
             onCountChanged: thumbsDebounce.restart()
             ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+            ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
         }
 
         // Actual Tree View
@@ -938,24 +959,33 @@ Item {
             delegate: Item {
                 id: treeDelegate
                 implicitWidth: treeView.width
-                implicitHeight: 32
+                implicitHeight: 32 * root.zoomScale
                 
                 readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPath === model.path
+                readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
+                readonly property bool clipboardCut: !!(controller && controller.isCutOp)
                 
                 Rectangle {
                     anchors.fill: parent; anchors.margins: 2; radius: 4
                     color: isActuallySelected ? theme.selection : (treeMA.containsMouse ? theme.hover : "transparent")
                     visible: isActuallySelected || treeMA.containsMouse
                 }
+                Rectangle {
+                    anchors.fill: parent; anchors.margins: 2; radius: 4
+                    visible: inClipboard
+                    color: clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.16) : Qt.rgba(0.15, 0.55, 0.85, 0.12)
+                    border.width: 1
+                    border.color: clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.55) : Qt.rgba(0.15, 0.55, 0.85, 0.45)
+                }
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: (model.depth || 0) * 20 + 8
-                    spacing: 8
+                    anchors.leftMargin: (model.depth || 0) * (20 * root.zoomScale) + (8 * root.zoomScale)
+                    spacing: 8 * root.zoomScale
 
                     Icon {
                         name: model.isExpanded ? "chevron-down" : "chevron-right"
-                        iconSize: 12
+                        iconSize: 12 * root.zoomScale
                         color: theme.textTertiary
                         visible: model.hasChildren
                         MouseArea {
@@ -968,8 +998,8 @@ Item {
                     }
 
                     FileIcon {
-                        Layout.preferredWidth: 18
-                        Layout.preferredHeight: 18
+                        Layout.preferredWidth: 18 * root.zoomScale
+                        Layout.preferredHeight: 18 * root.zoomScale
                         isDir: model.isDir
                         iconName: model.iconName
                         theme: root.theme
@@ -981,7 +1011,7 @@ Item {
                         Layout.fillWidth: true
                         elide: Text.ElideRight
                         color: treeDelegate.isActuallySelected ? theme.accent : theme.textPrimary
-                        font.pixelSize: 13
+                        font.pixelSize: 13 * root.zoomScale
                     }
                     ToolTip.visible: treeMA.containsMouse
                     ToolTip.text: model.path
@@ -1070,7 +1100,13 @@ Item {
     Connections {
         target: controller
         function onViewModeChanged() { thumbsDebounce.restart() }
-        function onCurrentPathChanged() { thumbsDebounce.restart() }
+        function onCurrentPathChanged() {
+            thumbsDebounce.restart()
+            Qt.callLater(root.forceActiveFocus)
+        }
+        function onLoadingChanged() {
+            if (controller && !controller.loading) Qt.callLater(root.forceActiveFocus)
+        }
     }
 
     Connections {
@@ -1089,11 +1125,70 @@ Item {
                 controller.clearSelection()
             }
         }
-        onWheel: (wheel) => {
-            if (wheel.modifiers & Qt.ControlModifier) {
-                if (wheel.angleDelta.y > 0) zoomIn()
-                else zoomOut()
-                wheel.accepted = true
+    }
+
+    // Unified Zoom and Navigation Handler (on top)
+    Item {
+        anchors.fill: parent
+        z: 1000 // Ensure it's above all views
+        
+        WheelHandler {
+            id: globalWheelHandler
+            property int zoomAccumulator: 0
+            property int xAccumulator: 0
+            property int yAccumulator: 0
+            onWheel: (event) => {
+                const flick = root.activeFlickable()
+                if (!flick) return
+
+                if ((event.modifiers & Qt.ControlModifier) && !(event.modifiers & Qt.ShiftModifier)) {
+                    zoomAccumulator += event.angleDelta.y
+                    if (Math.abs(zoomAccumulator) >= 40) {
+                        let steps = Math.trunc(zoomAccumulator / 40)
+                        root.queueZoom(root.pendingZoomLevel + (steps * 5))
+                        zoomAccumulator -= (steps * 40)
+                    }
+                    event.accepted = true
+                    return
+                }
+
+                const pixelDx = event.pixelDelta.x
+                const pixelDy = event.pixelDelta.y
+                const angleDx = event.angleDelta.x
+                const angleDy = event.angleDelta.y
+
+                const horizontalRequested = (event.modifiers & Qt.ShiftModifier)
+                    || ((event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
+
+                if (horizontalRequested) {
+                    const deltaX = pixelDx !== 0 ? pixelDx : (angleDx !== 0 ? angleDx / 2 : angleDy / 2)
+                    xAccumulator += deltaX
+                    if (Math.abs(xAccumulator) >= 1) {
+                        flick.contentX = Math.max(0, Math.min(flick.contentWidth - flick.width, flick.contentX - xAccumulator))
+                        xAccumulator = 0
+                    }
+                    event.accepted = true
+                    return
+                }
+
+                const deltaY = pixelDy !== 0 ? pixelDy : angleDy / 2
+                yAccumulator += deltaY
+                if (Math.abs(yAccumulator) >= 1) {
+                    flick.contentY = Math.max(0, Math.min(flick.contentHeight - flick.height, flick.contentY - yAccumulator))
+                    yAccumulator = 0
+                }
+                event.accepted = true
+            }
+        }
+
+        PinchHandler {
+            target: null
+            property real startZoom: 100
+            enabled: false
+            onActiveChanged: if (active) startZoom = root.zoomLevel
+            onScaleChanged: {
+                var newZoom = Math.max(50, Math.min(300, startZoom * scale))
+                root.queueZoom(newZoom)
             }
         }
     }

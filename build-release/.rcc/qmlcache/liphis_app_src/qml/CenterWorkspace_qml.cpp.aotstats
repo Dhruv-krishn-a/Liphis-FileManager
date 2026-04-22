@@ -10,7 +10,7 @@
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "orientation",
-                            "line": 20,
+                            "line": 23,
                             "message": "Could not find property \"orientation\"."
                         },
                         {
@@ -18,7 +18,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "normalizePath",
-                            "line": 23,
+                            "line": 26,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -26,7 +26,15 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "addTab",
-                            "line": 34,
+                            "line": 37,
+                            "message": "Functions without type annotations won't be compiled"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 5,
+                            "durationMicroseconds": 0,
+                            "functionName": "openDocCenter",
+                            "line": 44,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -34,7 +42,7 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "openSplit",
-                            "line": 41,
+                            "line": 62,
                             "message": "Functions without type annotations won't be compiled"
                         },
                         {
@@ -42,23 +50,23 @@
                             "column": 5,
                             "durationMicroseconds": 0,
                             "functionName": "closeCurrentTab",
-                            "line": 51,
+                            "line": 72,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
                             "codegenResult": 2,
                             "column": 5,
-                            "durationMicroseconds": 0,
+                            "durationMicroseconds": 1000,
                             "functionName": "updateActiveController",
-                            "line": 64,
-                            "message": "Cannot retrieve a non-object type by ID: root"
+                            "line": 85,
+                            "message": "Cannot load property kind from call to method itemAt, returning QQuickItem."
                         },
                         {
                             "codegenResult": 2,
                             "column": 51,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 21,
+                            "line": 24,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -66,7 +74,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 79,
+                            "line": 119,
                             "message": ""
                         },
                         {
@@ -74,7 +82,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 85,
+                            "line": 125,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -82,7 +90,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "tabModel",
-                            "line": 86,
+                            "line": 126,
                             "message": ""
                         },
                         {
@@ -90,7 +98,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "currentIndex",
-                            "line": 87,
+                            "line": 127,
                             "message": ""
                         },
                         {
@@ -98,7 +106,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onTabSelected",
-                            "line": 88,
+                            "line": 128,
                             "message": ""
                         },
                         {
@@ -106,7 +114,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "onTabSelected",
-                            "line": 88,
+                            "line": 128,
                             "message": ""
                         },
                         {
@@ -114,7 +122,7 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "onTabClosed",
-                            "line": 89,
+                            "line": 129,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -122,7 +130,7 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "onTabClosed",
-                            "line": 89,
+                            "line": 129,
                             "message": ""
                         },
                         {
@@ -130,7 +138,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onTabMoved",
-                            "line": 98,
+                            "line": 138,
                             "message": ""
                         },
                         {
@@ -138,7 +146,7 @@
                             "column": 29,
                             "durationMicroseconds": 0,
                             "functionName": "onTabMoved",
-                            "line": 98,
+                            "line": 138,
                             "message": ""
                         },
                         {
@@ -146,7 +154,7 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "onHomeRequested",
-                            "line": 103,
+                            "line": 143,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -154,7 +162,7 @@
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "orientation",
-                            "line": 110,
+                            "line": 150,
                             "message": "Could not find property \"orientation\"."
                         },
                         {
@@ -162,7 +170,7 @@
                             "column": 62,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 111,
+                            "line": 151,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -170,7 +178,7 @@
                             "column": 48,
                             "durationMicroseconds": 0,
                             "functionName": "onCurrentIndexChanged",
-                            "line": 120,
+                            "line": 160,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -178,7 +186,7 @@
                             "column": 44,
                             "durationMicroseconds": 0,
                             "functionName": "onChildrenChanged",
-                            "line": 121,
+                            "line": 161,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -186,7 +194,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 119,
+                            "line": 159,
                             "message": ""
                         },
                         {
@@ -194,23 +202,55 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "model",
-                            "line": 125,
+                            "line": 165,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 50,
+                            "durationMicroseconds": 0,
+                            "functionName": "sourceComponent",
+                            "line": 169,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 56,
+                            "durationMicroseconds": 0,
+                            "functionName": "tabIndex",
+                            "line": 171,
+                            "message": "Cannot access value for name index"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 60,
+                            "durationMicroseconds": 0,
+                            "functionName": "tabModelData",
+                            "line": 172,
+                            "message": "Cannot access value for name model"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 55,
+                            "durationMicroseconds": 0,
+                            "functionName": "kind",
+                            "line": 173,
+                            "message": "Cannot access value for name model"
                         },
                         {
                             "codegenResult": 2,
                             "column": 46,
                             "durationMicroseconds": 0,
                             "functionName": "initialPath",
-                            "line": 128,
-                            "message": "Cannot access value for name model"
+                            "line": 180,
+                            "message": "Cannot load property tabModelData from (component in /home/dhruv/Liphis/src/qml/CenterWorkspace.qml)::parent with type QQuickItem."
                         },
                         {
                             "codegenResult": 2,
                             "column": 40,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 129,
+                            "line": 181,
                             "message": "Cannot access value for name root"
                         },
                         {
@@ -218,7 +258,7 @@
                             "column": 50,
                             "durationMicroseconds": 0,
                             "functionName": "itemMenuHandler",
-                            "line": 130,
+                            "line": 182,
                             "message": "Cannot access value for name root"
                         },
                         {
@@ -226,7 +266,7 @@
                             "column": 52,
                             "durationMicroseconds": 0,
                             "functionName": "onRequestedActive",
-                            "line": 131,
+                            "line": 183,
                             "message": "Cannot access value for name tabView"
                         },
                         {
@@ -234,23 +274,55 @@
                             "column": 52,
                             "durationMicroseconds": 0,
                             "functionName": "onTabTitleChanged",
-                            "line": 132,
-                            "message": "Cannot access value for name index"
+                            "line": 187,
+                            "message": "Cannot load property tabIndex from (component in /home/dhruv/Liphis/src/qml/CenterWorkspace.qml)::parent with type QQuickItem."
                         },
                         {
                             "codegenResult": 0,
                             "column": 52,
                             "durationMicroseconds": 0,
                             "functionName": "onTabTitleChanged",
-                            "line": 132,
+                            "line": 187,
                             "message": ""
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 40,
+                            "durationMicroseconds": 0,
+                            "functionName": "theme",
+                            "line": 198,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 45,
+                            "durationMicroseconds": 0,
+                            "functionName": "controller",
+                            "line": 199,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 47,
+                            "durationMicroseconds": 0,
+                            "functionName": "toastManager",
+                            "line": 200,
+                            "message": "Cannot access value for name root"
+                        },
+                        {
+                            "codegenResult": 2,
+                            "column": 42,
+                            "durationMicroseconds": 0,
+                            "functionName": "section",
+                            "line": 201,
+                            "message": "Cannot load property tabModelData from (component in /home/dhruv/Liphis/src/qml/CenterWorkspace.qml)::parent with type QQuickItem."
                         },
                         {
                             "codegenResult": 2,
                             "column": 30,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 143,
+                            "line": 208,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -258,7 +330,7 @@
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "preferredWidth",
-                            "line": 144,
+                            "line": 209,
                             "message": "Could not find property \"preferredWidth\"."
                         },
                         {
@@ -266,7 +338,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 149,
+                            "line": 214,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -274,7 +346,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 148,
+                            "line": 213,
                             "message": ""
                         },
                         {
@@ -282,7 +354,7 @@
                             "column": 39,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 150,
+                            "line": 215,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -290,7 +362,7 @@
                             "column": 42,
                             "durationMicroseconds": 0,
                             "functionName": "initialPath",
-                            "line": 156,
+                            "line": 221,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -298,7 +370,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 157,
+                            "line": 222,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -306,7 +378,7 @@
                             "column": 46,
                             "durationMicroseconds": 0,
                             "functionName": "itemMenuHandler",
-                            "line": 158,
+                            "line": 223,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -314,15 +386,15 @@
                             "column": 43,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 155,
+                            "line": 220,
                             "message": ""
                         },
                         {
                             "codegenResult": 2,
-                            "column": 40,
+                            "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "onCompleted",
-                            "line": 166,
+                            "line": 231,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -330,7 +402,7 @@
                             "column": 18,
                             "durationMicroseconds": 0,
                             "functionName": "visible",
-                            "line": 176,
+                            "line": 241,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -338,7 +410,7 @@
                             "column": 16,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 177,
+                            "line": 242,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -346,7 +418,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 184,
+                            "line": 249,
                             "message": ""
                         },
                         {
@@ -354,7 +426,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 191,
+                            "line": 256,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -362,7 +434,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 193,
+                            "line": 258,
                             "message": ""
                         },
                         {
@@ -370,7 +442,7 @@
                             "column": 34,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 196,
+                            "line": 261,
                             "message": "Cannot retrieve a non-object type by ID: terminalManager"
                         },
                         {
@@ -378,7 +450,7 @@
                             "column": 93,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 196,
+                            "line": 261,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -386,7 +458,7 @@
                             "column": 47,
                             "durationMicroseconds": 0,
                             "functionName": "theme",
-                            "line": 198,
+                            "line": 263,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -394,7 +466,7 @@
                             "column": 103,
                             "durationMicroseconds": 0,
                             "functionName": "onClicked",
-                            "line": 198,
+                            "line": 263,
                             "message": "Could not find signal \"clicked\"."
                         },
                         {
@@ -402,7 +474,7 @@
                             "column": 67,
                             "durationMicroseconds": 0,
                             "functionName": "width",
-                            "line": 200,
+                            "line": 265,
                             "message": ""
                         },
                         {
@@ -410,7 +482,7 @@
                             "column": 99,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 200,
+                            "line": 265,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -418,7 +490,7 @@
                             "column": 45,
                             "durationMicroseconds": 0,
                             "functionName": "bottom",
-                            "line": 200,
+                            "line": 265,
                             "message": ""
                         },
                         {
@@ -426,7 +498,7 @@
                             "column": 27,
                             "durationMicroseconds": 0,
                             "functionName": "text",
-                            "line": 211,
+                            "line": 276,
                             "message": "Could not find property \"text\"."
                         },
                         {
@@ -434,7 +506,7 @@
                             "column": 28,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 215,
+                            "line": 280,
                             "message": "Could not find property \"color\"."
                         },
                         {
@@ -442,7 +514,7 @@
                             "column": 31,
                             "durationMicroseconds": 0,
                             "functionName": "wrapMode",
-                            "line": 217,
+                            "line": 282,
                             "message": "Could not find property \"wrapMode\"."
                         },
                         {
@@ -450,7 +522,7 @@
                             "column": 36,
                             "durationMicroseconds": 0,
                             "functionName": "onTextChanged",
-                            "line": 219,
+                            "line": 284,
                             "message": "Could not find signal \"textChanged\"."
                         },
                         {
@@ -458,7 +530,7 @@
                             "column": 24,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 228,
+                            "line": 293,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -466,7 +538,7 @@
                             "column": 35,
                             "durationMicroseconds": 0,
                             "functionName": "fill",
-                            "line": 230,
+                            "line": 295,
                             "message": ""
                         },
                         {
@@ -474,7 +546,7 @@
                             "column": 46,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 233,
+                            "line": 298,
                             "message": "Cannot access value for name theme"
                         },
                         {
@@ -482,7 +554,7 @@
                             "column": 32,
                             "durationMicroseconds": 0,
                             "functionName": "color",
-                            "line": 239,
+                            "line": 304,
                             "message": "Could not find property \"color\"."
                         },
                         {
@@ -490,7 +562,7 @@
                             "column": 37,
                             "durationMicroseconds": 0,
                             "functionName": "onAccepted",
-                            "line": 243,
+                            "line": 308,
                             "message": "Could not find signal \"accepted\"."
                         },
                         {
@@ -498,7 +570,7 @@
                             "column": 21,
                             "durationMicroseconds": 0,
                             "functionName": "target",
-                            "line": 255,
+                            "line": 320,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         },
                         {
@@ -506,7 +578,7 @@
                             "column": 13,
                             "durationMicroseconds": 0,
                             "functionName": "onActiveControllerChanged",
-                            "line": 256,
+                            "line": 321,
                             "message": "Cannot retrieve a non-object type by ID: root"
                         }
                     ],

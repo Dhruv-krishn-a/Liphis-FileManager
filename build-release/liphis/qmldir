@@ -14,6 +14,7 @@ HeaderBar 1.0 src/qml/HeaderBar.qml
 LeftSidebar 1.0 src/qml/LeftSidebar.qml
 TabStrip 1.0 src/qml/TabStrip.qml
 CenterWorkspace 1.0 src/qml/CenterWorkspace.qml
+DocumentCenterPage 1.0 src/qml/DocumentCenterPage.qml
 InspectorPanel 1.0 src/qml/InspectorPanel.qml
 StatusBar 1.0 src/qml/StatusBar.qml
 FileIcon 1.0 src/qml/FileIcon.qml
@@ -25,6 +26,10 @@ ProgressDialog 1.0 src/qml/ProgressDialog.qml
 FileView 1.0 src/qml/FileView.qml
 PropertiesDialog 1.0 src/qml/PropertiesDialog.qml
 AnalyseDialog 1.0 src/qml/AnalyseDialog.qml
+DocumentInboxDialog 1.0 src/qml/DocumentInboxDialog.qml
+DocumentDuplicatesDialog 1.0 src/qml/DocumentDuplicatesDialog.qml
+DocumentHealthDialog 1.0 src/qml/DocumentHealthDialog.qml
+CanonicalNamingDialog 1.0 src/qml/CanonicalNamingDialog.qml
 ToastManager 1.0 src/qml/ToastManager.qml
 BulkRenameDialog 1.0 src/qml/BulkRenameDialog.qml
 ConnectRemoteDialog 1.0 src/qml/ConnectRemoteDialog.qml

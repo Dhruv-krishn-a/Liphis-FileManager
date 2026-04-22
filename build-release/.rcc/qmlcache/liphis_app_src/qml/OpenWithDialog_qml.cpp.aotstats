@@ -8,7 +8,7 @@
                         {
                             "codegenResult": 0,
                             "column": 18,
-                            "durationMicroseconds": 5000,
+                            "durationMicroseconds": 3000,
                             "functionName": "closePolicy",
                             "line": 11,
                             "message": ""

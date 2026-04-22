@@ -41,35 +41,42 @@ Menu {
         if (name === "refresh") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/refresh.svg"
         if (name === "terminal") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/terminal.svg"
         if (name === "info") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/info-circle.svg"
+        if (name === "zoom-in") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-in.svg"
+        if (name === "zoom-out") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-out.svg"
+        if (name === "zoom-reset") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-reset.svg"
+        if (name === "file") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/file.svg"
+        if (name === "doc-text") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/file-description.svg"
+        if (name === "doc-spreadsheet") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/file-spreadsheet.svg"
         return ""
     }
 
     MenuItem {
-        text: "New Folder"
-        onTriggered: if (controller) controller.createFolder("New Folder")
+        text: "Create Folder..."
+        onTriggered: if (centerWorkspace.activeView) centerWorkspace.activeView.openCreateFolderDialog()
         Component.onCompleted: root.compact(this)
         icon.source: root.iconSource("folder-plus")
         icon.color: theme.accent
     }
 
-    MenuItem {
-        text: "New Empty File"
-        onTriggered: if (controller) controller.createFile("untitled.txt")
-        Component.onCompleted: root.compact(this)
+    Menu {
+        title: "Create Document"
         icon.source: root.iconSource("file-plus")
         icon.color: theme.accent
+        Action { 
+            text: "Empty Text File"; icon.source: root.iconSource("doc-text");
+            onTriggered: if (controller) controller.createFile("untitled.txt") 
+        }
+        Action { 
+            text: "Rich Text Document"; icon.source: root.iconSource("file");
+            onTriggered: if (controller) controller.createFile("untitled.odt") 
+        }
+        Action { 
+            text: "Spreadsheet"; icon.source: root.iconSource("doc-spreadsheet");
+            onTriggered: if (controller) controller.createFile("untitled.ods") 
+        }
     }
 
     MenuSeparator { topPadding: 4; bottomPadding: 4 }
-
-    MenuItem {
-        text: "Show Hidden"
-        checkable: true
-        checked: controller ? controller.showHiddenFiles : false
-        onTriggered: if (controller) controller.showHiddenFiles = checked
-        Component.onCompleted: root.compact(this)
-        icon.source: root.iconSource("eye")
-    }
 
     MenuItem {
         text: "Paste"
@@ -79,30 +86,64 @@ Menu {
         icon.source: root.iconSource("clipboard")
     }
 
-    MenuSeparator { topPadding: 4; bottomPadding: 4 }
-
-    MenuItem {
-        text: "Go to Parent"
-        onTriggered: if (controller) controller.goUp()
-        Component.onCompleted: root.compact(this)
-        icon.source: root.iconSource("arrow-up")
-    }
-
-    MenuItem {
-        text: "Refresh"
-        onTriggered: if (controller) controller.refresh()
-        Component.onCompleted: root.compact(this)
-        icon.source: root.iconSource("refresh")
-    }
-
-    MenuSeparator { topPadding: 4; bottomPadding: 4 }
-
     MenuItem {
         text: "Open Terminal Here"
         onTriggered: if (controller) controller.openInTerminal(root.targetPath)
         Component.onCompleted: root.compact(this)
         icon.source: root.iconSource("terminal")
     }
+
+    MenuSeparator { topPadding: 4; bottomPadding: 4 }
+
+    Menu {
+        title: "Arrange Items"
+        icon.source: root.iconSource("refresh")
+        Action { text: "by Name"; checkable: true; checked: viewSettings.sortField === "name"; onTriggered: controller.fileModel.setSortBy("name") }
+        Action { text: "by Size"; checkable: true; checked: viewSettings.sortField === "size"; onTriggered: controller.fileModel.setSortBy("size") }
+        Action { text: "by Type"; checkable: true; checked: viewSettings.sortField === "type"; onTriggered: controller.fileModel.setSortBy("type") }
+        Action { text: "by Modification Date"; checkable: true; checked: viewSettings.sortField === "date"; onTriggered: controller.fileModel.setSortBy("date") }
+        MenuSeparator {}
+        Action { text: "Ascending"; checkable: true; checked: viewSettings.sortAscending; onTriggered: controller.fileModel.setSortBy(viewSettings.sortField, true) }
+        Action { text: "Descending"; checkable: true; checked: !viewSettings.sortAscending; onTriggered: controller.fileModel.setSortBy(viewSettings.sortField, false) }
+    }
+
+    MenuSeparator { topPadding: 4; bottomPadding: 4 }
+
+    MenuItem {
+        text: "Zoom In"
+        onTriggered: if (centerWorkspace.activeView) centerWorkspace.activeView.zoomIn()
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("zoom-in")
+    }
+
+    MenuItem {
+        text: "Zoom Out"
+        onTriggered: if (centerWorkspace.activeView) centerWorkspace.activeView.zoomOut()
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("zoom-out")
+    }
+
+    MenuItem {
+        text: "Normal Size"
+        onTriggered: if (centerWorkspace.activeView) centerWorkspace.activeView.resetZoom()
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("zoom-reset")
+    }
+
+    MenuSeparator { 
+        visible: controller ? controller.currentPath.startsWith("trash:") : false
+        topPadding: 4; bottomPadding: 4 
+    }
+
+    MenuItem {
+        text: "Empty Trash"
+        visible: controller ? controller.currentPath.startsWith("trash:") : false
+        onTriggered: if (controller) controller.emptyTrash()
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("user-trash")
+    }
+
+    MenuSeparator { topPadding: 4; bottomPadding: 4 }
 
     MenuItem {
         text: "Properties"

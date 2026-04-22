@@ -19,6 +19,7 @@
 /qt/qml/liphis/src/qml/LeftSidebar.qml
 /qt/qml/liphis/src/qml/TabStrip.qml
 /qt/qml/liphis/src/qml/CenterWorkspace.qml
+/qt/qml/liphis/src/qml/DocumentCenterPage.qml
 /qt/qml/liphis/src/qml/InspectorPanel.qml
 /qt/qml/liphis/src/qml/StatusBar.qml
 /qt/qml/liphis/src/qml/FileIcon.qml
@@ -30,6 +31,10 @@
 /qt/qml/liphis/src/qml/FileView.qml
 /qt/qml/liphis/src/qml/PropertiesDialog.qml
 /qt/qml/liphis/src/qml/AnalyseDialog.qml
+/qt/qml/liphis/src/qml/DocumentInboxDialog.qml
+/qt/qml/liphis/src/qml/DocumentDuplicatesDialog.qml
+/qt/qml/liphis/src/qml/DocumentHealthDialog.qml
+/qt/qml/liphis/src/qml/CanonicalNamingDialog.qml
 /qt/qml/liphis/src/qml/ToastManager.qml
 /qt/qml/liphis/src/qml/BulkRenameDialog.qml
 /qt/qml/liphis/src/qml/ConnectRemoteDialog.qml

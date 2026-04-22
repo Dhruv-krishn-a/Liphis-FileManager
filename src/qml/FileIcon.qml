@@ -12,11 +12,31 @@ Item {
         return isDir ? "folder" : "text-x-generic"
     }
 
+    readonly property bool isCustomFolder: isDir && (iconName === "" || iconName === "folder")
+    readonly property string customFolderIcon: {
+        if (!isCustomFolder) return ""
+        return theme && theme.isDark 
+            ? "qrc:/qt/qml/liphis/src/qml/assets/folder-dark.png" 
+            : "qrc:/qt/qml/liphis/src/qml/assets/folder-light.png"
+    }
+
+    Image {
+        id: folderImage
+        anchors.fill: parent
+        source: root.customFolderIcon
+        visible: root.isCustomFolder
+        fillMode: Image.PreserveAspectFit
+        verticalAlignment: Image.AlignBottom
+        smooth: true
+        asynchronous: true
+    }
+
     Icon {
         id: themedIcon
         anchors.fill: parent
         name: root.resolvedIconName
         filled: root.isDir
+        visible: !root.isCustomFolder
         color: isDir
             ? (theme ? theme.accent : "#4A473E")
             : (theme ? theme.textSecondary : "#8A867E")
