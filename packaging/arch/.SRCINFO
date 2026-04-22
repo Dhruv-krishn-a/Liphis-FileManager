@@ -1,0 +1,28 @@
+pkgbase = liphis-git
+	pkgdesc = A high-performance, modern file manager built with C++20 and Qt6
+	pkgver = 0.1.r56.g33dc09b
+	pkgrel = 1
+	url = https://github.com/Dhruv-krishn-a/Liphis-FileManager
+	arch = x86_64
+	license = MIT
+	makedepends = cmake
+	makedepends = git
+	depends = qt6-base
+	depends = qt6-declarative
+	depends = qt6-5compat
+	depends = qt6-svg
+	depends = libgit2
+	depends = libarchive
+	depends = glib2
+	depends = polkit
+	optdepends = fd: Fast recursive file search
+	optdepends = ripgrep: Fast content search
+	optdepends = ffmpegthumbnailer: Video thumbnails
+	optdepends = poppler: PDF thumbnails
+	optdepends = libreoffice-fresh: Office document thumbnails
+	provides = liphis
+	conflicts = liphis
+	source = git+https://github.com/Dhruv-krishn-a/Liphis-FileManager.git#branch=develop
+	sha256sums = SKIP
+
+pkgname = liphis-git

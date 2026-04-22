@@ -1,0 +1,38 @@
+# Maintainer: Dhruv Krishna <dhruvkrishna1055@gmail.com>
+pkgname=liphis-git
+pkgver=0.1.r56.g33dc09b
+pkgrel=1
+pkgdesc="A high-performance, modern file manager built with C++20 and Qt6"
+arch=('x86_64')
+url="https://github.com/Dhruv-krishn-a/Liphis-FileManager"
+license=('MIT')
+depends=('qt6-base' 'qt6-declarative' 'qt6-5compat' 'qt6-svg' 'libgit2' 'libarchive' 'glib2' 'polkit')
+makedepends=('cmake' 'git')
+optdepends=('fd: Fast recursive file search'
+            'ripgrep: Fast content search'
+            'ffmpegthumbnailer: Video thumbnails'
+            'poppler: PDF thumbnails'
+            'libreoffice-fresh: Office document thumbnails')
+provides=('liphis')
+conflicts=('liphis')
+source=('git+https://github.com/Dhruv-krishn-a/Liphis-FileManager.git#branch=develop')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "Liphis-FileManager"
+  printf "0.1.r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cmake -B build -S "Liphis-FileManager" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  
+  # Install License
+  install -Dm644 "Liphis-FileManager/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
