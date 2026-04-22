@@ -7,7 +7,7 @@ arch=('x86_64')
 url="https://github.com/Dhruv-krishn-a/Liphis-FileManager"
 license=('MIT')
 depends=('qt6-base' 'qt6-declarative' 'qt6-5compat' 'qt6-svg' 'libgit2' 'libarchive' 'glib2' 'polkit')
-makedepends=('cmake' 'git')
+makedepends=('cmake' 'git' 'ninja')
 optdepends=('fd: Fast recursive file search'
             'ripgrep: Fast content search'
             'ffmpegthumbnailer: Video thumbnails'
@@ -26,13 +26,15 @@ pkgver() {
 build() {
   cmake -B build -S "Liphis-FileManager" \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTS=OFF \
+    -GNinja
   cmake --build build
 }
 
 package() {
   DESTDIR="$pkgdir" cmake --install build
-  
+
   # Install License
   install -Dm644 "Liphis-FileManager/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

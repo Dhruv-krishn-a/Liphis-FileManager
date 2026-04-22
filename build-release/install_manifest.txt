@@ -1,3 +1,0 @@
-/home/dhruv/Liphis/build-release/_CPack_Packages/Linux/ZIP/liphis-0.1-Linux-x86_64/bin/liphis_app
-/home/dhruv/Liphis/build-release/_CPack_Packages/Linux/ZIP/liphis-0.1-Linux-x86_64/share/applications/liphis.desktop
-/home/dhruv/Liphis/build-release/_CPack_Packages/Linux/ZIP/liphis-0.1-Linux-x86_64/share/icons/hicolor/512x512/apps/liphis.png

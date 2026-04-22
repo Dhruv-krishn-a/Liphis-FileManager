@@ -2,7 +2,7 @@
 Type=Application
 Name=Liphis
 Comment=Liphis file manager
-Exec=liphis_app
+Exec=liphis
 Icon=liphis
 Terminal=false
 Categories=Utility;FileManager;

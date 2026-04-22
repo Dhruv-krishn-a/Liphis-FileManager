@@ -1,9 +1,0 @@
-Architecture: 
-Depends: libc6 (>= 2.31), libstdc++6, libqt6core6, libqt6gui6, libqt6qml6, libqt6quick6
-Description: Liphis file manager
-Maintainer: Liphis Maintainers
-Package: liphis
-Priority: optional
-Section: devel
-Version: 0.1
-Installed-Size: 4958

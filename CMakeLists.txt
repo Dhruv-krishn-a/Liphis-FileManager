@@ -36,7 +36,7 @@ target_include_directories(liphis_core PUBLIC
 # =========================
 # GUI Executable
 # =========================
-qt_add_executable(liphis_app
+qt_add_executable(liphis
     src/main.cpp
     src/AppController.cpp
     src/AppController.hpp
@@ -65,12 +65,12 @@ qt_add_executable(liphis_app
 )
 
 # Expose include directories to GUI target
-target_include_directories(liphis_app PRIVATE
+target_include_directories(liphis PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
 )
 
-qt_add_qml_module(liphis_app
+qt_add_qml_module(liphis
     URI liphis
     VERSION 1.0
     QML_FILES
@@ -181,7 +181,7 @@ qt_add_qml_module(liphis_app
         src/qml/assets/icons/filled/folder-open.svg
 )
 
-target_link_libraries(liphis_app
+target_link_libraries(liphis
     PRIVATE Qt6::Core
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Concurrent
@@ -193,7 +193,7 @@ target_link_libraries(liphis_app
     PRIVATE ${LIBARCHIVE_LIBRARIES}
 )
 
-target_include_directories(liphis_app PRIVATE
+target_include_directories(liphis PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${LIBGIT2_INCLUDE_DIRS}
@@ -203,27 +203,31 @@ target_include_directories(liphis_app PRIVATE
 # =========================
 # CLI Test Binary
 # =========================
-add_executable(fs_test
-    src/fs_test.cpp
-)
+option(BUILD_TESTS "Build tests" OFF)
 
-target_link_libraries(fs_test
-    PRIVATE liphis_core
-)
+if(BUILD_TESTS)
+    add_executable(fs_test
+        src/fs_test.cpp
+    )
 
-add_executable(unit_tests
-    tests/unit_tests.cpp
-)
+    target_link_libraries(fs_test
+        PRIVATE liphis_core
+    )
 
-target_link_libraries(unit_tests
-    PRIVATE liphis_core
-)
+    add_executable(unit_tests
+        tests/unit_tests.cpp
+    )
 
-enable_testing()
-add_test(NAME fs_test_smoke COMMAND fs_test ${CMAKE_SOURCE_DIR})
-add_test(NAME unit_tests COMMAND unit_tests)
+    target_link_libraries(unit_tests
+        PRIVATE liphis_core
+    )
 
-install(TARGETS liphis_app
+    enable_testing()
+    add_test(NAME fs_test_smoke COMMAND fs_test ${CMAKE_SOURCE_DIR})
+    add_test(NAME unit_tests COMMAND unit_tests)
+endif()
+
+install(TARGETS liphis
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
@@ -233,7 +237,7 @@ install(FILES
 )
 
 install(FILES
-    LiphisApp-Logo.png
+    src/qml/assets/logo-light.png
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/512x512/apps
     RENAME liphis.png
 )

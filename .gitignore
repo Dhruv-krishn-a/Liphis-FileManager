@@ -1,8 +1,80 @@
+# =========================
+
+# Build directories
+
+# =========================
+
 build/
+build-*/
+dist/
+out/
+
+# =========================
+
+# CMake
+
+# =========================
+
 CMakeFiles/
 CMakeCache.txt
+cmake_install.cmake
+Makefile
 compile_commands.json
-*.user
-*.autosave
+
+# =========================
+
+# Binaries / objects
+
+# =========================
+
 *.o
 *.so
+*.a
+*.out
+*.exe
+
+# =========================
+
+# Qt / QML artifacts
+
+# =========================
+
+*.qmlc
+*.jsc
+
+# =========================
+
+# IDE / Editor
+
+# =========================
+
+*.user
+*.autosave
+.vscode/
+.idea/
+
+# =========================
+
+# Logs / temp
+
+# =========================
+
+*.log
+
+# =========================
+
+# makepkg / AUR artifacts (scoped)
+
+# =========================
+
+packaging/arch/src/
+packaging/arch/pkg/
+packaging/arch/*.pkg.tar.zst
+
+# =========================
+
+# Misc
+
+# =========================
+
+**pycache**/

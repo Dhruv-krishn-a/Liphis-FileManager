@@ -7,6 +7,7 @@ pkgbase = liphis-git
 	license = MIT
 	makedepends = cmake
 	makedepends = git
+	makedepends = ninja
 	depends = qt6-base
 	depends = qt6-declarative
 	depends = qt6-5compat
