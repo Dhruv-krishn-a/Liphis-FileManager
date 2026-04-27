@@ -2,49 +2,39 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Material
+import QtCore
 
-Rectangle {
+Item {
     id: root
-
-    property var theme
-    property var placesModel
+    property var theme: null
+    property var activeController: null
+    property var placesModel: null
+    property var docIntelController: null
     property string activePath: ""
     property string homePath: ""
-    property bool expanded: true
-    property var activeController: null
-    property var docIntelController: null
-
+    property bool expanded: generalSettings.sidebarExpanded
+    property bool narrowExpanded: !expanded && width > 100
+    
+    signal toggleExpanded()
     signal pathActivated(string path)
     signal removeBookmarkRequested(string path)
-    signal toggleExpanded()
     signal openDocInboxRequested()
     signal openDocDuplicatesRequested()
     signal openDocHealthRequested()
 
-    color: theme.sidebar
+    width: expanded ? (theme ? theme.sidebarWidth : 220) : (theme ? theme.sidebarWidthCollapsed : 64)
+    Behavior on width { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
 
-    Menu {
-        id: sidebarItemMenu
-        Material.theme: (theme && theme.isDark) ? Material.Dark : Material.Light
-        Material.background: theme.surfaceElevated
-        property string targetPath: ""
-        property string targetName: ""
+    Rectangle {
+        anchors.fill: parent
+        color: theme.surfaceMuted
+    }
 
-        MenuItem { 
-            text: "Open"
-            onTriggered: root.pathActivated(sidebarItemMenu.targetPath)
-        }
-        MenuItem { 
-            text: "Open in New Tab"
-            onTriggered: appWindow.addTab(sidebarItemMenu.targetPath)
-        }
-        MenuSeparator { visible: sidebarItemMenu.targetPath === "trash:///" }
-        MenuItem {
-            text: "Empty Trash"
-            visible: sidebarItemMenu.targetPath === "trash:///"
-            onTriggered: if (activeController) activeController.emptyTrash()
-            icon.source: "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
-        }
+    Rectangle {
+        anchors.right: parent.right
+        width: 1; height: parent.height
+        color: theme.border
+        opacity: 0.5
     }
 
     Menu {
@@ -58,21 +48,21 @@ Rectangle {
         MenuItem { text: "Show Recent"; checkable: true; checked: generalSettings.showRecent; onTriggered: generalSettings.showRecent = checked }
     }
 
+    MouseArea {
+        anchors.fill: parent
+        z: -1
+        acceptedButtons: Qt.RightButton
+        onClicked: (mouse) => {
+            if (mouse.button === Qt.RightButton) {
+                sidebarBgMenu.popup()
+            }
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 0
         spacing: 0
-
-        MouseArea {
-            anchors.fill: parent
-            z: -1
-            acceptedButtons: Qt.RightButton
-            onClicked: (mouse) => {
-                if (mouse.button === Qt.RightButton) {
-                    sidebarBgMenu.popup()
-                }
-            }
-        }
 
         // Sidebar Header / Toggle
         Rectangle {
@@ -81,6 +71,7 @@ Rectangle {
             color: "transparent"
 
             ThemedIconButton {
+                id: toggleBtn
                 anchors.right: root.expanded ? parent.right : undefined
                 anchors.rightMargin: root.expanded ? (theme ? theme.space8 : 8) : 0
                 anchors.horizontalCenter: root.expanded ? undefined : parent.horizontalCenter
@@ -101,285 +92,202 @@ Rectangle {
             }
         }
 
-        ListView {
-            id: sideList
+        ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.topMargin: theme ? theme.space8 : 8
-            Layout.leftMargin: root.expanded ? (theme ? theme.space12 : 12) : (theme ? theme.space8 : 8)
-            Layout.rightMargin: root.expanded ? (theme ? theme.space12 : 12) : (theme ? theme.space8 : 8)
-            model: root.placesModel
-            spacing: theme ? theme.space4 : 4
             clip: true
-            section.property: "category"
-            section.criteria: ViewSection.FullString
-
-            section.delegate: Rectangle {
-                required property string section
-                visible: {
-                    if (section === "0") return generalSettings.showPlaces
-                    if (section === "1") return generalSettings.showBookmarks
-                    if (section === "2") return generalSettings.showDevices
-                    if (section === "3") return generalSettings.showRecent
-                    return true
-                }
-                width: visible ? sideList.width : 0
-                height: visible ? (root.expanded ? 24 : 16) : 0
-                color: "transparent"
-
-                readonly property string sectionTitle: {
-                    if (section === "0") return "PLACES"
-                    if (section === "1") return "BOOKMARKS"
-                    if (section === "2") return "DEVICES"
-                    if (section === "3") return "RECENT"
-                    return "OTHER"
-                }
-
-                Text {
-                    visible: root.expanded
-                    anchors.left: parent.left
-                    anchors.leftMargin: theme ? theme.space10 : 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: parent.sectionTitle
-                    color: theme ? theme.textMuted : "#8A867E"
-                    font.pixelSize: theme ? theme.fontLabel : 10
-                    font.bold: true
-                    font.letterSpacing: theme ? theme.letterSpacingLabel : 1.0
-                }
-
-                Rectangle {
-                    visible: !root.expanded
-                    anchors.centerIn: parent
-                    width: parent.width * 0.6
-                    height: 1
-                    color: theme.border
-                    opacity: 0.5
-                }
-            }
-
-            delegate: SidebarItem {
-                visible: {
-                    if (model.category === 0) return generalSettings.showPlaces
-                    if (model.category === 1) return generalSettings.showBookmarks
-                    if (model.category === 2) return generalSettings.showDevices
-                    if (model.category === 3) return generalSettings.showRecent
-                    return true
-                }
-                width: visible ? sideList.width : 0
-                height: visible ? (root.expanded ? 36 : 40) : 0
-                text: model.name
-                iconName: model.icon
-                theme: root.theme
-                active: root.activePath === model.path
-                showAction: model.category === 1
-                actionIconName: "close"
-                actionToolTip: "Remove bookmark"
-                expanded: root.expanded
-                onClicked: root.pathActivated(model.path)
-                onActionClicked: root.removeBookmarkRequested(model.path)
-                onRightClicked: {
-                    sidebarItemMenu.targetPath = model.path
-                    sidebarItemMenu.targetName = model.name
-                    sidebarItemMenu.popup()
-                }
-            }
-        }
-
-        // Clipboard Status
-        Rectangle {
-            readonly property bool narrowExpanded: root.expanded && root.width < 220
-            visible: !!(root.docIntelController && root.expanded)
-            Layout.fillWidth: true
-            Layout.preferredHeight: 84
-            color: theme.surfaceMuted
-            border.color: theme.border
-            border.width: 1
-            radius: 8
-            Layout.leftMargin: 8
-            Layout.rightMargin: 8
-            Layout.bottomMargin: 8
-
+            ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+            
             ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 8
-                spacing: 6
-                Text {
-                    text: "DOC INTEL"
-                    color: theme.textMuted
-                    font.pixelSize: 10
-                    font.bold: true
-                    font.letterSpacing: 1.0
-                    elide: Text.ElideRight
-                    wrapMode: Text.NoWrap
-                }
-                RowLayout {
+                width: parent.width
+                spacing: 12
+                Layout.topMargin: 12
+                Layout.bottomMargin: 16
+
+                // Section: Places
+                ColumnLayout {
+                    visible: generalSettings.showPlaces
                     Layout.fillWidth: true
-                    spacing: 6
-                    Button {
-                        text: "Inbox"
-                        Layout.fillWidth: true
-                        Layout.minimumWidth: 0
-                        onClicked: root.openDocInboxRequested()
-                        background: Rectangle { radius: 6; color: hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
-                        contentItem: RowLayout {
-                            spacing: 4
-                            Icon { name: "folder-open"; iconSize: 12; color: theme.textSecondary }
-                            Text {
-                                text: parent.parent.text
-                                color: theme.textPrimary
-                                font.pixelSize: 11
-                                elide: Text.ElideRight
-                                Layout.fillWidth: true
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                        ToolTip.visible: hovered && parent.parent.narrowExpanded
-                        ToolTip.text: "Doc Intel: Inbox"
-                    }
-                    Button {
-                        text: "Dupes"
-                        Layout.fillWidth: true
-                        Layout.minimumWidth: 0
-                        onClicked: root.openDocDuplicatesRequested()
-                        background: Rectangle { radius: 6; color: hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
-                        contentItem: RowLayout {
-                            spacing: 4
-                            Icon { name: "copy"; iconSize: 12; color: theme.textSecondary }
-                            Text {
-                                text: parent.parent.text
-                                color: theme.textPrimary
-                                font.pixelSize: 11
-                                elide: Text.ElideRight
-                                Layout.fillWidth: true
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                        ToolTip.visible: hovered && parent.parent.narrowExpanded
-                        ToolTip.text: "Doc Intel: Duplicates"
-                    }
-                    Button {
-                        text: "Health"
-                        Layout.fillWidth: true
-                        Layout.minimumWidth: 0
-                        onClicked: root.openDocHealthRequested()
-                        background: Rectangle { radius: 6; color: hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
-                        contentItem: RowLayout {
-                            spacing: 4
-                            Icon { name: "chart-pie"; iconSize: 12; color: theme.textSecondary }
-                            Text {
-                                text: parent.parent.text
-                                color: theme.textPrimary
-                                font.pixelSize: 11
-                                elide: Text.ElideRight
-                                Layout.fillWidth: true
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                        ToolTip.visible: hovered && parent.parent.narrowExpanded
-                        ToolTip.text: "Doc Intel: Health"
-                    }
-                }
-            }
-        }
-
-        // Doc Intel (Collapsed)
-        Rectangle {
-            visible: !!(root.docIntelController && !root.expanded)
-            Layout.fillWidth: true
-            Layout.preferredHeight: 56
-            color: theme.surfaceMuted
-            border.color: theme.border
-            border.width: 1
-            radius: 8
-            Layout.leftMargin: 8
-            Layout.rightMargin: 8
-            Layout.bottomMargin: 8
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 6
-                spacing: 6
-
-                Repeater {
-                    model: [
-                        { label: "I", tip: "Doc Intel: Inbox", cb: () => root.openDocInboxRequested() },
-                        { label: "D", tip: "Doc Intel: Duplicates", cb: () => root.openDocDuplicatesRequested() },
-                        { label: "H", tip: "Doc Intel: Health", cb: () => root.openDocHealthRequested() }
-                    ]
-                    delegate: Button {
-                        required property var modelData
-                        Layout.fillWidth: true
-                        text: modelData.label
-                        font.pixelSize: 12
-                        font.bold: true
-                        onClicked: modelData.cb()
-                        background: Rectangle { radius: 6; color: parent.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
-                        ToolTip.visible: hovered
-                        ToolTip.text: modelData.tip
-                    }
-                }
-            }
-        }
-
-        Rectangle {
-            id: clipboardBar
-            visible: !!(root.activeController && root.activeController.hasClipboard)
-            Layout.fillWidth: true
-            Layout.preferredHeight: root.expanded ? 64 : 50
-            color: theme.surfaceMuted
-            border.color: theme.border
-            border.width: 1
-            radius: 8
-            Layout.margins: 8
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 8
-                spacing: 8
-
-                Icon {
-                    name: root.activeController && root.activeController.isCutOp ? "cut" : "copy"
-                    iconSize: 16
-                    color: theme.accent
-                }
-
-                Column {
-                    Layout.fillWidth: true
-                    visible: root.expanded
+                    spacing: 2
+                    
                     Text {
-                        text: root.activeController && root.activeController.isCutOp ? "Cut Pending" : "Copy Pending"
-                        color: theme.textSecondary
+                        text: "PLACES"
+                        Layout.leftMargin: root.expanded ? 16 : 0
+                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
                         font.pixelSize: 10
+                        color: theme.textTertiary
+                        visible: root.expanded || root.narrowExpanded
                         font.bold: true
+                        font.letterSpacing: 1.0
                     }
+                    
+                    SidebarItem { theme: root.theme; active: root.activePath === root.homePath; iconName: "home"; text: "Home"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath) }
+                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Documents"); iconName: "folder"; text: "Documents"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Documents") }
+                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Downloads"); iconName: "download"; text: "Downloads"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Downloads") }
+                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Pictures"); iconName: "photo"; text: "Pictures"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Pictures") }
+                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Videos"); iconName: "video"; text: "Videos"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Videos") }
+                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Music"); iconName: "music"; text: "Music"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Music") }
+                    SidebarItem { theme: root.theme; active: root.activePath === "trash:///"; iconName: "trash"; text: "Trash"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated("trash:///") }
+                }
+
+                // Section: Devices
+                ColumnLayout {
+                    visible: generalSettings.showDevices && root.placesModel && root.placesModel.rowCount() > 0
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8
+                    spacing: 2
+
                     Text {
-                        text: {
-                            if (!root.activeController || !root.activeController.clipboardPaths || root.activeController.clipboardPaths.length === 0) return ""
-                            let p = root.activeController.clipboardPaths[0]
-                            return p.substring(p.lastIndexOf("/") + 1)
+                        text: "DEVICES"
+                        Layout.leftMargin: root.expanded ? 16 : 0
+                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
+                        font.pixelSize: 10
+                        color: theme.textTertiary
+                        visible: root.expanded || root.narrowExpanded
+                        font.bold: true
+                        font.letterSpacing: 1.0
+                    }
+
+                    Repeater {
+                        model: root.placesModel
+                        SidebarItem {
+                            theme: root.theme
+                            active: root.activePath === model.path
+                            iconName: model.icon || "drive-harddisk"
+                            text: model.name
+                            expanded: root.expanded || root.narrowExpanded
+                            onClicked: root.pathActivated(model.path)
                         }
-                        color: theme.textPrimary
-                        font.pixelSize: 12
-                        elide: Text.ElideMiddle
-                        width: parent.width
                     }
                 }
 
-                ThemedIconButton {
-                    theme: root.theme
-                    iconName: "close"
-                    iconSize: 14
-                    toolTip: "Clear Clipboard"
-                    onClicked: root.activeController.clearClipboard()
+                // Section: Recent
+                ColumnLayout {
+                    visible: generalSettings.showRecent && root.activeController
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8
+                    spacing: 2
+                    
+                    Text {
+                        text: "RECENT"
+                        Layout.leftMargin: root.expanded ? 16 : 0
+                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
+                        font.pixelSize: 10
+                        color: theme.textTertiary
+                        visible: root.expanded || root.narrowExpanded
+                        font.bold: true
+                        font.letterSpacing: 1.0
+                    }
+                    
+                    Repeater {
+                        model: root.activeController ? root.activeController.recentPaths : []
+                        SidebarItem {
+                            theme: root.theme
+                            active: false
+                            iconName: "folder"
+                            text: modelData.split('/').pop()
+                            expanded: root.expanded || root.narrowExpanded
+                            onClicked: root.pathActivated(modelData)
+                            ToolTip.visible: hovered
+                            ToolTip.text: modelData
+                        }
+                    }
+                }
+                
+                Item { Layout.fillHeight: true }
+            }
+        }
+
+        // Section: Doc Intel
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.margins: 12
+            spacing: 8
+            visible: root.expanded || root.narrowExpanded
+
+            Rectangle {
+                Layout.fillWidth: true; height: 1; color: theme.border; opacity: 0.2
+            }
+
+            Text {
+                text: "DOC INTEL"
+                font.pixelSize: 10
+                color: theme.textTertiary
+                font.bold: true
+                font.letterSpacing: 1.0
+                elide: Text.ElideRight
+                wrapMode: Text.NoWrap
+            }
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 6
+                Button {
+                    id: inboxBtn
+                    text: "Inbox"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    onClicked: root.openDocInboxRequested()
+                    background: Rectangle { radius: 6; color: inboxBtn.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    contentItem: RowLayout {
+                        spacing: 4
+                        Icon { name: "folder-open"; iconSize: 12; color: theme.textSecondary }
+                        Text {
+                            text: parent.parent.text
+                            color: theme.textPrimary
+                            font.pixelSize: 11
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                    ToolTip.visible: hovered && parent.parent.narrowExpanded
+                    ToolTip.text: "Doc Intel: Inbox"
+                }
+                Button {
+                    id: dupesBtn
+                    text: "Dupes"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    onClicked: root.openDocDuplicatesRequested()
+                    background: Rectangle { radius: 6; color: dupesBtn.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    contentItem: RowLayout {
+                        spacing: 4
+                        Icon { name: "copy"; iconSize: 12; color: theme.textSecondary }
+                        Text {
+                            text: parent.parent.text
+                            color: theme.textPrimary
+                            font.pixelSize: 11
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                    ToolTip.visible: hovered && parent.parent.narrowExpanded
+                    ToolTip.text: "Doc Intel: Duplicates"
+                }
+                Button {
+                    id: healthBtn
+                    text: "Health"
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 0
+                    onClicked: root.openDocHealthRequested()
+                    background: Rectangle { radius: 6; color: healthBtn.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    contentItem: RowLayout {
+                        spacing: 4
+                        Icon { name: "chart-pie"; iconSize: 12; color: theme.textSecondary }
+                        Text {
+                            text: parent.parent.text
+                            color: theme.textPrimary
+                            font.pixelSize: 11
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                    ToolTip.visible: hovered && parent.parent.narrowExpanded
+                    ToolTip.text: "Doc Intel: Health"
                 }
             }
         }
-    }
-
-    Rectangle {
-        anchors.right: parent.right
-        width: 1
-        height: parent.height
-        color: theme.border
     }
 }

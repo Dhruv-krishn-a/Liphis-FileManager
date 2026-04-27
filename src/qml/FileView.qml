@@ -34,8 +34,8 @@ Item {
     property int rangeAnchorIndex: -1
     property string typeBuffer: ""
     property int cycleMatchIndex: -1
-    
-    property int zoomLevel: generalSettings ? generalSettings.defaultZoom : 100 // Percentage
+
+    property int zoomLevel: generalSettings ? generalSettings.defaultZoom : 100
     property int pendingZoomLevel: zoomLevel
     readonly property int baseCellSize: 100
     readonly property int baseIconSize: 92
@@ -49,13 +49,13 @@ Item {
         pendingZoomLevel = quantized
         zoomApplyTimer.restart()
     }
-    function zoomIn() { queueZoom(pendingZoomLevel + 10) }
-    function zoomOut() { queueZoom(pendingZoomLevel - 10) }
+    function zoomIn()    { queueZoom(pendingZoomLevel + 10) }
+    function zoomOut()   { queueZoom(pendingZoomLevel - 10) }
     function resetZoom() { queueZoom(generalSettings ? generalSettings.defaultZoom : 100) }
 
     Timer {
         id: zoomApplyTimer
-        interval: 32 // Debounce to prevent layout thrashing
+        interval: 80
         repeat: false
         onTriggered: {
             if (zoomLevel !== pendingZoomLevel) zoomLevel = pendingZoomLevel
@@ -97,6 +97,11 @@ Item {
         if (controller.viewMode === "grid") return gv
         if (controller.viewMode === "tree") return treeView
         return lv
+    }
+
+    function isViewInteracting() {
+        const flick = activeFlickable()
+        return !!(flick && (flick.moving || flick.flicking))
     }
 
     function applySelection(index, modifiers) {
@@ -176,7 +181,6 @@ Item {
         var count = currentRowCount()
         if (count <= 0) return
         if (typeBuffer.length === 1 && typeBuffer === ch) {
-            // Cycle among same-prefix matches on repeated key.
             var start = cycleMatchIndex >= 0 ? (cycleMatchIndex + 1) : 0
             for (var i = 0; i < count; ++i) {
                 var idx = (start + i) % count
@@ -224,6 +228,10 @@ Item {
                 var cols = Math.max(1, Math.floor(gv.width / gv.cellWidth))
                 last = Math.min(count - 1, first + (cols * 5))
             }
+        } else if (controller.viewMode === "tree") {
+            var rowH = Math.max(1, 32 * root.zoomScale)
+            first = Math.max(0, Math.floor(treeView.contentY / rowH))
+            last  = Math.min(count - 1, Math.ceil((treeView.contentY + treeView.height) / rowH))
         } else {
             first = lv.indexAt(6, lv.contentY + 6)
             if (first < 0) first = 0
@@ -291,7 +299,7 @@ Item {
             event.accepted = true
             return
         }
-        
+
         if (event.key === Qt.Key_Escape) {
             if (controller && controller.hasSelection) {
                 controller.clearSelection()
@@ -332,9 +340,7 @@ Item {
     function normalizePath(path) {
         if (!path) return ""
         var p = String(path)
-        if (p.indexOf("file:///") === 0) {
-            p = decodeURIComponent(p.substring("file://".length))
-        } else if (p.indexOf("file://") === 0) {
+        if (p.startsWith("file://")) {
             p = decodeURIComponent(p.substring("file://".length))
         }
         return p
@@ -389,7 +395,7 @@ Item {
 
     property var viewSettings: appWindow.viewSettings
     property var generalSettings: appWindow.generalSettings
-    
+
     Component.onCompleted: {
         if (typeof updateActiveController === "function") updateActiveController()
     }
@@ -430,25 +436,23 @@ Item {
         }
     }
 
-    // Context Menu for Background
     Menu {
         id: bgMenu
         Material.theme: (theme && theme.isDark) ? Material.Dark : Material.Light
         Material.background: theme.surfaceElevated
-        MenuItem { text: "New Folder"; onTriggered: root.openCreateFolderDialog() }
-        MenuItem { text: "Show Hidden"; checkable: true; checked: controller.showHiddenFiles; onTriggered: controller.showHiddenFiles = checked }
-        MenuItem { text: "Paste"; enabled: controller.hasClipboard; onTriggered: controller.pasteItem() }
+        MenuItem { text: "New Folder";   onTriggered: root.openCreateFolderDialog() }
+        MenuItem { text: "Show Hidden";  checkable: true; checked: controller.showHiddenFiles; onTriggered: controller.showHiddenFiles = checked }
+        MenuItem { text: "Paste";        enabled: controller.hasClipboard; onTriggered: controller.pasteItem() }
         MenuItem { text: "Go to Parent"; onTriggered: controller.goUp() }
-        MenuItem { text: "Refresh"; onTriggered: controller.refresh() }
+        MenuItem { text: "Refresh";      onTriggered: controller.refresh() }
         MenuSeparator {}
-        MenuItem { 
+        MenuItem {
             text: "Quit Liphis"
             onTriggered: Qt.quit()
             icon.source: "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/logout.svg"
         }
     }
 
-    // --- DELEGATES ---
     Component {
         id: listDelegate
         Item {
@@ -475,17 +479,17 @@ Item {
 
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 0
-                
+
                 Item {
                     Layout.preferredWidth: (viewSettings ? viewSettings.colNameWidth : 300) * (root.zoomScale || 1.0)
                     Layout.fillHeight: true
                     RowLayout {
                         anchors.fill: parent; spacing: 12
-                        FileIcon { 
-                            Layout.preferredWidth: 22 * (root.zoomScale || 1.0); 
-                            Layout.preferredHeight: 22 * (root.zoomScale || 1.0); 
-                            isDir: (model.isDir !== undefined ? model.isDir : false); 
-                            iconName: (model.iconName !== undefined ? model.iconName : ""); 
+                        FileIcon {
+                            Layout.preferredWidth: 22 * (root.zoomScale || 1.0)
+                            Layout.preferredHeight: 22 * (root.zoomScale || 1.0)
+                            isDir: (model.isDir !== undefined ? model.isDir : false)
+                            iconName: (model.iconName !== undefined ? model.iconName : "")
                             theme: root.theme
                             gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
                         }
@@ -508,7 +512,8 @@ Item {
                     Layout.preferredWidth: (viewSettings ? viewSettings.colSizeWidth : 100) * (root.zoomScale || 1.0)
                     Layout.fillHeight: true
                     Text {
-                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        anchors.fill: parent; rightPadding: 12
+                        verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
                         text: (model.formattedSize !== undefined ? model.formattedSize : "")
                         color: root.colTextSecondary
                         font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
@@ -533,7 +538,8 @@ Item {
                     Layout.preferredWidth: (viewSettings ? viewSettings.colDateWidth : 180) * (root.zoomScale || 1.0)
                     Layout.fillHeight: true
                     Text {
-                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        anchors.fill: parent; rightPadding: 12
+                        verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
                         text: (model.formattedDate !== undefined ? model.formattedDate : "")
                         color: root.colTextSecondary
                         font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
@@ -545,7 +551,8 @@ Item {
                     Layout.preferredWidth: (viewSettings ? viewSettings.colCreatedWidth : 180) * (root.zoomScale || 1.0)
                     Layout.fillHeight: true
                     Text {
-                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        anchors.fill: parent; rightPadding: 12
+                        verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
                         text: (model.formattedCTime !== undefined ? model.formattedCTime : "")
                         color: root.colTextSecondary
                         font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
@@ -557,7 +564,8 @@ Item {
                     Layout.preferredWidth: (viewSettings ? viewSettings.colAccessedWidth : 180) * (root.zoomScale || 1.0)
                     Layout.fillHeight: true
                     Text {
-                        anchors.fill: parent; rightPadding: 12; verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
+                        anchors.fill: parent; rightPadding: 12
+                        verticalAlignment: Text.AlignVCenter; horizontalAlignment: Text.AlignRight
                         text: (model.formattedATime !== undefined ? model.formattedATime : "")
                         color: root.colTextSecondary
                         font.pixelSize: Math.max(8, 12 * (root.zoomScale || 1.0))
@@ -614,39 +622,57 @@ Item {
                         color: root.colTextSecondary
                         font.pixelSize: Math.max(8, 11 * (root.zoomScale || 1.0))
                     }
-                }                
+                }
+
                 Item { Layout.fillWidth: true }
             }
 
             MouseArea {
-                id: listMA; anchors.fill: parent; hoverEnabled: true; acceptedButtons: Qt.LeftButton | Qt.RightButton
+                id: listMA
+                anchors.fill: parent
+                hoverEnabled: true
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                preventStealing: false
                 drag.target: dragProxy
                 drag.threshold: 12
-                
-                Item { id: dragProxy; Drag.active: listMA.drag.active; Drag.source: listRoot; Drag.supportedActions: Qt.CopyAction | Qt.MoveAction; Drag.keys: ["text/uri-list"]; Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") } }
-                onPressed: (mouse) => {
-                    if (mouse.button !== Qt.LeftButton) return
-                    var idx = controller.indexOfPath(model.path)
-                    if (mouse.modifiers & Qt.ShiftModifier) {
-                        if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
-                        controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
-                    } else if (mouse.modifiers & Qt.ControlModifier) {
-                        controller.toggleSelection(model.path)
-                    } else {
-                        controller.selectPath(model.path)
-                    }
-                    root.keyboardIndex = idx
-                    if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
+
+                Item {
+                    id: dragProxy
+                    Drag.active: listMA.drag.active
+                    Drag.source: listRoot
+                    Drag.supportedActions: Qt.CopyAction | Qt.MoveAction
+                    Drag.keys: ["text/uri-list"]
+                    Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") }
                 }
 
                 onClicked: (mouse) => {
+                    if (root.isViewInteracting()) return
                     var idx = controller.indexOfPath(model.path)
                     root.keyboardIndex = idx
                     root.forceActiveFocus()
                     if (mouse.button === Qt.RightButton) {
                         if (typeof itemMenuHandler === "function") itemMenuHandler(model, controller)
                     } else if (mouse.button === Qt.LeftButton && generalSettings.singleClick) {
+                        if (mouse.modifiers & Qt.ShiftModifier) {
+                            if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
+                            controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
+                        } else if (mouse.modifiers & Qt.ControlModifier) {
+                            controller.toggleSelection(model.path)
+                        } else {
+                            controller.selectPath(model.path)
+                        }
+                        if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
                         controller.openPath(model.path)
+                    } else if (mouse.button === Qt.LeftButton) {
+                        if (mouse.modifiers & Qt.ShiftModifier) {
+                            if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
+                            controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
+                        } else if (mouse.modifiers & Qt.ControlModifier) {
+                            controller.toggleSelection(model.path)
+                        } else {
+                            controller.selectPath(model.path)
+                        }
+                        if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
                     }
                 }
                 onDoubleClicked: if (!generalSettings.singleClick) controller.openPath(model.path)
@@ -699,23 +725,28 @@ Item {
                 anchors.fill: parent; anchors.margins: Math.max(2, 4 * (zoomLevel / 100.0)); spacing: 0
                 Item {
                     Layout.fillWidth: true; Layout.fillHeight: true
-                    FileIcon { 
+                    FileIcon {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottom: parent.bottom
-                        width: Math.min(parent.width, baseIconSize * (zoomLevel / 100.0)); 
-                        height: Math.min(parent.height, baseIconSize * (zoomLevel / 100.0)); 
-                        isDir: (model.isDir !== undefined ? model.isDir : false); 
-                        iconName: (model.iconName !== undefined ? model.iconName : ""); 
-                        theme: root.theme; 
-                        visible: !gridThumb.visible 
+                        width: Math.min(parent.width, baseIconSize * (zoomLevel / 100.0))
+                        height: Math.min(parent.height, baseIconSize * (zoomLevel / 100.0))
+                        isDir: (model.isDir !== undefined ? model.isDir : false)
+                        iconName: (model.iconName !== undefined ? model.iconName : "")
+                        theme: root.theme
+                        visible: !gridThumb.visible
                         gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
                     }
-                    Image { 
-                        id: gridThumb; anchors.fill: parent; fillMode: Image.PreserveAspectFit; source: (model.thumbnail !== undefined ? model.thumbnail : "")
-                        visible: status === Image.Ready; asynchronous: true; cache: true
+                    Image {
+                        id: gridThumb
+                        anchors.fill: parent
+                        fillMode: Image.PreserveAspectFit
+                        source: (model.thumbnail !== undefined ? model.thumbnail : "")
+                        visible: status === Image.Ready
+                        asynchronous: true
+                        cache: true
                     }
                 }
-                Text { 
+                Text {
                     text: (model.name !== undefined ? root.displayName(model.name) : "")
                     textFormat: Text.PlainText
                     Layout.fillWidth: true
@@ -725,41 +756,60 @@ Item {
                     elide: Text.ElideRight
                     wrapMode: gridRoot.isActuallySelected ? Text.WrapAnywhere : Text.NoWrap
                     maximumLineCount: gridRoot.isActuallySelected ? 2 : 1
-                    color: root.colTextPrimary; font.pixelSize: 7 + (5 * (zoomLevel / 100.0)); font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
+                    color: root.colTextPrimary
+                    font.pixelSize: 7 + (5 * (zoomLevel / 100.0))
+                    font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
                 ToolTip.visible: gridMA.containsMouse
                 ToolTip.text: (model.path !== undefined ? String(model.path) : "")
             }
 
             MouseArea {
-                id: gridMA; anchors.fill: parent; hoverEnabled: true; acceptedButtons: Qt.LeftButton | Qt.RightButton
+                id: gridMA
+                anchors.fill: parent
+                hoverEnabled: true
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                preventStealing: false
                 drag.target: gridDragProxy
                 drag.threshold: 12
-                
-                Item { id: gridDragProxy; Drag.active: gridMA.drag.active; Drag.source: gridRoot; Drag.supportedActions: Qt.CopyAction | Qt.MoveAction; Drag.keys: ["text/uri-list"]; Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") } }
-                onPressed: (mouse) => {
-                    if (mouse.button !== Qt.LeftButton) return
-                    var idx = controller.indexOfPath(model.path)
-                    if (mouse.modifiers & Qt.ShiftModifier) {
-                        if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
-                        controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
-                    } else if (mouse.modifiers & Qt.ControlModifier) {
-                        controller.toggleSelection(model.path)
-                    } else {
-                        controller.selectPath(model.path)
-                    }
-                    root.keyboardIndex = idx
-                    if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
+
+                Item {
+                    id: gridDragProxy
+                    Drag.active: gridMA.drag.active
+                    Drag.source: gridRoot
+                    Drag.supportedActions: Qt.CopyAction | Qt.MoveAction
+                    Drag.keys: ["text/uri-list"]
+                    Drag.mimeData: { "text/uri-list": controller.selectedPaths.join("\n") }
                 }
 
                 onClicked: (mouse) => {
+                    if (root.isViewInteracting()) return
                     var idx = controller.indexOfPath(model.path)
                     root.keyboardIndex = idx
                     root.forceActiveFocus()
                     if (mouse.button === Qt.RightButton) {
                         if (typeof itemMenuHandler === "function") itemMenuHandler(model, controller)
                     } else if (mouse.button === Qt.LeftButton && generalSettings.singleClick) {
+                        if (mouse.modifiers & Qt.ShiftModifier) {
+                            if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
+                            controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
+                        } else if (mouse.modifiers & Qt.ControlModifier) {
+                            controller.toggleSelection(model.path)
+                        } else {
+                            controller.selectPath(model.path)
+                        }
+                        if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
                         controller.openPath(model.path)
+                    } else if (mouse.button === Qt.LeftButton) {
+                        if (mouse.modifiers & Qt.ShiftModifier) {
+                            if (root.rangeAnchorIndex < 0) root.rangeAnchorIndex = idx
+                            controller.selectRangeByIndexes(root.rangeAnchorIndex, idx)
+                        } else if (mouse.modifiers & Qt.ControlModifier) {
+                            controller.toggleSelection(model.path)
+                        } else {
+                            controller.selectPath(model.path)
+                        }
+                        if (!(mouse.modifiers & Qt.ShiftModifier)) root.rangeAnchorIndex = root.keyboardIndex
                     }
                 }
                 onDoubleClicked: if (!generalSettings.singleClick) controller.openPath(model.path)
@@ -784,42 +834,67 @@ Item {
         }
     }
 
-    // --- MAIN VIEW ---
-
     StackLayout {
         id: viewStack
         anchors.fill: parent
         currentIndex: controller.viewMode === "grid" ? 1 : (controller.viewMode === "list" ? 0 : 2)
 
         ListView {
-            id: lv; model: controller.fileModel; clip: true; delegate: listDelegate
+            id: lv
+            model: controller.fileModel
+            clip: true
+            delegate: listDelegate
             focus: true
-            boundsBehavior: Flickable.StopAtBounds
-            flickDeceleration: 2600
-            maximumFlickVelocity: 16000
             interactive: true
-            flickableDirection: Flickable.AutoFlickDirection
+            flickableDirection: Flickable.VerticalFlick
+            boundsBehavior: Flickable.DragOverBounds
+            flickDeceleration: 1500
+            maximumFlickVelocity: 12000
+
             Keys.onEscapePressed: (event) => {
-                if (controller) {
-                    controller.clearSelection()
-                    event.accepted = true
+                if (controller) { controller.clearSelection(); event.accepted = true }
+            }
+
+            property real targetY: contentY
+            onMovementStarted: lvSmoothScroll.stop()
+
+            SmoothedAnimation {
+                id: lvSmoothScroll
+                target: lv
+                property: "contentY"
+                to: lv.targetY
+                duration: 150
+                velocity: -1
+            }
+
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse
+                onWheel: (event) => {
+                    if (event.angleDelta.y !== 0) {
+                        let step = (event.angleDelta.y / 120) * (44 * Math.max(1.0, root.zoomScale) * 4);
+                        let newTarget = lv.targetY - step;
+                        lv.targetY = Math.max(lv.originY, Math.min(newTarget, lv.originY + lv.contentHeight - lv.height));
+                        lvSmoothScroll.start();
+                        event.accepted = true;
+                    }
                 }
             }
+
             reuseItems: true
             cacheBuffer: 420
-            onContentYChanged: thumbsDebounce.restart()
+            onContentYChanged: { thumbsDebounce.restart(); if (!lvSmoothScroll.running) targetY = contentY; }
             onContentXChanged: thumbsDebounce.restart()
-            onCountChanged: thumbsDebounce.restart()
-            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded; active: true }
+            onCountChanged:    thumbsDebounce.restart()
+            ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded; active: true }
             ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
-            
+
             headerPositioning: ListView.OverlayHeader
             header: Rectangle {
                 z: 10; width: lv.width; height: 36; color: theme.surfaceMuted
-                
+
                 RowLayout {
                     anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 0
-                    
+
                     HeaderColumn {
                         title: "Name"; field: "name"; theme: root.theme; minWidth: 100
                         columnWidth: viewSettings.colNameWidth * root.zoomScale
@@ -832,8 +907,7 @@ Item {
                     HeaderColumn {
                         visible: viewSettings.showSize; title: "Size"; field: "size"; theme: root.theme; minWidth: 60
                         columnWidth: viewSettings.colSizeWidth * root.zoomScale
-                        horizontalAlignment: Text.AlignRight
-                        paddingRight: 12
+                        horizontalAlignment: Text.AlignRight; paddingRight: 12
                         isSortActive: viewSettings.sortField === "size"
                         sortAscending: viewSettings.sortAscending
                         onClicked: toggleSort("size")
@@ -851,8 +925,7 @@ Item {
                     HeaderColumn {
                         visible: viewSettings.showDate; title: "Date Modified"; field: "date"; theme: root.theme; minWidth: 80
                         columnWidth: viewSettings.colDateWidth * root.zoomScale
-                        horizontalAlignment: Text.AlignRight
-                        paddingRight: 12
+                        horizontalAlignment: Text.AlignRight; paddingRight: 12
                         isSortActive: viewSettings.sortField === "date"
                         sortAscending: viewSettings.sortAscending
                         onClicked: toggleSort("date")
@@ -861,8 +934,7 @@ Item {
                     HeaderColumn {
                         visible: viewSettings.showCreated; title: "Date Created"; field: "ctime"; theme: root.theme; minWidth: 80
                         columnWidth: viewSettings.colCreatedWidth * root.zoomScale
-                        horizontalAlignment: Text.AlignRight
-                        paddingRight: 12
+                        horizontalAlignment: Text.AlignRight; paddingRight: 12
                         isSortActive: viewSettings.sortField === "ctime"
                         sortAscending: viewSettings.sortAscending
                         onClicked: toggleSort("ctime")
@@ -871,8 +943,7 @@ Item {
                     HeaderColumn {
                         visible: viewSettings.showAccessed; title: "Date Accessed"; field: "atime"; theme: root.theme; minWidth: 80
                         columnWidth: viewSettings.colAccessedWidth * root.zoomScale
-                        horizontalAlignment: Text.AlignRight
-                        paddingRight: 12
+                        horizontalAlignment: Text.AlignRight; paddingRight: 12
                         isSortActive: viewSettings.sortField === "atime"
                         sortAscending: viewSettings.sortAscending
                         onClicked: toggleSort("atime")
@@ -908,63 +979,116 @@ Item {
                     HeaderColumn {
                         visible: viewSettings.showMime; title: "MIME Type"; field: "mimeType"; theme: root.theme; minWidth: 80
                         columnWidth: viewSettings.colMimeWidth * root.zoomScale
-                        paddingLeft: 12
-                        showSplitter: false
+                        paddingLeft: 12; showSplitter: false
                         isSortActive: viewSettings.sortField === "mimeType"
                         sortAscending: viewSettings.sortAscending
                         onClicked: toggleSort("mimeType")
                         onWidthChangedByHandle: (w) => viewSettings.colMimeWidth = w / root.zoomScale
                     }
-                    
+
                     Item { Layout.fillWidth: true }
                 }
-                
+
                 Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: theme.border }
             }
         }
 
         GridView {
-            id: gv; model: controller.fileModel; clip: true; delegate: gridDelegate
+            id: gv
+            model: controller.fileModel
+            clip: true
+            delegate: gridDelegate
             focus: true
-            boundsBehavior: Flickable.StopAtBounds
-            flickDeceleration: 2600
-            maximumFlickVelocity: 16000
             interactive: true
-            flickableDirection: Flickable.AutoFlickDirection
+            boundsBehavior: Flickable.DragOverBounds
+            flickDeceleration: 1500
+            maximumFlickVelocity: 12000
+
             Keys.onEscapePressed: (event) => {
-                if (controller) {
-                    controller.clearSelection()
-                    event.accepted = true
+                if (controller) { controller.clearSelection(); event.accepted = true }
+            }
+
+            property real targetY: contentY
+            onMovementStarted: gvSmoothScroll.stop()
+
+            SmoothedAnimation {
+                id: gvSmoothScroll
+                target: gv
+                property: "contentY"
+                to: gv.targetY
+                duration: 150
+                velocity: -1
+            }
+
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse
+                onWheel: (event) => {
+                    if (event.angleDelta.y !== 0) {
+                        let step = (event.angleDelta.y / 120) * (gv.cellHeight * 2.5);
+                        let newTarget = gv.targetY - step;
+                        gv.targetY = Math.max(gv.originY, Math.min(newTarget, gv.originY + gv.contentHeight - gv.height));
+                        gvSmoothScroll.start();
+                        event.accepted = true;
+                    }
                 }
             }
-            cellWidth: Math.max(84, baseCellSize * root.zoomScale)
+
+            cellWidth:  Math.max(84, baseCellSize * root.zoomScale)
             cellHeight: Math.max(76, baseCellSize * root.zoomScale)
             reuseItems: true
             cacheBuffer: 520
-            onContentYChanged: thumbsDebounce.restart()
+            onContentYChanged: { thumbsDebounce.restart(); if (!gvSmoothScroll.running) targetY = contentY; }
             onContentXChanged: thumbsDebounce.restart()
-            onCountChanged: thumbsDebounce.restart()
-            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+            onCountChanged:    thumbsDebounce.restart()
+            ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded }
             ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
         }
 
-        // Actual Tree View
         TreeView {
             id: treeView
             model: controller.treeModel
             focus: true
             clip: true
-            boundsBehavior: Flickable.StopAtBounds
-            
+            flickableDirection: Flickable.VerticalFlick
+            boundsBehavior: Flickable.DragOverBounds
+            flickDeceleration: 1500
+            maximumFlickVelocity: 12000
+
+            property real targetY: contentY
+            onContentYChanged: { if (!tvSmoothScroll.running) targetY = contentY }
+            onMovementStarted: tvSmoothScroll.stop()
+
+            SmoothedAnimation {
+                id: tvSmoothScroll
+                target: treeView
+                property: "contentY"
+                to: treeView.targetY
+                duration: 150
+                velocity: -1
+            }
+
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse
+                onWheel: (event) => {
+                    if (event.angleDelta.y !== 0) {
+                        let step = (event.angleDelta.y / 120) * (32 * Math.max(1.0, root.zoomScale) * 5);
+                        let newTarget = treeView.targetY - step;
+                        treeView.targetY = Math.max(treeView.originY, Math.min(newTarget, treeView.originY + treeView.contentHeight - treeView.height));
+                        tvSmoothScroll.start();
+                        event.accepted = true;
+                    }
+                }
+            }
+
             delegate: Item {
                 id: treeDelegate
                 implicitWidth: treeView.width
                 implicitHeight: 32 * root.zoomScale
-                
+
                 readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPath === model.path
                 readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
                 readonly property bool clipboardCut: !!(controller && controller.isCutOp)
-                
+
                 Rectangle {
                     anchors.fill: parent; anchors.margins: 2; radius: 4
                     color: isActuallySelected ? theme.selection : (treeMA.containsMouse ? theme.hover : "transparent")
@@ -1021,19 +1145,21 @@ Item {
                     id: treeMA
                     anchors.fill: parent
                     hoverEnabled: true
+                    preventStealing: false
                     onClicked: {
+                        if (root.isViewInteracting()) return
                         controller.selectPath(model.path)
                         if (model.isDir && generalSettings.singleClick) controller.openPath(model.path)
                     }
                     onDoubleClicked: if (model.isDir && !generalSettings.singleClick) controller.openPath(model.path)
                 }
             }
-            
-            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AsNeeded }
+
+            ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded }
+            ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
         }
     }
 
-    // Loading Overlay
     Rectangle {
         anchors.fill: parent
         color: theme.bg
@@ -1056,7 +1182,6 @@ Item {
         }
     }
 
-    // Empty State
     Item {
         id: emptyState
         anchors.fill: parent
@@ -1066,7 +1191,7 @@ Item {
         ColumnLayout {
             anchors.centerIn: parent
             spacing: 20
-            
+
             Icon {
                 Layout.alignment: Qt.AlignHCenter
                 name: "search"
@@ -1074,7 +1199,7 @@ Item {
                 color: theme.textMuted
                 opacity: 0.4
             }
-            
+
             Column {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 4
@@ -1087,8 +1212,8 @@ Item {
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: controller.activeSearchTerm 
-                        ? "Try different keywords or filters" 
+                    text: controller.activeSearchTerm
+                        ? "Try different keywords or filters"
                         : "This directory contains no files"
                     color: theme.textSecondary
                     font.pixelSize: 13
@@ -1115,71 +1240,21 @@ Item {
     }
 
     MouseArea {
-        anchors.fill: parent; z: -1; acceptedButtons: Qt.RightButton | Qt.BackButton | Qt.ForwardButton | Qt.LeftButton
+        anchors.fill: parent
+        z: -1
+        acceptedButtons: Qt.RightButton | Qt.BackButton | Qt.ForwardButton | Qt.LeftButton
         onClicked: (mouse) => {
             root.forceActiveFocus()
-            if (mouse.button === Qt.RightButton) bgMenu.popup()
-            else if (mouse.button === Qt.BackButton) controller.goBack()
+            if      (mouse.button === Qt.RightButton)   bgMenu.popup()
+            else if (mouse.button === Qt.BackButton)    controller.goBack()
             else if (mouse.button === Qt.ForwardButton) controller.goForward()
-            else if (mouse.button === Qt.LeftButton) {
-                controller.clearSelection()
-            }
+            else if (mouse.button === Qt.LeftButton)    controller.clearSelection()
         }
     }
 
-    // Unified Zoom and Navigation Handler (on top)
     Item {
         anchors.fill: parent
-        z: 1000 // Ensure it's above all views
-        
-        WheelHandler {
-            id: globalWheelHandler
-            property int zoomAccumulator: 0
-            property int xAccumulator: 0
-            property int yAccumulator: 0
-            onWheel: (event) => {
-                const flick = root.activeFlickable()
-                if (!flick) return
-
-                if ((event.modifiers & Qt.ControlModifier) && !(event.modifiers & Qt.ShiftModifier)) {
-                    zoomAccumulator += event.angleDelta.y
-                    if (Math.abs(zoomAccumulator) >= 40) {
-                        let steps = Math.trunc(zoomAccumulator / 40)
-                        root.queueZoom(root.pendingZoomLevel + (steps * 5))
-                        zoomAccumulator -= (steps * 40)
-                    }
-                    event.accepted = true
-                    return
-                }
-
-                const pixelDx = event.pixelDelta.x
-                const pixelDy = event.pixelDelta.y
-                const angleDx = event.angleDelta.x
-                const angleDy = event.angleDelta.y
-
-                const horizontalRequested = (event.modifiers & Qt.ShiftModifier)
-                    || ((event.modifiers & Qt.ControlModifier) && (event.modifiers & Qt.ShiftModifier))
-
-                if (horizontalRequested) {
-                    const deltaX = pixelDx !== 0 ? pixelDx : (angleDx !== 0 ? angleDx / 2 : angleDy / 2)
-                    xAccumulator += deltaX
-                    if (Math.abs(xAccumulator) >= 1) {
-                        flick.contentX = Math.max(0, Math.min(flick.contentWidth - flick.width, flick.contentX - xAccumulator))
-                        xAccumulator = 0
-                    }
-                    event.accepted = true
-                    return
-                }
-
-                const deltaY = pixelDy !== 0 ? pixelDy : angleDy / 2
-                yAccumulator += deltaY
-                if (Math.abs(yAccumulator) >= 1) {
-                    flick.contentY = Math.max(0, Math.min(flick.contentHeight - flick.height, flick.contentY - yAccumulator))
-                    yAccumulator = 0
-                }
-                event.accepted = true
-            }
-        }
+        z: 1000
 
         PinchHandler {
             target: null

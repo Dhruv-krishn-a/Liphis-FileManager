@@ -44,91 +44,78 @@ Item {
 
     function localAsset(iconName) {
         var n = iconName || ""
-        if (n === "arrow-left") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-left.svg"
-        if (n === "arrow-right") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-right.svg"
-        if (n === "arrow-up") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-up.svg"
-        if (n === "back") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-left.svg"
-        if (n === "forward") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-right.svg"
-        if (n === "up") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/arrow-up.svg"
-        if (n === "refresh" || n === "view-refresh") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/refresh.svg"
-        if (n === "search" || n === "edit-find") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/search.svg"
-        if (n === "home" || n === "user-home" || n === "go-home") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/home.svg"
-        if (n === "star" || n === "bookmark-new") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/star.svg"
-        if (n === "star-filled") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/star.svg"
-        if (n === "user-bookmarks") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/bookmark.svg"
-        if (n === "close" || n === "window-close") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/x.svg"
-        if (n === "folder-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-open.svg"
-        if (n === "folder" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder.svg"
-        if (n === "info" || n === "dialog-information") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/info-circle.svg"
-        if (n === "terminal" || n === "utilities-terminal") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/terminal.svg"
-        if (n === "edit-copy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/copy.svg"
-        if (n === "edit-cut") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/scissors.svg"
-        if (n === "edit-rename") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pencil.svg"
-        if (n === "user-trash" || n === "trash") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
-        if (n === "view-list-details") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
-        if (n === "tab-new") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/square-plus.svg"
-        if (n === "window-new") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/app-window.svg"
-        if (n === "view-split-left-right") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-board-split.svg"
-        if (n === "dialog-password") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/password.svg"
-        if (n === "vscode") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/brand-vscode.svg"
-        if (n === "media-playback-start") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/player-play.svg"
-        if (n === "background") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/background.svg"
-        if (n === "tag") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/tag.svg"
-        if (n === "document-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-open.svg"
-        if (n === "document-properties") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/list-details.svg"
-        if (n === "layout-grid") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-grid.svg"
-        if (n === "layout-list") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-list.svg"
-        if (n === "layout-tree") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-tree.svg"
-        if (n === "layout-sidebar") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-sidebar.svg"
-        if (n === "layout-sidebar-left-collapse") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-sidebar-left-collapse.svg"
-        if (n === "layout-sidebar-left-expand") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/layout-sidebar-left-expand.svg"
-        if (n === "alphabet-latin") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/alphabet-latin.svg"
-        if (n === "calendar") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/calendar.svg"
-        if (n === "database") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/database.svg"
-        if (n === "eye") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/eye.svg"
-        if (n === "zoom-in") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-in.svg"
-        if (n === "zoom-out") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-out.svg"
-        if (n === "zoom-reset") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-reset.svg"
-        if (n === "clipboard") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/clipboard.svg"
-        if (n === "logout") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/logout.svg"
-        if (n === "chart-pie") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/chart-pie.svg"
-        if (n === "folder-code") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-code.svg"
-        if (n === "folder-heart") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-heart.svg"
-        if (n === "folder-star") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-star.svg"
-        if (n === "folder-plus") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-plus.svg"
-        if (n === "folder-root") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/folder-root.svg"
-        if (n === "device-desktop") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-desktop.svg"
-        if (n === "device-floppy") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-floppy.svg"
-        if (n === "device-sd-card") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-sd-card.svg"
-        if (n === "device-usb") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/device-usb.svg"
-        if (n === "music") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/music.svg"
-        if (n === "photo") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/photo.svg"
-        if (n === "video") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/video.svg"
-        if (n === "download") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/download.svg"
-        if (n === "chevron-right") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/chevron-right.svg"
-        if (n === "chevron-down") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/chevron-down.svg"
-        if (n === "mouse-pointer" || n === "pointer") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/pointer.svg"
-        if (n === "settings" || n === "preferences-system") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/settings.svg"
-        return ""
+        if (n === "back") n = "arrow-left"
+        if (n === "forward") n = "arrow-right"
+        if (n === "up") n = "arrow-up"
+        if (n === "down") n = "arrow-down"
+        if (n === "close" || n === "window-close") n = "x"
+        if (n === "home" || n === "user-home" || n === "go-home") n = "home"
+        if (n === "edit-rename") n = "pencil"
+        if (n === "user-trash" || n === "trash") n = "trash"
+        if (n === "view-list-details") n = "list-details"
+        if (n === "tab-new") n = "square-plus"
+        if (n === "window-new") n = "app-window"
+        if (n === "view-split-left-right") n = "layout-board-split"
+        if (n === "media-playback-start") n = "player-play"
+        if (n === "mouse-pointer" || n === "pointer") n = "pointer"
+        if (n === "preferences-system") n = "settings"
+        if (n === "info" || n === "dialog-information") n = "info-circle"
+        if (n === "doc" || n === "text-x-generic" || n === "text-plain") n = "file-text"
+        if (n === "layout-tree") n = "list-tree"
+        
+        // Final absolute path in resource tree based on CMake GLOB
+        return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/" + n + ".svg"
     }
 
     function filledAsset(iconName) {
         var n = iconName || ""
-        if (n === "folder-open") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/folder-open.svg"
-        if (n === "folder" || n.indexOf("folder-") === 0) return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/folder.svg"
-        if (n === "star") return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/star.svg"
-        return ""
+        if (n === "folder-open" || n === "folder" || n.indexOf("folder-") === 0) n = "folder"
+        if (n === "star") n = "star"
+        return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/" + n + ".svg"
+    }
+
+    function prefersThemeProvider(iconName) {
+        var n = iconName || ""
+        if (!n.length) return false
+        if (n.indexOf("/") !== -1) return true // MIME type like application/pdf
+
+        var mimeLikePrefixes = [
+            "application-",
+            "audio-",
+            "font-",
+            "image-",
+            "inode-",
+            "message-",
+            "model-",
+            "multipart-",
+            "package-",
+            "text-",
+            "video-",
+            "x-content-"
+        ]
+        for (var i = 0; i < mimeLikePrefixes.length; ++i) {
+            if (n.indexOf(mimeLikePrefixes[i]) === 0)
+                return true
+        }
+
+        var themeNames = {
+            "document-open-recent": true,
+            "drive-harddisk-system": true,
+            "drive-removable-media": true
+        }
+        return !!themeNames[n]
     }
 
     readonly property string iconTheme: (typeof generalSettings !== "undefined" && generalSettings) ? generalSettings.iconTheme : "outline"
-    readonly property string assetSource: (iconTheme === "filled" || root.filled) ? (filledAsset(root.name) || localAsset(root.name)) : localAsset(root.name)
+    readonly property bool useThemeProvider: prefersThemeProvider(root.name)
+    readonly property string assetSource: useThemeProvider
+        ? ("image://icon/" + root.mappedIconName(root.name))
+        : ((iconTheme === "filled" || root.filled) ? filledAsset(root.name) : localAsset(root.name))
 
     Image {
         id: sourceIcon
         anchors.fill: parent
-        source: root.assetSource.length > 0
-            ? root.assetSource
-            : "image://icon/" + root.mappedIconName(root.name)
+        source: root.assetSource
         sourceSize.width: Math.max(32, Math.round(root.width * 1.5))
         sourceSize.height: Math.max(32, Math.round(root.height * 1.5))
         fillMode: Image.PreserveAspectFit
@@ -136,6 +123,13 @@ Item {
         smooth: root.width > 32
         mipmap: true
         antialiasing: true
+        asynchronous: true
+        
+        onStatusChanged: {
+            if (status === Image.Error) {
+                source = "image://icon/" + root.mappedIconName(root.name)
+            }
+        }
     }
 
     ColorOverlay {

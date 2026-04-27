@@ -4,6 +4,7 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QFileInfo>
+#include <QStyleHints>
 
 #include "AppController.hpp"
 #include "AnalysisController.hpp"
@@ -19,9 +20,21 @@
 #include <QtQml>
 #include <unistd.h>
 #include <git2.h>
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
+
+void customLogHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+    QFile file("liphis_scroll.log");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        QTextStream stream(&file);
+        stream << QDateTime::currentDateTime().toString("HH:mm:ss.zzz") << " " << msg << "\n";
+    }
+}
 
 int main(int argc, char **argv)
 {
+    qInstallMessageHandler(customLogHandler);
     git_libgit2_init();
 
     qputenv("QSG_RENDER_LOOP", "basic");
@@ -36,6 +49,8 @@ int main(int argc, char **argv)
     }
 
     QGuiApplication app(argc, argv);
+    app.styleHints()->setWheelScrollLines(12);
+
     QCoreApplication::setOrganizationName("Liphis");
     QCoreApplication::setOrganizationDomain("liphis.local");
     QCoreApplication::setApplicationName("Liphis");

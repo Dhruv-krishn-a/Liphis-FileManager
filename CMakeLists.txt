@@ -10,8 +10,8 @@ include(GNUInstallDirs)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Core5Compat Sql)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBGIT2 libgit2)
-pkg_check_modules(LIBARCHIVE libarchive)
+pkg_check_modules(LIBGIT2 REQUIRED libgit2)
+pkg_check_modules(LIBARCHIVE REQUIRED libarchive)
 
 qt_standard_project_setup()
 
@@ -36,7 +36,7 @@ target_include_directories(liphis_core PUBLIC
 # =========================
 # GUI Executable
 # =========================
-qt_add_executable(liphis
+qt_add_executable(liphis_app
     src/main.cpp
     src/AppController.cpp
     src/AppController.hpp
@@ -64,13 +64,16 @@ qt_add_executable(liphis
     src/CommandManager.hpp
 )
 
-# Expose include directories to GUI target
-target_include_directories(liphis PRIVATE
+target_include_directories(liphis_app PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
 )
 
-qt_add_qml_module(liphis
+# Collecting all icons with RELATIVE paths to src/qml/assets/icons/
+file(GLOB_RECURSE OUTLINE_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/outline/*.svg")
+file(GLOB_RECURSE FILLED_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/filled/*.svg")
+
+qt_add_qml_module(liphis_app
     URI liphis
     VERSION 1.0
     QML_FILES
@@ -116,72 +119,11 @@ qt_add_qml_module(liphis
         src/qml/assets/logo-dark.png
         src/qml/assets/folder-light.png
         src/qml/assets/folder-dark.png
-        src/qml/assets/icons/outline/arrow-left.svg
-        src/qml/assets/icons/outline/arrow-right.svg
-        src/qml/assets/icons/outline/arrow-up.svg
-        src/qml/assets/icons/outline/refresh.svg
-        src/qml/assets/icons/outline/search.svg
-        src/qml/assets/icons/outline/home.svg
-        src/qml/assets/icons/outline/bookmark.svg
-        src/qml/assets/icons/outline/star.svg
-        src/qml/assets/icons/outline/x.svg
-        src/qml/assets/icons/outline/folder.svg
-        src/qml/assets/icons/outline/folder-open.svg
-        src/qml/assets/icons/outline/info-circle.svg
-        src/qml/assets/icons/outline/terminal.svg
-        src/qml/assets/icons/outline/copy.svg
-        src/qml/assets/icons/outline/scissors.svg
-        src/qml/assets/icons/outline/pencil.svg
-        src/qml/assets/icons/outline/trash.svg
-        src/qml/assets/icons/outline/list-details.svg
-        src/qml/assets/icons/outline/square-plus.svg
-        src/qml/assets/icons/outline/app-window.svg
-        src/qml/assets/icons/outline/layout-board-split.svg
-        src/qml/assets/icons/outline/layout-grid.svg
-        src/qml/assets/icons/outline/layout-list.svg
-        src/qml/assets/icons/outline/layout-sidebar.svg
-        src/qml/assets/icons/outline/layout-tree.svg
-        src/qml/assets/icons/outline/password.svg
-        src/qml/assets/icons/outline/alphabet-latin.svg
-        src/qml/assets/icons/outline/calendar.svg
-        src/qml/assets/icons/outline/database.svg
-        src/qml/assets/icons/outline/eye.svg
-        src/qml/assets/icons/outline/zoom-in.svg
-        src/qml/assets/icons/outline/zoom-out.svg
-        src/qml/assets/icons/outline/zoom-reset.svg
-        src/qml/assets/icons/outline/clipboard.svg
-        src/qml/assets/icons/outline/logout.svg
-        src/qml/assets/icons/outline/chart-pie.svg
-        src/qml/assets/icons/outline/brand-vscode.svg
-        src/qml/assets/icons/outline/player-play.svg
-        src/qml/assets/icons/outline/background.svg
-        src/qml/assets/icons/outline/tag.svg
-        src/qml/assets/icons/outline/window.svg
-        src/qml/assets/icons/outline/layout-sidebar-left-collapse.svg
-        src/qml/assets/icons/outline/layout-sidebar-left-expand.svg
-        src/qml/assets/icons/outline/folder-code.svg
-        src/qml/assets/icons/outline/folder-heart.svg
-        src/qml/assets/icons/outline/folder-star.svg
-        src/qml/assets/icons/outline/folder-plus.svg
-        src/qml/assets/icons/outline/folder-root.svg
-        src/qml/assets/icons/outline/device-desktop.svg
-        src/qml/assets/icons/outline/device-floppy.svg
-        src/qml/assets/icons/outline/device-sd-card.svg
-        src/qml/assets/icons/outline/device-usb.svg
-        src/qml/assets/icons/outline/music.svg
-        src/qml/assets/icons/outline/photo.svg
-        src/qml/assets/icons/outline/video.svg
-        src/qml/assets/icons/outline/download.svg
-        src/qml/assets/icons/outline/chevron-right.svg
-        src/qml/assets/icons/outline/chevron-down.svg
-        src/qml/assets/icons/outline/pointer.svg
-        src/qml/assets/icons/outline/settings.svg
-        src/qml/assets/icons/filled/star.svg
-        src/qml/assets/icons/filled/folder.svg
-        src/qml/assets/icons/filled/folder-open.svg
+        ${OUTLINE_ICONS}
+        ${FILLED_ICONS}
 )
 
-target_link_libraries(liphis
+target_link_libraries(liphis_app
     PRIVATE Qt6::Core
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Concurrent
@@ -193,42 +135,31 @@ target_link_libraries(liphis
     PRIVATE ${LIBARCHIVE_LIBRARIES}
 )
 
-target_include_directories(liphis PRIVATE
+target_include_directories(liphis_app PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${LIBGIT2_INCLUDE_DIRS}
     ${LIBARCHIVE_INCLUDE_DIRS}
 )
 
-# =========================
-# CLI Test Binary
-# =========================
 option(BUILD_TESTS "Build tests" OFF)
-
 if(BUILD_TESTS)
-    add_executable(fs_test
-        src/fs_test.cpp
-    )
-
-    target_link_libraries(fs_test
-        PRIVATE liphis_core
-    )
-
-    add_executable(unit_tests
-        tests/unit_tests.cpp
-    )
-
-    target_link_libraries(unit_tests
-        PRIVATE liphis_core
-    )
-
+    add_executable(fs_test src/fs_test.cpp)
+    target_link_libraries(fs_test PRIVATE liphis_core)
+    add_executable(unit_tests tests/unit_tests.cpp)
+    target_link_libraries(unit_tests PRIVATE liphis_core)
     enable_testing()
     add_test(NAME fs_test_smoke COMMAND fs_test ${CMAKE_SOURCE_DIR})
     add_test(NAME unit_tests COMMAND unit_tests)
 endif()
 
-install(TARGETS liphis
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+# Installation rules
+install(TARGETS liphis_app
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME liphis
+)
+
+install(DIRECTORY src/qml/assets/icons/
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/liphis/icons
 )
 
 install(FILES
