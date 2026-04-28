@@ -3,6 +3,11 @@
 #include <QPixmap>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QMutex>
+#include <QHash>
+
+static QMutex s_cacheMutex;
+static QHash<QString, QImage> s_iconCache;
 
 SystemIconProvider::SystemIconProvider()
     : QQuickImageProvider(QQuickImageProvider::Image)
@@ -13,8 +18,23 @@ QImage SystemIconProvider::requestImage(const QString &id,
                                         QSize *size,
                                         const QSize &requestedSize)
 {
-    int width = requestedSize.width() > 0 ? requestedSize.width() : 64;
-    int height = requestedSize.height() > 0 ? requestedSize.height() : 64;
+    int width = requestedSize.width() > 0 ? requestedSize.width() : 48;
+    int height = requestedSize.height() > 0 ? requestedSize.height() : 48;
+    
+    // Ensure we don't cache 0-sized icons which can happen during initialization
+    width = qMax(16, width);
+    height = qMax(16, height);
+
+    QString cacheKey = id + "_" + QString::number(width) + "x" + QString::number(height);
+
+    {
+        QMutexLocker lock(&s_cacheMutex);
+        if (s_iconCache.contains(cacheKey)) {
+            QImage img = s_iconCache.value(cacheKey);
+            if (size) *size = img.size();
+            return img;
+        }
+    }
 
     // 1. Try exact match
     QIcon icon = QIcon::fromTheme(id);
@@ -51,12 +71,20 @@ QImage SystemIconProvider::requestImage(const QString &id,
         QImage empty(1, 1, QImage::Format_ARGB32);
         empty.fill(Qt::transparent);
         if (size) *size = QSize(width, height);
+        
+        QMutexLocker lock(&s_cacheMutex);
+        s_iconCache.insert(cacheKey, empty);
         return empty;
     }
 
     QImage img = icon.pixmap(width, height).toImage();
     if (size)
         *size = img.size();
+
+    {
+        QMutexLocker lock(&s_cacheMutex);
+        s_iconCache.insert(cacheKey, img);
+    }
 
     return img;
 }

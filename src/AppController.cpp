@@ -309,6 +309,7 @@ void AppController::setThumbnailManager(ThumbnailManager* manager)
     if (m_thumbnailManager == manager) return;
     if (m_thumbnailManager) disconnect(m_thumbnailManager, nullptr, this, nullptr);
     m_thumbnailManager = manager;
+    m_fileModel.setThumbnailManager(manager);
     if (m_thumbnailManager) {
         connect(m_thumbnailManager, &ThumbnailManager::thumbnailReady, this, [this](const QString &filePath, const QString &thumbPath) {
             QMetaObject::invokeMethod(this, [this, filePath, thumbPath]() {
@@ -739,7 +740,7 @@ void AppController::reloadCurrentDirectoryModel(bool preserveSelection)
     QFileInfo fi(m_currentPath);
     if (!fi.isDir() || !fi.isReadable()) return;
 
-    const QStringList prevSelected = preserveSelection ? m_selectedPaths : QStringList{};
+    const QStringList prevSelected = preserveSelection ? m_selectedPaths.values() : QStringList{};
     QPointer<AppController> safeThis(this);
     ThreadPool::instance().submit([safeThis, path = m_currentPath, prevSelected, preserveSelection]() {
         if (!safeThis) return;
@@ -759,10 +760,12 @@ void AppController::reloadCurrentDirectoryModel(bool preserveSelection)
             for (const QString &p : prevSelected) {
                 if (QFileInfo::exists(p)) kept.append(p);
             }
-            if (kept != safeThis->m_selectedPaths) {
-                safeThis->m_selectedPaths = kept;
-                safeThis->m_selectedPath = kept.isEmpty() ? "" : kept.last();
+            QSet<QString> keptSet = QSet<QString>(kept.begin(), kept.end());
+            if (keptSet != safeThis->m_selectedPaths) {
+                safeThis->m_selectedPaths = keptSet;
+                safeThis->m_selectedPath = keptSet.isEmpty() ? "" : *keptSet.begin();
                 safeThis->m_selectionRevision++;
+                safeThis->updateModelSelection();
                 emit safeThis->selectedPathChanged();
                 emit safeThis->selectedPathsChanged();
             }
@@ -775,17 +778,15 @@ void AppController::removeFromSelection(const QStringList &paths)
     if (paths.isEmpty() || m_selectedPaths.isEmpty()) return;
     bool changed = false;
     for (const QString &p : paths) {
-        const int before = m_selectedPaths.size();
-        m_selectedPaths.removeAll(p);
-        if (m_selectedPaths.size() != before) changed = true;
+        if (m_selectedPaths.remove(p)) changed = true;
     }
     if (!changed) return;
-    const QString next = m_selectedPaths.isEmpty() ? QString() : m_selectedPaths.last();
+    const QString next = m_selectedPaths.isEmpty() ? QString() : *m_selectedPaths.begin();
     if (next != m_selectedPath) {
         m_selectedPath = next;
         emit selectedPathChanged();
     }
-    m_selectionRevision++;
+    updateModelSelection();
     emit selectedPathsChanged();
 }
 
@@ -818,9 +819,10 @@ void AppController::addEntriesForPaths(const QStringList &paths, bool selectAdde
     }
 
     if (selectAdded && !addedPaths.isEmpty()) {
-        m_selectedPaths = addedPaths;
+        m_selectedPaths = QSet<QString>(addedPaths.begin(), addedPaths.end());
         m_selectedPath = addedPaths.last();
         m_selectionRevision++;
+        updateModelSelection();
         emit selectedPathChanged();
         emit selectedPathsChanged();
     }
@@ -1321,7 +1323,7 @@ void AppController::copyItem(const QString &path)
 {
     m_clipboardPaths.clear();
     if (path.isEmpty()) {
-        if (!m_selectedPaths.isEmpty()) m_clipboardPaths = m_selectedPaths;
+        if (!m_selectedPaths.isEmpty()) m_clipboardPaths = m_selectedPaths.values();
     } else {
         m_clipboardPaths.append(path);
     }
@@ -1334,7 +1336,7 @@ void AppController::cutItem(const QString &path)
 {
     m_clipboardPaths.clear();
     if (path.isEmpty()) {
-        if (!m_selectedPaths.isEmpty()) m_clipboardPaths = m_selectedPaths;
+        if (!m_selectedPaths.isEmpty()) m_clipboardPaths = m_selectedPaths.values();
     } else {
         m_clipboardPaths.append(path);
     }
@@ -1434,26 +1436,32 @@ void AppController::selectPath(const QString &path)
     if (m_selectedPath == path && m_selectedPaths.size() == 1 && m_selectedPaths.contains(path)) return;
     m_selectedPath = path;
     m_selectedPaths.clear();
-    if (!path.isEmpty()) m_selectedPaths.append(path);
+    if (!path.isEmpty()) m_selectedPaths.insert(path);
     m_selectionRevision++;
+    updateModelSelection();
     emit selectedPathChanged(); emit selectedPathsChanged();
 }
 
 void AppController::toggleSelection(const QString &path)
 {
-    if (m_selectedPaths.contains(path)) m_selectedPaths.removeAll(path);
-    else m_selectedPaths.append(path);
+    if (m_selectedPaths.contains(path)) m_selectedPaths.remove(path);
+    else m_selectedPaths.insert(path);
+    
     if (m_selectedPaths.isEmpty()) m_selectedPath = "";
-    else m_selectedPath = m_selectedPaths.last();
+    else if (!m_selectedPaths.contains(m_selectedPath)) m_selectedPath = *m_selectedPaths.begin();
+    
     m_selectionRevision++;
+    updateModelSelection();
     emit selectedPathChanged(); emit selectedPathsChanged();
 }
 
 void AppController::clearSelection()
 {
+    if (m_selectedPaths.isEmpty()) return;
     m_selectedPath = ""; 
     m_selectedPaths.clear();
     m_selectionRevision++;
+    updateModelSelection();
     emit selectedPathChanged(); 
     emit selectedPathsChanged();
 }
@@ -1465,11 +1473,12 @@ void AppController::selectAll()
     for (int i = 0; i < rowCount; ++i) {
         QModelIndex proxyIdx = m_proxyModel.index(i, 0);
         QString path = m_proxyModel.data(proxyIdx, FileListModel::PathRole).toString();
-        if (!path.isEmpty()) m_selectedPaths.append(path);
+        if (!path.isEmpty()) m_selectedPaths.insert(path);
     }
-    if (!m_selectedPaths.isEmpty()) m_selectedPath = m_selectedPaths.last();
+    if (!m_selectedPaths.isEmpty()) m_selectedPath = *m_selectedPaths.begin();
     else m_selectedPath = "";
     m_selectionRevision++;
+    updateModelSelection();
     emit selectedPathChanged();
     emit selectedPathsChanged();
 }
@@ -1486,10 +1495,11 @@ void AppController::selectRangeByIndexes(int from, int to)
     for (int i = from; i <= to; ++i) {
         const QModelIndex proxyIdx = m_proxyModel.index(i, 0);
         const QString path = m_proxyModel.data(proxyIdx, FileListModel::PathRole).toString();
-        if (!path.isEmpty()) m_selectedPaths.append(path);
+        if (!path.isEmpty()) m_selectedPaths.insert(path);
     }
-    m_selectedPath = m_selectedPaths.isEmpty() ? "" : m_selectedPaths.last();
+    m_selectedPath = m_selectedPaths.isEmpty() ? "" : *m_selectedPaths.begin();
     m_selectionRevision++;
+    updateModelSelection();
     emit selectedPathChanged();
     emit selectedPathsChanged();
 }
@@ -1520,7 +1530,12 @@ int AppController::indexOfPath(const QString &path) const
 
 void AppController::startRename(const QString &path) { emit renameRequested(path); }
 QString AppController::selectedPath() const { return m_selectedPath; }
-QStringList AppController::selectedPaths() const { return m_selectedPaths; }
+QStringList AppController::selectedPaths() const { return m_selectedPaths.values(); }
+
+void AppController::updateModelSelection()
+{
+    m_fileModel.setSelectedPaths(m_selectedPaths);
+}
 bool AppController::hasSelection() const { return !m_selectedPaths.isEmpty(); }
 QVariantMap AppController::metadataForPath(const QString &path) const
 {

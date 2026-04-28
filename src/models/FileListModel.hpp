@@ -35,7 +35,8 @@ public:
         ThumbnailRole,
         IconNameRole,
         MimeTypeRole,
-        TypeRole
+        TypeRole,
+        IsSelectedRole
     };
 
     // Required overrides
@@ -50,6 +51,9 @@ public:
     void removeItems(const QStringList &paths);
     void updateThumbnail(const QString &filePath,
                          const QString &thumbPath);
+    void setSelectedPaths(const QSet<QString> &paths);
+
+    void setThumbnailManager(class ThumbnailManager* manager) { m_thumbnailManager = manager; }
 
     Q_INVOKABLE QVariantMap metadataForPath(const QString &path) const;
     Q_INVOKABLE QStringList availableExtensions() const;
@@ -66,8 +70,10 @@ signals:
 private:
     std::vector<FileMeta> m_entries;
     std::unordered_map<std::string, size_t> m_pathToIndex;
+    QSet<QString> m_selectedPaths;
     QString m_sortField = "name";
     bool m_sortAscending = true;
+    class ThumbnailManager* m_thumbnailManager = nullptr;
     void applySort();
     void rebuildPathMap();
 };

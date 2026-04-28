@@ -1,4 +1,5 @@
 #include "FileListModel.hpp"
+#include "src/ThumbnailManager.hpp"
 
 #include <QString>
 #include <QUrl>
@@ -179,6 +180,13 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const
         if (!entry.thumbnailPath.empty()) {
             return QString::fromStdString(entry.thumbnailPath);
         }
+        if (m_thumbnailManager) {
+            QString path = QString::fromStdString(entry.path);
+            if (m_thumbnailManager->hasMemoryCache(path)) {
+                return "image://thumbs/" + path;
+            }
+            m_thumbnailManager->requestThumbnail(path);
+        }
         return QString();
     }
     case IconNameRole: {
@@ -196,6 +204,8 @@ QVariant FileListModel::data(const QModelIndex &index, int role) const
         const QString m = entry.mimeType ? QString::fromStdString(*entry.mimeType) : "application/octet-stream";
         return db.mimeTypeForName(m).comment();
     }
+    case IsSelectedRole:
+        return m_selectedPaths.contains(path);
     default:
         return {};
     }
@@ -222,8 +232,26 @@ QHash<int, QByteArray> FileListModel::roleNames() const
         {ThumbnailRole, "thumbnail"},
         {IconNameRole, "iconName"},
         {MimeTypeRole, "mimeType"},
-        {TypeRole, "type"}
+        {TypeRole, "type"},
+        {IsSelectedRole, "isSelected"}
     };
+}
+
+void FileListModel::setSelectedPaths(const QSet<QString> &paths)
+{
+    if (m_selectedPaths == paths) return;
+
+    // Find what changed
+    QSet<QString> changed = (m_selectedPaths - paths) + (paths - m_selectedPaths);
+    m_selectedPaths = paths;
+
+    for (const QString &path : changed) {
+        auto it = m_pathToIndex.find(path.toStdString());
+        if (it != m_pathToIndex.end()) {
+            QModelIndex idx = index(static_cast<int>(it->second));
+            emit dataChanged(idx, idx, {IsSelectedRole});
+        }
+    }
 }
 
 void FileListModel::clear()
@@ -340,9 +368,12 @@ void FileListModel::updateThumbnail(const QString &filePath,
     auto it = m_pathToIndex.find(filePath.toStdString());
     if (it != m_pathToIndex.end()) {
         size_t i = it->second;
-        m_entries[i].thumbnailPath = thumbPath.toStdString();
-        QModelIndex idx = index(static_cast<int>(i));
-        emit dataChanged(idx, idx, {ThumbnailRole});
+        std::string newPath = thumbPath.toStdString();
+        if (m_entries[i].thumbnailPath != newPath) {
+            m_entries[i].thumbnailPath = newPath;
+            QModelIndex idx = index(static_cast<int>(i));
+            emit dataChanged(idx, idx, {ThumbnailRole});
+        }
     }
 }
 

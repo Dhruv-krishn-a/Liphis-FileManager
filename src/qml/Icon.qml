@@ -107,35 +107,25 @@ Item {
     }
 
     readonly property string iconTheme: (typeof generalSettings !== "undefined" && generalSettings) ? generalSettings.iconTheme : "outline"
-    readonly property bool useThemeProvider: prefersThemeProvider(root.name)
-    readonly property string assetSource: useThemeProvider
-        ? ("image://icon/" + root.mappedIconName(root.name))
-        : ((iconTheme === "filled" || root.filled) ? filledAsset(root.name) : localAsset(root.name))
+    readonly property string assetSource: "image://icon/" + root.mappedIconName(root.name)
 
     Image {
         id: sourceIcon
         anchors.fill: parent
         source: root.assetSource
-        sourceSize.width: Math.max(32, Math.round(root.width * 1.5))
-        sourceSize.height: Math.max(32, Math.round(root.height * 1.5))
+        sourceSize.width: Math.max(16, root.width)
+        sourceSize.height: Math.max(16, root.height)
         fillMode: Image.PreserveAspectFit
-        verticalAlignment: Image.AlignBottom
-        smooth: root.width > 32
-        mipmap: true
-        antialiasing: true
         asynchronous: true
+        cache: true
         
         onStatusChanged: {
             if (status === Image.Error) {
-                source = "image://icon/" + root.mappedIconName(root.name)
+                let local = root.localAsset(root.name)
+                if (source.toString() !== local) {
+                    source = local
+                }
             }
         }
-    }
-
-    ColorOverlay {
-        anchors.fill: sourceIcon
-        source: sourceIcon
-        visible: !root.useVector
-        color: root.color
     }
 }

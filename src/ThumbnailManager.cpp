@@ -138,32 +138,9 @@ qsizetype ThumbnailManager::imageCost(const QImage *img) const
 
 void ThumbnailManager::requestThumbnail(const QString &filePath)
 {
-    QFileInfo fi(filePath);
-    if (!fi.exists() || !fi.isFile()) return;
-
-    static const QStringList imageExt = { "png","jpg","jpeg","bmp","webp","gif" };
-    static const QStringList videoExt = { "mp4","mkv","avi","mov","webm","wmv" };
-    static const QStringList pdfExt = { "pdf" };
-    static const QStringList officeExt = { "doc","docx","ppt","pptx","xls","xlsx","odt","odp","ods","rtf" };
-    
-    bool isImage = imageExt.contains(fi.suffix().toLower());
-    bool isVideo = videoExt.contains(fi.suffix().toLower());
-    bool isPdf = pdfExt.contains(fi.suffix().toLower());
-    bool isOffice = officeExt.contains(fi.suffix().toLower());
-    // 1) Always check the standard system thumbnail cache first (works for many filetypes).
-    QString stdPath = getStandardThumbnailPath(filePath);
-    if (!stdPath.isEmpty()) {
-        QString url = QUrl::fromLocalFile(stdPath).toString();
-        QMetaObject::invokeMethod(this, [this, filePath, url]() {
-            emit thumbnailReady(filePath, url);
-        }, Qt::QueuedConnection);
-        return;
-    }
-
-    // 2) If not cached by the system, only generate for supported types.
-    if (!isImage && !isVideo && !isPdf && !isOffice) return;
-
     QString key = filePath;
+    
+    // 1) Fast path: Check memory cache (NO disk IO)
     {
         QMutexLocker lk(&m_mutex);
         QImage *cached = m_memCache.object(key);
@@ -173,30 +150,14 @@ void ThumbnailManager::requestThumbnail(const QString &filePath)
             }, Qt::QueuedConnection);
             return;
         }
-    }
-
-    QString diskCachePath = cachePathFor(filePath);
-    if (QFileInfo::exists(diskCachePath)) {
-        ThreadPool::instance().submit([this, filePath, diskCachePath, key]() {
-            QImage *img = new QImage(diskCachePath);
-            if (!img->isNull()) {
-                QMutexLocker lk(&m_mutex);
-                m_memCache.insert(key, img, imageCost(img));
-                QString url = QUrl::fromLocalFile(diskCachePath).toString();
-                QMetaObject::invokeMethod(this, [this, filePath, url]() {
-                    emit thumbnailReady(filePath, url);
-                }, Qt::QueuedConnection);
-            } else { delete img; }
-        });
-        return;
-    }
-
-    {
-        QMutexLocker lk(&m_mutex);
+        
+        // If already pending generation, don't queue again
         if (m_pendingSet.contains(key)) return;
         m_pendingSet.insert(key);
         m_queue.enqueue(key);
     }
+    
+    // Process queue on background thread
     processQueue();
 }
 
@@ -233,11 +194,46 @@ QImage ThumbnailManager::getFromMemoryCache(const QString &key)
 void ThumbnailManager::workerGenerate(const QString &filePath, const QString &cachePath)
 {
     QFileInfo fi(filePath);
+    if (!fi.exists() || !fi.isFile()) return;
+
+    // 1) First check our disk cache, since the UI thread no longer checks it synchronously.
+    if (QFileInfo::exists(cachePath)) {
+        QImage *img = new QImage(cachePath);
+        if (!img->isNull()) {
+            QMutexLocker lk(&m_mutex);
+            m_memCache.insert(filePath, img, imageCost(img));
+            QString url = QUrl::fromLocalFile(cachePath).toString();
+            QMetaObject::invokeMethod(this, [this, filePath, url]() {
+                emit thumbnailReady(filePath, url);
+            }, Qt::QueuedConnection);
+            return;
+        } else { delete img; }
+    }
+
+    // 2) Check the standard system thumbnail cache
+    QString stdPath = getStandardThumbnailPath(filePath);
+    if (!stdPath.isEmpty()) {
+        QString url = QUrl::fromLocalFile(stdPath).toString();
+        QMetaObject::invokeMethod(this, [this, filePath, url]() {
+            emit thumbnailReady(filePath, url);
+        }, Qt::QueuedConnection);
+        return;
+    }
+
+    static const QStringList imageExt = { "png","jpg","jpeg","bmp","webp","gif" };
     static const QStringList videoExt = { "mp4","mkv","avi","mov","webm","wmv" };
     static const QStringList pdfExt = { "pdf" };
     static const QStringList officeExt = { "doc","docx","ppt","pptx","xls","xlsx","odt","odp","ods","rtf" };
     
-    if (videoExt.contains(fi.suffix().toLower())) {
+    const QString suffix = fi.suffix().toLower();
+    bool isImage = imageExt.contains(suffix);
+    bool isVideo = videoExt.contains(suffix);
+    bool isPdf = pdfExt.contains(suffix);
+    bool isOffice = officeExt.contains(suffix);
+
+    if (!isImage && !isVideo && !isPdf && !isOffice) return;
+
+    if (isVideo) {
         QProcess proc;
         proc.start("ffmpegthumbnailer", {"-i", filePath, "-o", cachePath, "-s", "256"});
         if (proc.waitForFinished(3000) && QFileInfo::exists(cachePath)) {
@@ -247,7 +243,6 @@ void ThumbnailManager::workerGenerate(const QString &filePath, const QString &ca
         }
     }
 
-    const QString suffix = fi.suffix().toLower();
     if (pdfExt.contains(suffix)) {
         if (generatePdfThumbPdftoppm(filePath, cachePath)) {
             QImage *px = new QImage(cachePath);

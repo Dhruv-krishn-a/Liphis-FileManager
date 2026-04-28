@@ -37,8 +37,6 @@ int main(int argc, char **argv)
     qInstallMessageHandler(customLogHandler);
     git_libgit2_init();
 
-    qputenv("QSG_RENDER_LOOP", "basic");
-
     const QByteArray lang = qgetenv("LANG");
     const QByteArray lcAll = qgetenv("LC_ALL");
     const QByteArray lcCtype = qgetenv("LC_CTYPE");
@@ -49,7 +47,8 @@ int main(int argc, char **argv)
     }
 
     QGuiApplication app(argc, argv);
-    app.styleHints()->setWheelScrollLines(12);
+    app.styleHints()->setWheelScrollLines(5);
+    qDebug() << "Application started with wheelScrollLines:" << app.styleHints()->wheelScrollLines();
 
     QCoreApplication::setOrganizationName("Liphis");
     QCoreApplication::setOrganizationDomain("liphis.local");

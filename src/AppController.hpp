@@ -243,7 +243,7 @@ private:
     QElapsedTimer m_lastUserInitiatedOp;
 
     QString m_selectedPath;
-    QStringList m_selectedPaths;
+    QSet<QString> m_selectedPaths;
     QVector<QString> m_history;
     int m_historyIndex = -1;
     
@@ -272,6 +272,7 @@ private:
     QSet<QString> m_pendingFolderSizeRequests;
     void loadRecentSearches();
     void persistRecentSearches();
+    void updateModelSelection();
 public:
     Q_INVOKABLE void setThumbnailManager(ThumbnailManager* manager);
     Q_INVOKABLE void setPlacesModel(PlacesModel* model);

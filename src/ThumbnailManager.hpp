@@ -18,6 +18,10 @@ public:
     void setMemoryCacheBytes(int bytes);
 
     QImage getFromMemoryCache(const QString &key);
+    bool hasMemoryCache(const QString &key) {
+        QMutexLocker lk(&m_mutex);
+        return m_memCache.contains(key);
+    }
     QString cachePathFor(const QString &filePath) const;
 
 signals:

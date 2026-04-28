@@ -34,6 +34,9 @@ Item {
     property int rangeAnchorIndex: -1
     property string typeBuffer: ""
     property int cycleMatchIndex: -1
+    property double lastWheelAtMs: 0
+    property double lastTouchpadDeltaAtMs: 0
+    readonly property int tooltipCooldownMs: 350
 
     property int zoomLevel: generalSettings ? generalSettings.defaultZoom : 100
     property int pendingZoomLevel: zoomLevel
@@ -44,7 +47,7 @@ Item {
     readonly property real zoomScale: zoomLevel / 100.0
 
     function queueZoom(nextZoom) {
-        var quantized = Math.round(Math.max(50, Math.min(300, nextZoom)) / 5) * 5
+        var quantized = Math.round(Math.max(50, Math.min(150, nextZoom)) / 5) * 5
         if (pendingZoomLevel === quantized) return
         pendingZoomLevel = quantized
         zoomApplyTimer.restart()
@@ -71,7 +74,8 @@ Item {
     }
 
     function currentRowCount() {
-        return controller && controller.fileModel ? controller.fileModel.rowCount() : 0
+        var flick = activeFlickable()
+        return (flick && flick.count !== undefined) ? flick.count : 0
     }
 
     function ensureKeyboardIndex() {
@@ -89,19 +93,28 @@ Item {
 
     function ensureVisible(index) {
         if (index < 0) return
-        if (controller.viewMode === "grid") gv.positionViewAtIndex(index, GridView.Contain)
-        else lv.positionViewAtIndex(index, ListView.Contain)
+        var flick = activeFlickable()
+        if (flick && typeof flick.positionViewAtIndex === "function") {
+            flick.positionViewAtIndex(index, (controller.viewMode === "grid" ? GridView.Contain : ListView.Contain))
+        }
     }
 
     function activeFlickable() {
-        if (controller.viewMode === "grid") return gv
-        if (controller.viewMode === "tree") return treeView
-        return lv
+        return viewLoader.item
     }
 
     function isViewInteracting() {
         const flick = activeFlickable()
         return !!(flick && (flick.moving || flick.flicking))
+    }
+
+    function markWheelActivity() {
+        lastWheelAtMs = Date.now()
+    }
+
+    function allowHoverTooltips() {
+        var elapsed = Date.now() - lastWheelAtMs
+        return !isViewInteracting() && elapsed > tooltipCooldownMs
     }
 
     function applySelection(index, modifiers) {
@@ -147,7 +160,9 @@ Item {
     }
 
     function gridStepForUpDown() {
-        var cols = Math.floor(gv.width / gv.cellWidth)
+        var flick = activeFlickable()
+        if (!flick || controller.viewMode !== "grid") return 1
+        var cols = Math.floor(flick.width / flick.cellWidth)
         return Math.max(1, cols)
     }
 
@@ -212,34 +227,108 @@ Item {
         return String(name || "")
     }
 
-    function requestVisibleThumbnails() {
-        if (!controller || !controller.fileModel) return
-        var count = currentRowCount()
-        if (count <= 0) return
+    function normalizePath(path) {
+        if (!path) return ""
+        var p = String(path)
+        if (p.startsWith("file://")) {
+            p = decodeURIComponent(p.substring("file://".length))
+        }
+        return p
+    }
 
-        var first = 0
-        var last = Math.min(count - 1, 30)
+    function maxScrollY(view) {
+        return Math.max(view.originY, view.originY + view.contentHeight - view.height)
+    }
 
-        if (controller.viewMode === "grid") {
-            first = gv.indexAt(6, gv.contentY + 6)
-            if (first < 0) first = 0
-            last = gv.indexAt(Math.max(6, gv.width - 10), gv.contentY + gv.height - 10)
-            if (last < first) {
-                var cols = Math.max(1, Math.floor(gv.width / gv.cellWidth))
-                last = Math.min(count - 1, first + (cols * 5))
+    function wheelStepFor(view) {
+        // Keep notch-wheel movement predictable and zoom-aware.
+        // At higher zoom we move farther to keep visual speed consistent.
+        var zoomFactor = Math.max(0.75, Math.min(1.8, root.zoomScale))
+        return Math.max(120, view.height * 0.42 * zoomFactor)
+    }
+
+    function softLimitDelta(delta, maxAbs) {
+        if (maxAbs <= 0) return delta
+        // Smoothly compress spikes instead of hard-clipping, avoiding springy jumps.
+        return maxAbs * Math.tanh(delta / maxAbs)
+    }
+
+    function limitTouchpadDelta(delta, view) {
+        var now = Date.now()
+        var dtMs = lastTouchpadDeltaAtMs > 0 ? (now - lastTouchpadDeltaAtMs) : 16
+        lastTouchpadDeltaAtMs = now
+
+        // Reset timing after pauses to avoid giant first-frame allowance.
+        if (dtMs <= 0 || dtMs > 100) dtMs = 16
+
+        // Hard guardrails against burst packets.
+        var maxPerEvent = Math.max(28, view.height * 0.055)       // px/event
+        var maxPerSecond = Math.max(1100, view.height * 1.9)      // px/second
+        var maxByTime = maxPerSecond * (dtMs / 1000.0)
+        var maxAbs = Math.min(maxPerEvent, maxByTime)
+
+        return Math.max(-maxAbs, Math.min(delta, maxAbs))
+    }
+
+    function isLikelyTouchpadEvent(event) {
+        if (!event) return false
+        if (event.pixelDelta && (event.pixelDelta.y !== 0 || event.pixelDelta.x !== 0)) return true
+        if (!event.angleDelta || event.angleDelta.y === 0) return false
+        var ay = Math.abs(event.angleDelta.y)
+        // Mouse wheels are typically 120-step notches; touchpads are often fine-grained.
+        return ay < 120 || (ay % 120) !== 0
+    }
+
+    function applyWheelScroll(view, event, multiplier, isTouchpadInput) {
+        if (!view || !event) return
+
+        markWheelActivity()
+
+        var legacySens = (typeof generalSettings !== "undefined" && generalSettings) ? generalSettings.scrollSensitivity : 1.0
+        var mouseSens = (typeof generalSettings !== "undefined" && generalSettings && generalSettings.mouseScrollSensitivity !== undefined)
+            ? generalSettings.mouseScrollSensitivity : legacySens
+        var touchpadSens = (typeof generalSettings !== "undefined" && generalSettings && generalSettings.touchpadScrollSensitivity !== undefined)
+            ? generalSettings.touchpadScrollSensitivity : legacySens
+        var sens = isTouchpadInput ? touchpadSens : mouseSens
+        var zoomBoost = Math.max(0.85, Math.min(1.45, root.zoomScale))
+        var totalSens = sens * zoomBoost * (multiplier === undefined ? 1.0 : multiplier)
+        
+        var direction = event.inverted ? -1.0 : 1.0
+
+        // 1. Touchpad / Trackpad (pixelDelta)
+        if (event.pixelDelta && (event.pixelDelta.y !== 0 || event.pixelDelta.x !== 0)) {
+            // Touchpads report fine-grained deltas; apply a dedicated boost here
+            // so two-finger scrolling feels responsive without changing mouse wheel speed.
+            var touchpadBoost = isTouchpadInput ? 1.35 : 1.0
+            var pDelta = event.pixelDelta.y * totalSens * touchpadBoost * direction
+            if (isTouchpadInput) {
+                var maxTouchpadStepPx = Math.max(90, view.height * 0.20)
+                pDelta = softLimitDelta(pDelta, maxTouchpadStepPx)
+                pDelta = limitTouchpadDelta(pDelta, view)
             }
-        } else if (controller.viewMode === "tree") {
-            var rowH = Math.max(1, 32 * root.zoomScale)
-            first = Math.max(0, Math.floor(treeView.contentY / rowH))
-            last  = Math.min(count - 1, Math.ceil((treeView.contentY + treeView.height) / rowH))
-        } else {
-            first = lv.indexAt(6, lv.contentY + 6)
-            if (first < 0) first = 0
-            last = lv.indexAt(6, lv.contentY + lv.height - 10)
-            if (last < first) last = Math.min(count - 1, first + 28)
+            var nextY = Math.max(view.originY, Math.min(view.contentY - pDelta, maxScrollY(view)))
+            
+            view.contentY = nextY
+            event.accepted = true
+            return
         }
 
-        controller.requestThumbnailsForRange(first, last)
+        // 2. Mouse Wheel (angleDelta)
+        if (event.angleDelta && event.angleDelta.y !== 0) {
+            var rawAngleY = event.angleDelta.y
+            // Use an explicit device path instead of threshold switching to avoid
+            // per-event speed jumps ("sometimes fast, sometimes normal").
+            var highResAngleBoost = isTouchpadInput ? 2.4 : 1.0
+            var aDelta = (rawAngleY / 120.0) * wheelStepFor(view) * totalSens * highResAngleBoost * direction
+            if (isTouchpadInput) {
+                var maxTouchpadStepAngle = Math.max(90, view.height * 0.20)
+                aDelta = softLimitDelta(aDelta, maxTouchpadStepAngle)
+                aDelta = limitTouchpadDelta(aDelta, view)
+            }
+            var nextY2 = Math.max(view.originY, Math.min(view.contentY - aDelta, maxScrollY(view)))
+            view.contentY = nextY2
+            event.accepted = true
+        }
     }
 
     Timer {
@@ -250,21 +339,6 @@ Item {
             root.typeBuffer = ""
             root.cycleMatchIndex = -1
         }
-    }
-
-    Timer {
-        id: thumbsDebounce
-        interval: 50
-        repeat: false
-        onTriggered: root.requestVisibleThumbnails()
-    }
-
-    Timer {
-        id: thumbsDuringSearch
-        interval: 260
-        repeat: true
-        running: !!(controller && controller.searchInProgress)
-        onTriggered: root.requestVisibleThumbnails()
     }
 
     Keys.onPressed: (event) => {
@@ -337,15 +411,6 @@ Item {
         }
     }
 
-    function normalizePath(path) {
-        if (!path) return ""
-        var p = String(path)
-        if (p.startsWith("file://")) {
-            p = decodeURIComponent(p.substring("file://".length))
-        }
-        return p
-    }
-
     Rectangle {
         anchors.fill: parent
         color: theme.bg
@@ -363,11 +428,11 @@ Item {
     AppController {
         id: controller
         Component.onCompleted: {
-            if (typeof globalThumbnailManager !== "undefined") setThumbnailManager(globalThumbnailManager);
-            if (typeof globalPlacesModel !== "undefined") setPlacesModel(globalPlacesModel);
-            var launchPath = initialPath && initialPath.length > 0 ? initialPath : homePath;
-            launchPath = normalizePath(launchPath);
-            if (launchPath && launchPath.length > 0) openPath(launchPath);
+            if (typeof globalThumbnailManager !== "undefined") setThumbnailManager(globalThumbnailManager)
+            if (typeof globalPlacesModel !== "undefined") setPlacesModel(globalPlacesModel)
+            var launchPath = initialPath && initialPath.length > 0 ? initialPath : homePath
+            launchPath = normalizePath(launchPath)
+            if (launchPath && launchPath.length > 0) openPath(launchPath)
             root.tabTitleChanged(controller.title)
             root.requestedActive()
             Qt.callLater(root.forceActiveFocus)
@@ -457,8 +522,8 @@ Item {
         id: listDelegate
         Item {
             id: listRoot
-            width: lv.width; height: baseListHeight * root.zoomScale
-            readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPaths.includes(model.path)
+            width: ListView.view.width; height: baseListHeight * root.zoomScale
+            readonly property bool isActuallySelected: model.isSelected !== undefined ? model.isSelected : false
             readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
             readonly property bool clipboardCut: !!(controller && controller.isCutOp)
             readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
@@ -502,7 +567,9 @@ Item {
                             font.pixelSize: Math.max(8, 13 * (root.zoomScale || 1.0))
                             font.weight: listRoot.isActuallySelected ? Font.Medium : Font.Normal
                         }
-                        ToolTip.visible: listMA.containsMouse
+                        ToolTip.visible: listMA.containsMouse && root.allowHoverTooltips()
+                        ToolTip.delay: 450
+                        ToolTip.timeout: 1200
                         ToolTip.text: (model.path !== undefined ? String(model.path) : "")
                     }
                 }
@@ -688,12 +755,6 @@ Item {
                     }
                 }
             }
-
-            Component.onCompleted: {
-                if (model.path && (!model.thumbnail || model.thumbnail === "")) {
-                    controller.requestThumbnail(model.path)
-                }
-            }
         }
     }
 
@@ -701,8 +762,11 @@ Item {
         id: gridDelegate
         Item {
             id: gridRoot
-            width: gv.cellWidth; height: gv.cellHeight
-            readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPaths.includes(model.path)
+            // We use the cellWidth/Height from the GridView that is loading us.
+            // Since GridView sets width/height of delegates to cellWidth/Height by default,
+            // we can just fill parent or rely on the parent sizing.
+            implicitWidth: 100; implicitHeight: 100
+            readonly property bool isActuallySelected: model.isSelected !== undefined ? model.isSelected : false
             readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
             readonly property bool clipboardCut: !!(controller && controller.isCutOp)
             readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
@@ -741,6 +805,8 @@ Item {
                         anchors.fill: parent
                         fillMode: Image.PreserveAspectFit
                         source: (model.thumbnail !== undefined ? model.thumbnail : "")
+                        sourceSize.width: Math.max(128, width)
+                        sourceSize.height: Math.max(128, height)
                         visible: status === Image.Ready
                         asynchronous: true
                         cache: true
@@ -760,7 +826,9 @@ Item {
                     font.pixelSize: 7 + (5 * (zoomLevel / 100.0))
                     font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
-                ToolTip.visible: gridMA.containsMouse
+                ToolTip.visible: gridMA.containsMouse && root.allowHoverTooltips()
+                ToolTip.delay: 450
+                ToolTip.timeout: 1200
                 ToolTip.text: (model.path !== undefined ? String(model.path) : "")
             }
 
@@ -825,66 +893,51 @@ Item {
                     }
                 }
             }
-
-            Component.onCompleted: {
-                if (model.path && (!model.thumbnail || model.thumbnail === "")) {
-                    controller.requestThumbnail(model.path)
-                }
-            }
         }
     }
 
-    StackLayout {
-        id: viewStack
+    Loader {
+        id: viewLoader
         anchors.fill: parent
-        currentIndex: controller.viewMode === "grid" ? 1 : (controller.viewMode === "list" ? 0 : 2)
+        focus: true
+        sourceComponent: {
+            if (controller.viewMode === "grid") return gridComponent;
+            if (controller.viewMode === "tree") return treeComponent;
+            return listComponent;
+        }
+    }
 
+    Component {
+        id: listComponent
         ListView {
             id: lv
+            anchors.fill: parent
             model: controller.fileModel
             clip: true
             delegate: listDelegate
             focus: true
             interactive: true
             flickableDirection: Flickable.VerticalFlick
-            boundsBehavior: Flickable.DragOverBounds
+            boundsBehavior: Flickable.StopAtBounds
             flickDeceleration: 1500
-            maximumFlickVelocity: 12000
+            maximumFlickVelocity: 15000
+            pixelAligned: false
+
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                blocking: true
+                onWheel: (event) => {
+                    var tp = isLikelyTouchpadEvent(event)
+                    applyWheelScroll(lv, event, tp ? 1.3 : 1.6, tp)
+                }
+            }
 
             Keys.onEscapePressed: (event) => {
                 if (controller) { controller.clearSelection(); event.accepted = true }
             }
 
-            property real targetY: contentY
-            onMovementStarted: lvSmoothScroll.stop()
-
-            SmoothedAnimation {
-                id: lvSmoothScroll
-                target: lv
-                property: "contentY"
-                to: lv.targetY
-                duration: 150
-                velocity: -1
-            }
-
-            WheelHandler {
-                acceptedDevices: PointerDevice.Mouse
-                onWheel: (event) => {
-                    if (event.angleDelta.y !== 0) {
-                        let step = (event.angleDelta.y / 120) * (44 * Math.max(1.0, root.zoomScale) * 4);
-                        let newTarget = lv.targetY - step;
-                        lv.targetY = Math.max(lv.originY, Math.min(newTarget, lv.originY + lv.contentHeight - lv.height));
-                        lvSmoothScroll.start();
-                        event.accepted = true;
-                    }
-                }
-            }
-
             reuseItems: true
-            cacheBuffer: 420
-            onContentYChanged: { thumbsDebounce.restart(); if (!lvSmoothScroll.running) targetY = contentY; }
-            onContentXChanged: thumbsDebounce.restart()
-            onCountChanged:    thumbsDebounce.restart()
+            cacheBuffer: 400
             ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded; active: true }
             ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
 
@@ -892,7 +945,7 @@ Item {
             header: Rectangle {
                 z: 10; width: lv.width; height: 36; color: theme.surfaceMuted
 
-                RowLayout {
+                Row {
                     anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16; spacing: 0
 
                     HeaderColumn {
@@ -985,107 +1038,80 @@ Item {
                         onClicked: toggleSort("mimeType")
                         onWidthChangedByHandle: (w) => viewSettings.colMimeWidth = w / root.zoomScale
                     }
-
-                    Item { Layout.fillWidth: true }
+                    Item { width: 40; height: 1 } // Spacer
                 }
 
                 Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: theme.border }
             }
         }
+    }
 
+    Component {
+        id: gridComponent
         GridView {
             id: gv
+            anchors.fill: parent
             model: controller.fileModel
             clip: true
             delegate: gridDelegate
             focus: true
             interactive: true
-            boundsBehavior: Flickable.DragOverBounds
+            boundsBehavior: Flickable.StopAtBounds
             flickDeceleration: 1500
-            maximumFlickVelocity: 12000
+            maximumFlickVelocity: 15000
+            pixelAligned: false
+
+            WheelHandler {
+                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                blocking: true
+                onWheel: (event) => {
+                    var tp = isLikelyTouchpadEvent(event)
+                    applyWheelScroll(gv, event, tp ? 1.25 : 1.5, tp)
+                }
+            }
 
             Keys.onEscapePressed: (event) => {
                 if (controller) { controller.clearSelection(); event.accepted = true }
             }
 
-            property real targetY: contentY
-            onMovementStarted: gvSmoothScroll.stop()
-
-            SmoothedAnimation {
-                id: gvSmoothScroll
-                target: gv
-                property: "contentY"
-                to: gv.targetY
-                duration: 150
-                velocity: -1
-            }
-
-            WheelHandler {
-                acceptedDevices: PointerDevice.Mouse
-                onWheel: (event) => {
-                    if (event.angleDelta.y !== 0) {
-                        let step = (event.angleDelta.y / 120) * (gv.cellHeight * 2.5);
-                        let newTarget = gv.targetY - step;
-                        gv.targetY = Math.max(gv.originY, Math.min(newTarget, gv.originY + gv.contentHeight - gv.height));
-                        gvSmoothScroll.start();
-                        event.accepted = true;
-                    }
-                }
-            }
-
             cellWidth:  Math.max(84, baseCellSize * root.zoomScale)
             cellHeight: Math.max(76, baseCellSize * root.zoomScale)
             reuseItems: true
-            cacheBuffer: 520
-            onContentYChanged: { thumbsDebounce.restart(); if (!gvSmoothScroll.running) targetY = contentY; }
-            onContentXChanged: thumbsDebounce.restart()
-            onCountChanged:    thumbsDebounce.restart()
+            cacheBuffer: 800
             ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded }
             ScrollBar.horizontal: ScrollBar { policy: ScrollBar.AsNeeded }
         }
+    }
 
+    Component {
+        id: treeComponent
         TreeView {
             id: treeView
+            anchors.fill: parent
             model: controller.treeModel
             focus: true
             clip: true
             flickableDirection: Flickable.VerticalFlick
-            boundsBehavior: Flickable.DragOverBounds
+            boundsBehavior: Flickable.StopAtBounds
             flickDeceleration: 1500
-            maximumFlickVelocity: 12000
-
-            property real targetY: contentY
-            onContentYChanged: { if (!tvSmoothScroll.running) targetY = contentY }
-            onMovementStarted: tvSmoothScroll.stop()
-
-            SmoothedAnimation {
-                id: tvSmoothScroll
-                target: treeView
-                property: "contentY"
-                to: treeView.targetY
-                duration: 150
-                velocity: -1
-            }
+            maximumFlickVelocity: 15000
+            pixelAligned: false
 
             WheelHandler {
-                acceptedDevices: PointerDevice.Mouse
+                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                blocking: true
                 onWheel: (event) => {
-                    if (event.angleDelta.y !== 0) {
-                        let step = (event.angleDelta.y / 120) * (32 * Math.max(1.0, root.zoomScale) * 5);
-                        let newTarget = treeView.targetY - step;
-                        treeView.targetY = Math.max(treeView.originY, Math.min(newTarget, treeView.originY + treeView.contentHeight - treeView.height));
-                        tvSmoothScroll.start();
-                        event.accepted = true;
-                    }
+                    var tp = isLikelyTouchpadEvent(event)
+                    applyWheelScroll(treeView, event, tp ? 1.25 : 1.5, tp)
                 }
             }
 
             delegate: Item {
                 id: treeDelegate
-                implicitWidth: treeView.width
+                implicitWidth: treeView.implicitWidth
                 implicitHeight: 32 * root.zoomScale
 
-                readonly property bool isActuallySelected: (controller.selectionRevision >= 0) && controller.selectedPath === model.path
+                readonly property bool isActuallySelected: model.isSelected !== undefined ? model.isSelected : false
                 readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
                 readonly property bool clipboardCut: !!(controller && controller.isCutOp)
 
@@ -1137,7 +1163,9 @@ Item {
                         color: treeDelegate.isActuallySelected ? theme.accent : theme.textPrimary
                         font.pixelSize: 13 * root.zoomScale
                     }
-                    ToolTip.visible: treeMA.containsMouse
+                    ToolTip.visible: treeMA.containsMouse && root.allowHoverTooltips()
+                    ToolTip.delay: 450
+                    ToolTip.timeout: 1200
                     ToolTip.text: model.path
                 }
 
@@ -1224,9 +1252,7 @@ Item {
 
     Connections {
         target: controller
-        function onViewModeChanged() { thumbsDebounce.restart() }
         function onCurrentPathChanged() {
-            thumbsDebounce.restart()
             Qt.callLater(root.forceActiveFocus)
         }
         function onLoadingChanged() {
@@ -1236,7 +1262,6 @@ Item {
 
     Connections {
         target: controller ? controller.fileModel : null
-        function onCountChanged() { thumbsDebounce.restart() }
     }
 
     MouseArea {
