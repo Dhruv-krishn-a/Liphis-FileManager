@@ -34,15 +34,14 @@ Item {
     property int rangeAnchorIndex: -1
     property string typeBuffer: ""
     property int cycleMatchIndex: -1
-    property double lastWheelAtMs: 0
-    property double lastTouchpadDeltaAtMs: 0
-    readonly property int tooltipCooldownMs: 350
+    property real pendingTouchpadDeltaY: 0
+    property var pendingTouchpadView: null
 
     property int zoomLevel: generalSettings ? generalSettings.defaultZoom : 100
     property int pendingZoomLevel: zoomLevel
-    readonly property int baseCellSize: 100
-    readonly property int baseIconSize: 92
-    readonly property int baseListHeight: 44
+    readonly property int baseCellSize: 108
+    readonly property int baseIconSize: 86
+    readonly property int baseListHeight: 46
 
     readonly property real zoomScale: zoomLevel / 100.0
 
@@ -108,13 +107,8 @@ Item {
         return !!(flick && (flick.moving || flick.flicking))
     }
 
-    function markWheelActivity() {
-        lastWheelAtMs = Date.now()
-    }
-
     function allowHoverTooltips() {
-        var elapsed = Date.now() - lastWheelAtMs
-        return !isViewInteracting() && elapsed > tooltipCooldownMs
+        return !isViewInteracting()
     }
 
     function applySelection(index, modifiers) {
@@ -240,94 +234,75 @@ Item {
         return Math.max(view.originY, view.originY + view.contentHeight - view.height)
     }
 
-    function wheelStepFor(view) {
-        // Keep notch-wheel movement predictable and zoom-aware.
-        // At higher zoom we move farther to keep visual speed consistent.
-        var zoomFactor = Math.max(0.75, Math.min(1.8, root.zoomScale))
-        return Math.max(120, view.height * 0.42 * zoomFactor)
-    }
-
-    function softLimitDelta(delta, maxAbs) {
-        if (maxAbs <= 0) return delta
-        // Smoothly compress spikes instead of hard-clipping, avoiding springy jumps.
-        return maxAbs * Math.tanh(delta / maxAbs)
-    }
-
-    function limitTouchpadDelta(delta, view) {
-        var now = Date.now()
-        var dtMs = lastTouchpadDeltaAtMs > 0 ? (now - lastTouchpadDeltaAtMs) : 16
-        lastTouchpadDeltaAtMs = now
-
-        // Reset timing after pauses to avoid giant first-frame allowance.
-        if (dtMs <= 0 || dtMs > 100) dtMs = 16
-
-        // Hard guardrails against burst packets.
-        var maxPerEvent = Math.max(28, view.height * 0.055)       // px/event
-        var maxPerSecond = Math.max(1100, view.height * 1.9)      // px/second
-        var maxByTime = maxPerSecond * (dtMs / 1000.0)
-        var maxAbs = Math.min(maxPerEvent, maxByTime)
-
-        return Math.max(-maxAbs, Math.min(delta, maxAbs))
-    }
-
-    function isLikelyTouchpadEvent(event) {
-        if (!event) return false
-        if (event.pixelDelta && (event.pixelDelta.y !== 0 || event.pixelDelta.x !== 0)) return true
-        if (!event.angleDelta || event.angleDelta.y === 0) return false
-        var ay = Math.abs(event.angleDelta.y)
-        // Mouse wheels are typically 120-step notches; touchpads are often fine-grained.
-        return ay < 120 || (ay % 120) !== 0
-    }
-
-    function applyWheelScroll(view, event, multiplier, isTouchpadInput) {
+    function applyTouchpadScroll(view, event) {
         if (!view || !event) return
-
-        markWheelActivity()
-
-        var legacySens = (typeof generalSettings !== "undefined" && generalSettings) ? generalSettings.scrollSensitivity : 1.0
-        var mouseSens = (typeof generalSettings !== "undefined" && generalSettings && generalSettings.mouseScrollSensitivity !== undefined)
-            ? generalSettings.mouseScrollSensitivity : legacySens
-        var touchpadSens = (typeof generalSettings !== "undefined" && generalSettings && generalSettings.touchpadScrollSensitivity !== undefined)
-            ? generalSettings.touchpadScrollSensitivity : legacySens
-        var sens = isTouchpadInput ? touchpadSens : mouseSens
-        var zoomBoost = Math.max(0.85, Math.min(1.45, root.zoomScale))
-        var totalSens = sens * zoomBoost * (multiplier === undefined ? 1.0 : multiplier)
-        
+        var sens = (generalSettings && generalSettings.touchpadScrollSensitivity !== undefined)
+            ? generalSettings.touchpadScrollSensitivity : 3.0
+        var smoothing = (generalSettings && generalSettings.touchpadSmoothing !== undefined)
+            ? Math.max(0.0, Math.min(0.9, generalSettings.touchpadSmoothing)) : 0.45
+        var maxStepRatio = (generalSettings && generalSettings.touchpadMaxStepRatio !== undefined)
+            ? Math.max(0.05, Math.min(0.35, generalSettings.touchpadMaxStepRatio)) : 0.14
+        var zoomComp = Math.max(0.95, Math.min(1.25, root.zoomScale))
         var direction = event.inverted ? -1.0 : 1.0
 
-        // 1. Touchpad / Trackpad (pixelDelta)
+        var dy = 0.0
+        var dx = 0.0
         if (event.pixelDelta && (event.pixelDelta.y !== 0 || event.pixelDelta.x !== 0)) {
-            // Touchpads report fine-grained deltas; apply a dedicated boost here
-            // so two-finger scrolling feels responsive without changing mouse wheel speed.
-            var touchpadBoost = isTouchpadInput ? 1.35 : 1.0
-            var pDelta = event.pixelDelta.y * totalSens * touchpadBoost * direction
-            if (isTouchpadInput) {
-                var maxTouchpadStepPx = Math.max(90, view.height * 0.20)
-                pDelta = softLimitDelta(pDelta, maxTouchpadStepPx)
-                pDelta = limitTouchpadDelta(pDelta, view)
-            }
-            var nextY = Math.max(view.originY, Math.min(view.contentY - pDelta, maxScrollY(view)))
-            
-            view.contentY = nextY
-            event.accepted = true
+            dy = event.pixelDelta.y
+            dx = event.pixelDelta.x
+        } else if (event.angleDelta && event.angleDelta.y !== 0) {
+            // Fallback for touchpads that only emit angle deltas.
+            dy = (event.angleDelta.y / 120.0) * 42.0
+            dx = event.angleDelta.x ? (event.angleDelta.x / 120.0) * 42.0 : 0.0
+        } else {
             return
         }
 
-        // 2. Mouse Wheel (angleDelta)
-        if (event.angleDelta && event.angleDelta.y !== 0) {
-            var rawAngleY = event.angleDelta.y
-            // Use an explicit device path instead of threshold switching to avoid
-            // per-event speed jumps ("sometimes fast, sometimes normal").
-            var highResAngleBoost = isTouchpadInput ? 2.4 : 1.0
-            var aDelta = (rawAngleY / 120.0) * wheelStepFor(view) * totalSens * highResAngleBoost * direction
-            if (isTouchpadInput) {
-                var maxTouchpadStepAngle = Math.max(90, view.height * 0.20)
-                aDelta = softLimitDelta(aDelta, maxTouchpadStepAngle)
-                aDelta = limitTouchpadDelta(aDelta, view)
+        // Vertical intent only; damp diagonal/horizontal gestures to reduce accidental bursts.
+        var axisMix = Math.abs(dy) / Math.max(1.0, Math.abs(dy) + Math.abs(dx))
+        var stepRaw = dy * sens * zoomComp * direction * axisMix
+
+        // Coalesce at frame cadence to avoid packet-level jitter.
+        pendingTouchpadView = view
+        pendingTouchpadDeltaY += stepRaw
+        if (!touchpadScrollTimer.running) touchpadScrollTimer.start()
+
+        // Store runtime params for timer tick.
+        root._tpSmoothing = smoothing
+        root._tpMaxStepRatio = maxStepRatio
+        event.accepted = true
+    }
+
+    property real _tpSmoothing: 0.45
+    property real _tpMaxStepRatio: 0.14
+
+    Timer {
+        id: touchpadScrollTimer
+        interval: 16
+        repeat: true
+        onTriggered: {
+            var view = root.pendingTouchpadView
+            if (!view) {
+                root.pendingTouchpadDeltaY = 0
+                stop()
+                return
             }
-            var nextY2 = Math.max(view.originY, Math.min(view.contentY - aDelta, maxScrollY(view)))
-            view.contentY = nextY2
-            event.accepted = true
+            var pending = root.pendingTouchpadDeltaY
+            if (Math.abs(pending) < 0.05) {
+                root.pendingTouchpadDeltaY = 0
+                stop()
+                return
+            }
+
+            var alpha = Math.max(0.12, 1.0 - root._tpSmoothing)
+            var step = pending * alpha
+            var maxStep = Math.max(22, view.height * root._tpMaxStepRatio)
+            if (step > maxStep) step = maxStep
+            if (step < -maxStep) step = -maxStep
+
+            var nextY = Math.max(view.originY, Math.min(view.contentY - step, maxScrollY(view)))
+            view.contentY = nextY
+            root.pendingTouchpadDeltaY -= step
         }
     }
 
@@ -554,6 +529,7 @@ Item {
                             Layout.preferredWidth: 22 * (root.zoomScale || 1.0)
                             Layout.preferredHeight: 22 * (root.zoomScale || 1.0)
                             isDir: (model.isDir !== undefined ? model.isDir : false)
+                            fileName: (model.name !== undefined ? String(model.name) : "")
                             iconName: (model.iconName !== undefined ? model.iconName : "")
                             theme: root.theme
                             gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
@@ -786,7 +762,7 @@ Item {
             }
 
             ColumnLayout {
-                anchors.fill: parent; anchors.margins: Math.max(2, 4 * (zoomLevel / 100.0)); spacing: 0
+                anchors.fill: parent; anchors.margins: Math.max(3, 5 * (zoomLevel / 100.0)); spacing: 0
                 Item {
                     Layout.fillWidth: true; Layout.fillHeight: true
                     FileIcon {
@@ -795,6 +771,7 @@ Item {
                         width: Math.min(parent.width, baseIconSize * (zoomLevel / 100.0))
                         height: Math.min(parent.height, baseIconSize * (zoomLevel / 100.0))
                         isDir: (model.isDir !== undefined ? model.isDir : false)
+                        fileName: (model.name !== undefined ? String(model.name) : "")
                         iconName: (model.iconName !== undefined ? model.iconName : "")
                         theme: root.theme
                         visible: !gridThumb.visible
@@ -816,14 +793,14 @@ Item {
                     text: (model.name !== undefined ? root.displayName(model.name) : "")
                     textFormat: Text.PlainText
                     Layout.fillWidth: true
-                    Layout.preferredHeight: font.pixelSize * 1.4
+                    Layout.preferredHeight: font.pixelSize * 2.1
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignTop
                     elide: Text.ElideRight
                     wrapMode: gridRoot.isActuallySelected ? Text.WrapAnywhere : Text.NoWrap
-                    maximumLineCount: gridRoot.isActuallySelected ? 2 : 1
+                    maximumLineCount: 2
                     color: root.colTextPrimary
-                    font.pixelSize: 7 + (5 * (zoomLevel / 100.0))
+                    font.pixelSize: Math.max(8, 8 + (4.5 * (zoomLevel / 100.0)))
                     font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
                 }
                 ToolTip.visible: gridMA.containsMouse && root.allowHoverTooltips()
@@ -922,14 +899,10 @@ Item {
             flickDeceleration: 1500
             maximumFlickVelocity: 15000
             pixelAligned: false
-
             WheelHandler {
-                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                acceptedDevices: PointerDevice.TouchPad
                 blocking: true
-                onWheel: (event) => {
-                    var tp = isLikelyTouchpadEvent(event)
-                    applyWheelScroll(lv, event, tp ? 1.3 : 1.6, tp)
-                }
+                onWheel: (event) => applyTouchpadScroll(lv, event)
             }
 
             Keys.onEscapePressed: (event) => {
@@ -1060,22 +1033,18 @@ Item {
             flickDeceleration: 1500
             maximumFlickVelocity: 15000
             pixelAligned: false
-
             WheelHandler {
-                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                acceptedDevices: PointerDevice.TouchPad
                 blocking: true
-                onWheel: (event) => {
-                    var tp = isLikelyTouchpadEvent(event)
-                    applyWheelScroll(gv, event, tp ? 1.25 : 1.5, tp)
-                }
+                onWheel: (event) => applyTouchpadScroll(gv, event)
             }
 
             Keys.onEscapePressed: (event) => {
                 if (controller) { controller.clearSelection(); event.accepted = true }
             }
 
-            cellWidth:  Math.max(84, baseCellSize * root.zoomScale)
-            cellHeight: Math.max(76, baseCellSize * root.zoomScale)
+            cellWidth:  Math.max(102, baseCellSize * root.zoomScale)
+            cellHeight: Math.max(108, baseCellSize * root.zoomScale)
             reuseItems: true
             cacheBuffer: 800
             ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded }
@@ -1096,14 +1065,10 @@ Item {
             flickDeceleration: 1500
             maximumFlickVelocity: 15000
             pixelAligned: false
-
             WheelHandler {
-                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                acceptedDevices: PointerDevice.TouchPad
                 blocking: true
-                onWheel: (event) => {
-                    var tp = isLikelyTouchpadEvent(event)
-                    applyWheelScroll(treeView, event, tp ? 1.25 : 1.5, tp)
-                }
+                onWheel: (event) => applyTouchpadScroll(treeView, event)
             }
 
             delegate: Item {
@@ -1151,6 +1116,7 @@ Item {
                         Layout.preferredWidth: 18 * root.zoomScale
                         Layout.preferredHeight: 18 * root.zoomScale
                         isDir: model.isDir
+                        fileName: model.name
                         iconName: model.iconName
                         theme: root.theme
                         gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""

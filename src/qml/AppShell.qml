@@ -33,6 +33,24 @@ ApplicationWindow {
     property var hotkeyCatalog: ({})
     property var hotkeyEntries: []
     property var hotkeyOverrides: ({})
+    property real sidebarPanelWidth: generalSettings && generalSettings.sidebarExpanded ? theme.sidebarWidth : 64
+
+    onGeneralSettingsChanged: {
+        sidebarPanelWidth = (generalSettings && generalSettings.sidebarExpanded) ? theme.sidebarWidth : 64
+    }
+    Connections {
+        target: generalSettings
+        function onSidebarExpandedChanged() {
+            sidebarPanelWidth = generalSettings.sidebarExpanded ? theme.sidebarWidth : 64
+        }
+    }
+    Behavior on sidebarPanelWidth {
+        NumberAnimation {
+            duration: 180
+            easing.type: Easing.OutQuad
+            running: !generalSettings || generalSettings.showAnimations
+        }
+    }
 
     Settings {
         id: uiSettings
@@ -181,9 +199,11 @@ ApplicationWindow {
         // Window size and theme can stay separate or be moved to generalSettings if desired
         appWindow.width = 1200 
         appWindow.height = 800
-        appWindow.theme.isDark = false 
+        appWindow.theme.isDark = false
+        if (generalSettings) generalSettings.iconTheme = "outline"
         
         // Use generalSettings for panel states
+        generalSettings.sidebarExpanded = true
         appWindow.detailsVisible = generalSettings.inspectorExpanded
         appWindow.terminalVisible = false
         appWindow.docIntelEnabled = true
@@ -514,7 +534,7 @@ ApplicationWindow {
 
             LeftSidebar {
                 id: leftSidebar
-                SplitView.preferredWidth: generalSettings.sidebarExpanded ? theme.sidebarWidth : 64
+                SplitView.preferredWidth: appWindow.sidebarPanelWidth
                 SplitView.minimumWidth: 64
                 SplitView.maximumWidth: 400
                 activeController: appWindow.activeController

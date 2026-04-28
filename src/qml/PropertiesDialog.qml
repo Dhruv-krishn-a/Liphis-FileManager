@@ -103,7 +103,7 @@ Dialog {
 
         RowLayout {
             spacing: 15
-            FileIcon { Layout.preferredWidth: 48; Layout.preferredHeight: 48; isDir: root.isDir; theme: theme }
+            FileIcon { Layout.preferredWidth: 48; Layout.preferredHeight: 48; isDir: root.isDir; fileName: root.fileName; theme: theme }
             ColumnLayout {
                 Text { text: root.fileName; color: theme.textPrimary; font.pixelSize: 18; font.bold: true; elide: Text.ElideRight; Layout.fillWidth: true }
                 Text { text: root.isDir ? "Folder" : "File"; color: theme.textSecondary; font.pixelSize: 12 }

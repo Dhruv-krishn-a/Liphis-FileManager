@@ -13,7 +13,10 @@ Item {
     property string activePath: ""
     property string homePath: ""
     property bool expanded: generalSettings.sidebarExpanded
-    property bool narrowExpanded: !expanded && width > 100
+    property bool compact: !expanded
+    property var networkEntries: []
+    property var deviceEntries: []
+    property var bookmarkEntries: []
     
     signal toggleExpanded()
     signal pathActivated(string path)
@@ -22,8 +25,32 @@ Item {
     signal openDocDuplicatesRequested()
     signal openDocHealthRequested()
 
-    width: expanded ? (theme ? theme.sidebarWidth : 220) : (theme ? theme.sidebarWidthCollapsed : 64)
-    Behavior on width { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+    width: expanded ? (theme ? theme.sidebarWidth : 220) : 64
+    Behavior on width {
+        NumberAnimation {
+            duration: 170
+            easing.type: Easing.OutQuad
+            running: !generalSettings || generalSettings.showAnimations
+        }
+    }
+
+    function refreshSidebarLists() {
+        if (!placesModel || typeof placesModel.entriesByCategory !== "function") {
+            networkEntries = []
+            deviceEntries = []
+            bookmarkEntries = []
+            return
+        }
+        networkEntries = placesModel.entriesByCategory(4)
+        deviceEntries = placesModel.entriesByCategory(2)
+        bookmarkEntries = placesModel.entriesByCategory(1)
+    }
+
+    function formatGiB(bytes) {
+        var b = Number(bytes || 0)
+        if (b <= 0) return ""
+        return (b / (1024.0 * 1024.0 * 1024.0)).toFixed(1) + " GiB"
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -57,6 +84,17 @@ Item {
                 sidebarBgMenu.popup()
             }
         }
+    }
+
+    Component.onCompleted: refreshSidebarLists()
+    onPlacesModelChanged: refreshSidebarLists()
+
+    Connections {
+        target: placesModel
+        function onModelReset() { root.refreshSidebarLists() }
+        function onRowsInserted() { root.refreshSidebarLists() }
+        function onRowsRemoved() { root.refreshSidebarLists() }
+        function onDataChanged() { root.refreshSidebarLists() }
     }
 
     ColumnLayout {
@@ -93,13 +131,14 @@ Item {
         }
 
         ScrollView {
+            id: sidebarScroll
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
             ScrollBar.vertical.policy: ScrollBar.AlwaysOff
             
             ColumnLayout {
-                width: parent.width
+                width: Math.max(0, sidebarScroll.availableWidth)
                 spacing: 12
                 Layout.topMargin: 12
                 Layout.bottomMargin: 16
@@ -116,23 +155,68 @@ Item {
                         Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
                         font.pixelSize: 10
                         color: theme.textTertiary
-                        visible: root.expanded || root.narrowExpanded
+                        visible: root.expanded
                         font.bold: true
                         font.letterSpacing: 1.0
                     }
                     
-                    SidebarItem { theme: root.theme; active: root.activePath === root.homePath; iconName: "home"; text: "Home"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath) }
-                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Documents"); iconName: "folder"; text: "Documents"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Documents") }
-                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Downloads"); iconName: "download"; text: "Downloads"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Downloads") }
-                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Pictures"); iconName: "photo"; text: "Pictures"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Pictures") }
-                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Videos"); iconName: "video"; text: "Videos"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Videos") }
-                    SidebarItem { theme: root.theme; active: root.activePath.endsWith("/Music"); iconName: "music"; text: "Music"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated(root.homePath + "/Music") }
-                    SidebarItem { theme: root.theme; active: root.activePath === "trash:///"; iconName: "trash"; text: "Trash"; expanded: root.expanded || root.narrowExpanded; onClicked: root.pathActivated("trash:///") }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath === root.homePath; iconName: "home"; text: "Home"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath) }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Documents"); iconName: "folder"; text: "Documents"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Documents") }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Downloads"); iconName: "download"; text: "Downloads"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Downloads") }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Pictures"); iconName: "photo"; text: "Pictures"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Pictures") }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Videos"); iconName: "video"; text: "Videos"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Videos") }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Music"); iconName: "music"; text: "Music"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Music") }
+                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath === "trash:///"; iconName: "trash"; text: "Trash"; expanded: root.expanded; onClicked: root.pathActivated("trash:///") }
+
+                    Repeater {
+                        model: root.bookmarkEntries
+                        SidebarItem {
+                            Layout.fillWidth: true
+                            theme: root.theme
+                            active: root.activePath === modelData.path
+                            iconName: modelData.icon || "folder-star"
+                            text: modelData.name
+                            expanded: root.expanded
+                            onClicked: root.pathActivated(modelData.path)
+                        }
+                    }
+                }
+
+                // Section: Network
+                ColumnLayout {
+                    visible: root.networkEntries && root.networkEntries.length > 0
+                    Layout.fillWidth: true
+                    Layout.topMargin: 8
+                    spacing: 2
+
+                    Text {
+                        text: "NETWORK"
+                        Layout.leftMargin: root.expanded ? 16 : 0
+                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
+                        font.pixelSize: 10
+                        color: theme.textTertiary
+                        visible: root.expanded
+                        font.bold: true
+                        font.letterSpacing: 1.0
+                    }
+
+                    Repeater {
+                        model: root.networkEntries
+                        SidebarItem {
+                            Layout.fillWidth: true
+                            theme: root.theme
+                            active: root.activePath === modelData.path
+                            iconName: modelData.icon || "network"
+                            text: modelData.name
+                            expanded: root.expanded
+                            onClicked: root.pathActivated(modelData.path)
+                        }
+                    }
                 }
 
                 // Section: Devices
                 ColumnLayout {
-                    visible: generalSettings.showDevices && root.placesModel && root.placesModel.rowCount() > 0
+                    visible: generalSettings.showDevices && root.deviceEntries && root.deviceEntries.length > 0
                     Layout.fillWidth: true
                     Layout.topMargin: 8
                     spacing: 2
@@ -143,20 +227,69 @@ Item {
                         Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
                         font.pixelSize: 10
                         color: theme.textTertiary
-                        visible: root.expanded || root.narrowExpanded
+                        visible: root.expanded
                         font.bold: true
                         font.letterSpacing: 1.0
                     }
 
                     Repeater {
-                        model: root.placesModel
-                        SidebarItem {
-                            theme: root.theme
-                            active: root.activePath === model.path
-                            iconName: model.icon || "drive-harddisk"
-                            text: model.name
-                            expanded: root.expanded || root.narrowExpanded
-                            onClicked: root.pathActivated(model.path)
+                        model: root.deviceEntries
+                        Item {
+                            Layout.fillWidth: true
+                            height: root.expanded ? 44 : 32
+
+                            SidebarItem {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.bottom: root.expanded ? undefined : parent.bottom
+                                height: root.expanded ? 24 : parent.height
+                                theme: root.theme
+                                active: root.activePath === modelData.path
+                                iconName: modelData.icon || "drive-harddisk-system"
+                                text: modelData.name
+                                expanded: root.expanded
+                                onClicked: root.pathActivated(modelData.path)
+                            }
+
+                            Item {
+                                visible: root.expanded && modelData.totalBytes > 0
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                anchors.leftMargin: 14
+                                anchors.rightMargin: 14
+                                height: 18
+
+                                readonly property real ratio: Math.max(0, Math.min(1, modelData.usedBytes / modelData.totalBytes))
+
+                                Text {
+                                    anchors.left: parent.left
+                                    anchors.top: parent.top
+                                    text: root.formatGiB(modelData.totalBytes)
+                                    color: theme.textTertiary
+                                    font.pixelSize: 9
+                                }
+
+                                Rectangle {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.bottom: parent.bottom
+                                    height: 3
+                                    radius: 2
+                                    color: theme.surfaceRaised
+                                    border.width: 1
+                                    border.color: theme.border
+                                }
+                                Rectangle {
+                                    width: Math.max(3, (parent.width) * parent.ratio)
+                                    anchors.left: parent.left
+                                    anchors.bottom: parent.bottom
+                                    height: 3
+                                    radius: 2
+                                    color: theme.accent
+                                }
+                            }
                         }
                     }
                 }
@@ -174,7 +307,7 @@ Item {
                         Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
                         font.pixelSize: 10
                         color: theme.textTertiary
-                        visible: root.expanded || root.narrowExpanded
+                        visible: root.expanded
                         font.bold: true
                         font.letterSpacing: 1.0
                     }
@@ -182,11 +315,12 @@ Item {
                     Repeater {
                         model: root.activeController ? root.activeController.recentPaths : []
                         SidebarItem {
+                            Layout.fillWidth: true
                             theme: root.theme
                             active: false
                             iconName: "folder"
                             text: modelData.split('/').pop()
-                            expanded: root.expanded || root.narrowExpanded
+                            expanded: root.expanded
                             onClicked: root.pathActivated(modelData)
                             ToolTip.visible: hovered
                             ToolTip.text: modelData
@@ -203,7 +337,7 @@ Item {
             Layout.fillWidth: true
             Layout.margins: 12
             spacing: 8
-            visible: root.expanded || root.narrowExpanded
+            visible: true
 
             Rectangle {
                 Layout.fillWidth: true; height: 1; color: theme.border; opacity: 0.2
@@ -217,10 +351,12 @@ Item {
                 font.letterSpacing: 1.0
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
+                visible: root.expanded
             }
-            RowLayout {
+            Flow {
                 Layout.fillWidth: true
                 spacing: 6
+                visible: root.expanded
                 Button {
                     id: inboxBtn
                     text: "Inbox"
@@ -240,7 +376,7 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                         }
                     }
-                    ToolTip.visible: hovered && parent.parent.narrowExpanded
+                    ToolTip.visible: hovered && !root.expanded
                     ToolTip.text: "Doc Intel: Inbox"
                 }
                 Button {
@@ -262,7 +398,7 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                         }
                     }
-                    ToolTip.visible: hovered && parent.parent.narrowExpanded
+                    ToolTip.visible: hovered && !root.expanded
                     ToolTip.text: "Doc Intel: Duplicates"
                 }
                 Button {
@@ -284,9 +420,18 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                         }
                     }
-                    ToolTip.visible: hovered && parent.parent.narrowExpanded
+                    ToolTip.visible: hovered && !root.expanded
                     ToolTip.text: "Doc Intel: Health"
                 }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 6
+                visible: root.compact
+                ThemedIconButton { theme: root.theme; iconName: "folder-open"; iconSize: 13; toolTip: "Doc Intel: Inbox"; onClicked: root.openDocInboxRequested() }
+                ThemedIconButton { theme: root.theme; iconName: "copy"; iconSize: 13; toolTip: "Doc Intel: Duplicates"; onClicked: root.openDocDuplicatesRequested() }
+                ThemedIconButton { theme: root.theme; iconName: "chart-pie"; iconSize: 13; toolTip: "Doc Intel: Health"; onClicked: root.openDocHealthRequested() }
             }
         }
     }

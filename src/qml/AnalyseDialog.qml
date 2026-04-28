@@ -145,7 +145,7 @@ Dialog {
                 width: listView.width; height: 48; radius: theme.radiusSmall; color: theme.surfaceElevated; border.color: theme.border
                 RowLayout {
                     anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 12
-                    FileIcon { Layout.preferredWidth: 20; Layout.preferredHeight: 20; isDir: model.isDir; theme: theme }
+                    FileIcon { Layout.preferredWidth: 20; Layout.preferredHeight: 20; isDir: model.isDir; fileName: model.name; theme: theme }
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: 4
                         Text { text: model.name; elide: Text.ElideRight; font.pixelSize: 12; color: theme.textPrimary }

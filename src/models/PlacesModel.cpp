@@ -4,6 +4,7 @@
 #include <QStorageInfo>
 #include <QSettings>
 #include <QUrl>
+#include <QVariantMap>
 
 namespace {
 QString normalizePath(QString path) {
@@ -151,22 +152,39 @@ void PlacesModel::addRecent(const QString &path)
     refresh();
 }
 
+QVariantList PlacesModel::entriesByCategory(int category) const
+{
+    QVariantList out;
+    for (const auto &item : m_items) {
+        if (item.category != category) continue;
+        QVariantMap m;
+        m["name"] = item.name;
+        m["path"] = item.path;
+        m["icon"] = item.icon;
+        m["category"] = item.category;
+        m["totalBytes"] = item.totalBytes;
+        m["usedBytes"] = item.usedBytes;
+        out.push_back(m);
+    }
+    return out;
+}
+
 void PlacesModel::setupDefaultPlaces()
 {
     m_items.clear();
 
     // 0. PLACES
-    m_items.push_back({"Home", QDir::homePath(), "user-home", 0});
+    m_items.push_back({"Home", QDir::homePath(), "user-home", 0, 0, 0});
     auto addLoc = [&](QStandardPaths::StandardLocation loc, const QString &name, const QString &icon) {
         QString p = QStandardPaths::writableLocation(loc);
-        if (QDir(p).exists()) m_items.push_back({name, p, icon, 0});
+        if (QDir(p).exists()) m_items.push_back({name, p, icon, 0, 0, 0});
     };
     addLoc(QStandardPaths::DocumentsLocation, "Documents", "folder-code");
     addLoc(QStandardPaths::DownloadLocation, "Downloads", "download");
     addLoc(QStandardPaths::PicturesLocation, "Pictures", "photo");
     addLoc(QStandardPaths::MoviesLocation, "Videos", "video");
     addLoc(QStandardPaths::MusicLocation, "Music", "music");
-    m_items.push_back({"Trash", "trash:///", "trash", 0});
+    m_items.push_back({"Trash", "trash:///", "trash", 0, 0, 0});
 
     // 1. BOOKMARKS
     QSettings bSettings("Liphis", "Bookmarks");
@@ -178,18 +196,28 @@ void PlacesModel::setupDefaultPlaces()
         if (name.contains("Code", Qt::CaseInsensitive) || name.contains("Dev", Qt::CaseInsensitive) || name.contains("Project", Qt::CaseInsensitive)) {
             icon = "folder-code";
         }
-        m_items.push_back({name, m["path"].toString(), icon, 1});
+        m_items.push_back({name, m["path"].toString(), icon, 1, 0, 0});
     }
 
-    // 2. DEVICES
+    // 2. DEVICES + 4. NETWORK
     for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
         if (storage.isValid() && storage.isReady() && !storage.isReadOnly()) {
             QString root = storage.rootPath();
-            if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev") || root.startsWith("/run/user")) continue;
+            if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev")) continue;
             QString name = storage.displayName();
             if (name.isEmpty() || name == "/") name = "System Root";
-            QString icon = root == "/" ? "folder-root" : "device-usb";
-            m_items.push_back({name, root, icon, 2});
+            const qlonglong total = storage.bytesTotal();
+            const qlonglong free = storage.bytesAvailable();
+            const qlonglong used = (total > 0 && free >= 0) ? (total - free) : 0;
+
+            const QString fsType = QString::fromLatin1(storage.fileSystemType()).toLower();
+            bool isNetwork = root.startsWith("/run/user/") || root.contains("/gvfs/")
+                || fsType.contains("nfs") || fsType.contains("cifs") || fsType.contains("smb")
+                || fsType.contains("fuse.sshfs") || fsType.contains("davfs");
+
+            QString icon = isNetwork ? "network" : (root == "/" ? "drive-harddisk-system" : "drive-removable-media");
+            int category = isNetwork ? 4 : 2;
+            m_items.push_back({name, root, icon, category, total, used});
         }
     }
 
@@ -199,6 +227,6 @@ void PlacesModel::setupDefaultPlaces()
     for (const auto& path : rList) {
         QFileInfo fi(path);
         QString icon = fi.isDir() ? "folder-heart" : "doc";
-        m_items.push_back({fi.fileName(), path, icon, 3});
+        m_items.push_back({fi.fileName(), path, icon, 3, 0, 0});
     }
 }

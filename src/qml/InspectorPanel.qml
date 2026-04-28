@@ -357,6 +357,7 @@ Rectangle {
                             width: root.compact ? 56 : 64
                             height: root.compact ? 56 : 64
                             isDir: !!(root.metadata && root.metadata.isDir)
+                            fileName: (root.metadata && root.metadata.name !== undefined) ? String(root.metadata.name) : ""
                             iconName: (root.metadata && root.metadata.iconName !== undefined) ? root.metadata.iconName : ""
                             theme: root.theme
                             visible: previewImg.status !== Image.Ready

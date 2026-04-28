@@ -62,9 +62,9 @@ Dialog {
         property bool confirmDelete: true
         property bool showHiddenByDefault: false
         property int defaultZoom: 100
-        property real scrollSensitivity: 1.0
-        property real mouseScrollSensitivity: 1.0
-        property real touchpadScrollSensitivity: 1.8
+        property real touchpadScrollSensitivity: 3.0
+        property real touchpadSmoothing: 0.45
+        property real touchpadMaxStepRatio: 0.14
         property string iconTheme: "outline"
 
         // Sidebar Settings
@@ -317,15 +317,11 @@ Dialog {
 
                     RowLayout {
                         Layout.fillWidth: true
-                        Text { text: "Mouse Scroll Sensitivity"; color: theme.textPrimary; Layout.fillWidth: true }
+                        Text { text: "Touchpad Scroll Speed"; color: theme.textPrimary; Layout.fillWidth: true }
                         SpinBox {
-                            from: 1; to: 100; stepSize: 1
-                            value: Math.round(generalSettings.mouseScrollSensitivity * 10)
-                            onValueModified: {
-                                generalSettings.mouseScrollSensitivity = value / 10.0
-                                console.log("[Settings] mouseScrollSensitivity changed to:", generalSettings.mouseScrollSensitivity)
-                            }
-                            validator: DoubleValidator { bottom: 0.1; top: 10.0 }
+                            from: 5; to: 80; stepSize: 1
+                            value: Math.round(generalSettings.touchpadScrollSensitivity * 10)
+                            onValueModified: generalSettings.touchpadScrollSensitivity = value / 10.0
                             textFromValue: function(value, locale) { return (value / 10.0).toLocaleString(locale, 'f', 1) }
                             valueFromText: function(text, locale) { return Number.fromLocaleString(locale, text) * 10 }
                         }
@@ -333,17 +329,25 @@ Dialog {
 
                     RowLayout {
                         Layout.fillWidth: true
-                        Text { text: "Touchpad Scroll Sensitivity"; color: theme.textPrimary; Layout.fillWidth: true }
+                        Text { text: "Touchpad Smoothing"; color: theme.textPrimary; Layout.fillWidth: true }
                         SpinBox {
-                            from: 1; to: 100; stepSize: 1
-                            value: Math.round(generalSettings.touchpadScrollSensitivity * 10)
-                            onValueModified: {
-                                generalSettings.touchpadScrollSensitivity = value / 10.0
-                                console.log("[Settings] touchpadScrollSensitivity changed to:", generalSettings.touchpadScrollSensitivity)
-                            }
-                            validator: DoubleValidator { bottom: 0.1; top: 10.0 }
-                            textFromValue: function(value, locale) { return (value / 10.0).toLocaleString(locale, 'f', 1) }
-                            valueFromText: function(text, locale) { return Number.fromLocaleString(locale, text) * 10 }
+                            from: 0; to: 90; stepSize: 1
+                            value: Math.round(generalSettings.touchpadSmoothing * 100)
+                            onValueModified: generalSettings.touchpadSmoothing = value / 100.0
+                            textFromValue: function(value, locale) { return (value / 100.0).toLocaleString(locale, 'f', 2) }
+                            valueFromText: function(text, locale) { return Number.fromLocaleString(locale, text) * 100 }
+                        }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Text { text: "Touchpad Max Step"; color: theme.textPrimary; Layout.fillWidth: true }
+                        SpinBox {
+                            from: 5; to: 35; stepSize: 1
+                            value: Math.round(generalSettings.touchpadMaxStepRatio * 100)
+                            onValueModified: generalSettings.touchpadMaxStepRatio = value / 100.0
+                            textFromValue: function(value, locale) { return value.toLocaleString(locale, 'f', 0) + "%" }
+                            valueFromText: function(text, locale) { return Number.fromLocaleString(locale, text.replace("%", "")) }
                         }
                     }
                 }

@@ -4,10 +4,36 @@ Item {
     id: root
     property bool isDir: false
     property string iconName: ""
+    property string fileName: ""
     property var theme: null
     property string gitStatus: ""
 
+    function fileTypeIconFromName(name) {
+        var n = String(name || "")
+        var dot = n.lastIndexOf(".")
+        if (dot < 0) return ""
+        var ext = n.substring(dot + 1).toLowerCase()
+
+        if (["py", "pyw"].indexOf(ext) !== -1) return "brand-python"
+        if (["cpp", "cc", "cxx", "c", "h", "hpp", "hh", "rs", "go", "java", "kt", "swift", "rb", "php", "sh", "bash", "zsh", "ts", "tsx", "js", "jsx", "vue", "html", "css", "scss", "sql", "xml", "yaml", "yml", "toml", "ini", "conf"].indexOf(ext) !== -1) return "file-code"
+        if (ext === "json") return "json"
+        if (ext === "ipynb") return "notebook"
+
+        if (["doc", "docx", "odt", "rtf", "txt", "md"].indexOf(ext) !== -1) return "file-word"
+        if (["xls", "xlsx", "ods", "csv"].indexOf(ext) !== -1) return "file-spreadsheet"
+        if (["ppt", "pptx", "odp"].indexOf(ext) !== -1) return "file-description"
+        if (ext === "pdf") return "file-type-pdf"
+
+        if (["mp3", "wav", "flac", "ogg", "m4a", "aac"].indexOf(ext) !== -1) return "file-music"
+        if (["mp4", "mkv", "mov", "avi", "webm", "m4v"].indexOf(ext) !== -1) return "video"
+        if (["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"].indexOf(ext) !== -1) return "photo"
+        if (["zip", "rar", "7z", "tar", "gz", "bz2", "xz"].indexOf(ext) !== -1) return "file-zip"
+        return ""
+    }
+
     readonly property string resolvedIconName: {
+        var typed = fileTypeIconFromName(fileName)
+        if (typed.length > 0) return typed
         if (iconName && iconName.length > 0) return iconName
         return isDir ? "folder" : "text-x-generic"
     }
@@ -35,11 +61,12 @@ Item {
         id: themedIcon
         anchors.fill: parent
         name: root.resolvedIconName
-        filled: root.isDir
+        filled: false
+        tint: true
         visible: !root.isCustomFolder
-        color: isDir
-            ? (theme ? theme.accent : "#4A473E")
-            : (theme ? theme.textSecondary : "#8A867E")
+        color: root.isDir
+            ? (theme ? theme.accent : "#B9783E")
+            : (theme ? theme.textSecondary : "#6F685F")
     }
 
     // Git Status Badge

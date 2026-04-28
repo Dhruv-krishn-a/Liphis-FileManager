@@ -6,7 +6,7 @@ Item {
     property string name: ""
     property color color: "white"
     property int iconSize: 24
-    property bool useVector: true
+    property bool tint: true
     property bool filled: false
 
     implicitWidth: iconSize
@@ -36,13 +36,13 @@ Item {
         if (iconName === "drive-removable-media") return "drive-removable-media"
         if (iconName === "document-open-recent") return "document-open-recent"
         if (iconName === "down") return "go-down"
-        if (iconName === "settings") return "settings"
+        if (iconName === "settings" || iconName === "preferences") return "settings"
         if (iconName === "info") return "dialog-information"
         if (iconName === "tag") return "tag"
         return iconName && iconName.length > 0 ? iconName : "text-x-generic"
     }
 
-    function localAsset(iconName) {
+    function localAsset(iconName, setName) {
         var n = iconName || ""
         if (n === "back") n = "arrow-left"
         if (n === "forward") n = "arrow-right"
@@ -62,16 +62,9 @@ Item {
         if (n === "info" || n === "dialog-information") n = "info-circle"
         if (n === "doc" || n === "text-x-generic" || n === "text-plain") n = "file-text"
         if (n === "layout-tree") n = "list-tree"
+        if (n === "star-filled") n = "star"
         
-        // Final absolute path in resource tree based on CMake GLOB
-        return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/" + n + ".svg"
-    }
-
-    function filledAsset(iconName) {
-        var n = iconName || ""
-        if (n === "folder-open" || n === "folder" || n.indexOf("folder-") === 0) n = "folder"
-        if (n === "star") n = "star"
-        return "qrc:/qt/qml/liphis/src/qml/assets/icons/filled/" + n + ".svg"
+        return "qrc:/qt/qml/liphis/src/qml/assets/icons/" + (setName || "outline") + "/" + n + ".svg"
     }
 
     function prefersThemeProvider(iconName) {
@@ -107,25 +100,50 @@ Item {
     }
 
     readonly property string iconTheme: (typeof generalSettings !== "undefined" && generalSettings) ? generalSettings.iconTheme : "outline"
-    readonly property string assetSource: "image://icon/" + root.mappedIconName(root.name)
+    readonly property string mappedName: root.mappedIconName(root.name)
+    readonly property bool themeProviderPreferred: root.prefersThemeProvider(mappedName)
+    readonly property string preferredSet: iconTheme === "filled" ? "filled" : "outline"
+    readonly property string preferredAssetSource: root.localAsset(root.name, preferredSet)
+    readonly property string outlineAssetSource: root.localAsset(root.name, "outline")
+    readonly property string themeSource: "image://icon/" + mappedName
+
+    function sourceForMode() {
+        // For UI controls, prefer bundled assets (deterministic and theme-aware).
+        // For MIME/system names, prefer system theme provider.
+        return themeProviderPreferred ? themeSource : preferredAssetSource
+    }
 
     Image {
         id: sourceIcon
         anchors.fill: parent
-        source: root.assetSource
+        source: root.sourceForMode()
         sourceSize.width: Math.max(16, root.width)
         sourceSize.height: Math.max(16, root.height)
         fillMode: Image.PreserveAspectFit
+        smooth: true
+        mipmap: true
         asynchronous: true
         cache: true
         
         onStatusChanged: {
             if (status === Image.Error) {
-                let local = root.localAsset(root.name)
-                if (source.toString() !== local) {
-                    source = local
+                // First fallback: outline variant for missing filled icon.
+                if (source.toString() === root.preferredAssetSource && root.preferredSet !== "outline") {
+                    source = root.outlineAssetSource
+                    return
+                }
+                // Final fallback: system theme icon provider.
+                if (source.toString() !== root.themeSource) {
+                    source = root.themeSource
                 }
             }
         }
+    }
+
+    ColorOverlay {
+        anchors.fill: sourceIcon
+        source: sourceIcon
+        color: root.color
+        visible: root.tint
     }
 }

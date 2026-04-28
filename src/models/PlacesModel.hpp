@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE void removeBookmarkByPath(const QString &path);
     Q_INVOKABLE bool isBookmarked(const QString &path) const;
     Q_INVOKABLE void addRecent(const QString &path);
+    Q_INVOKABLE QVariantList entriesByCategory(int category) const;
 
 private:
     void setupDefaultPlaces();
@@ -42,6 +43,8 @@ private:
         QString path;
         QString icon;
         int category;
+        qlonglong totalBytes = 0;
+        qlonglong usedBytes = 0;
     };
     std::vector<PlaceItem> m_items;
 };

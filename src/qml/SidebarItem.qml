@@ -16,6 +16,7 @@ ItemDelegate {
     signal actionClicked()
     signal rightClicked()
 
+    Layout.fillWidth: true
     height: 32
     padding: 0
     ToolTip.visible: hovered && !expanded
@@ -50,13 +51,13 @@ ItemDelegate {
         spacing: root.theme ? root.theme.space8 : 8
 
         Item {
-            Layout.fillWidth: !root.expanded
-            Layout.preferredWidth: root.expanded ? (root.theme ? root.theme.iconMd : 16) : -1
-            Layout.preferredHeight: root.theme ? root.theme.iconMd : 16
+            Layout.fillWidth: false
+            Layout.preferredWidth: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg + 2 : 20)
+            Layout.preferredHeight: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg + 2 : 20)
             Icon {
                 anchors.centerIn: parent
                 name: root.iconName
-                iconSize: root.theme ? root.theme.iconMd : 16
+                iconSize: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg : 18)
                 color: root.active ? root.theme.accent : root.theme.textSecondary
             }
         }
@@ -65,6 +66,7 @@ ItemDelegate {
             visible: root.expanded
             text: root.text
             Layout.fillWidth: true
+            Layout.minimumWidth: 0
             elide: Text.ElideRight
             color: root.active ? root.theme.accent : root.theme.textPrimary
             font.pixelSize: root.theme ? root.theme.fontBody : 12
