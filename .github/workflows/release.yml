@@ -25,7 +25,7 @@ jobs:
             build-essential cmake ninja-build pkg-config curl \
             qt6-base-dev qt6-declarative-dev \
             libqt6core5compat6-dev libqt6svg6-dev qml6-module-qtquick-shapes \
-            libarchive-dev libgit2-dev \
+            libarchive-dev libgit2-dev libgl1-mesa-dev \
             rpm dpkg-dev patchelf desktop-file-utils file
 
       - name: Build All Packages
@@ -73,12 +73,12 @@ jobs:
           # Clean up any existing source clones
           rm -rf liphis/ src/ pkg/
           
-          # Force build directory name to 'build_arch' to avoid 'liphis' folder collision
-          su builder -c "makepkg -fc --noconfirm --builddir $(pwd)/build_arch"
+          # Force build directory name to 'build_arch' using environment variable
+          su builder -c "BUILDDIR=$(pwd)/build_arch makepkg -fc --noconfirm"
           
           mkdir -p ../../dist-arch
-          # Copy the generated package from the package folder
-          find . -name "*.pkg.tar.zst" -exec cp {} ../../dist-arch/ \;
+          # Copy the generated package from the current folder
+          find . -maxdepth 1 -name "*.pkg.tar.zst" -exec cp {} ../../dist-arch/ \;
 
       - name: Upload Arch Artifacts
         uses: actions/upload-artifact@v4

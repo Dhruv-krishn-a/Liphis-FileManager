@@ -19,7 +19,7 @@ jobs:
             build-essential cmake ninja-build pkg-config \
             qt6-base-dev qt6-declarative-dev \
             libqt6core5compat6-dev libqt6svg6-dev \
-            libarchive-dev libgit2-dev libxkbcommon-dev
+            libarchive-dev libgit2-dev libxkbcommon-dev libgl1-mesa-dev
 
       - name: Configure
         run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
