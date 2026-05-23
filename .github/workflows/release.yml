@@ -68,15 +68,17 @@ jobs:
           chmod -R 777 .
           
           cd packaging/arch
-          # Use the absolute GITHUB_WORKSPACE to test the current checkout instead of the remote URL
+          # Use the absolute GITHUB_WORKSPACE to test the current checkout
           sed -i "s|source=(.*)|source=('liphis::git+file://\${GITHUB_WORKSPACE}')|" PKGBUILD
-          # Clean up any existing source clones from previous steps/runs
+          # Clean up any existing source clones
           rm -rf liphis/ src/ pkg/
           
-          su builder -c "makepkg -fc --noconfirm"
+          # Force build directory name to 'build_arch' to avoid 'liphis' folder collision
+          su builder -c "makepkg -fc --noconfirm --builddir $(pwd)/build_arch"
           
           mkdir -p ../../dist-arch
-          cp *.pkg.tar.zst ../../dist-arch/
+          # Copy the generated package from the package folder
+          find . -name "*.pkg.tar.zst" -exec cp {} ../../dist-arch/ \;
 
       - name: Upload Arch Artifacts
         uses: actions/upload-artifact@v4

@@ -2,7 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-BUILD_DIR="${ROOT_DIR}/build-release"
+# Changed BUILD_DIR name to 'build_linux' to avoid any 'liphis' folder collision
+BUILD_DIR="${ROOT_DIR}/build_linux"
 DIST_DIR="${ROOT_DIR}/dist"
 APPDIR="${DIST_DIR}/AppDir"
 SKIP_APPIMAGE=0
@@ -20,23 +21,25 @@ for arg in "$@"; do
   esac
 done
 
-
 mkdir -p "${BUILD_DIR}" "${DIST_DIR}"
-rm -f "${DIST_DIR}"/*.deb "${DIST_DIR}"/*.rpm "${DIST_DIR}"/*.tar.gz "${DIST_DIR}"/*.zip "${DIST_DIR}"/*.AppImage 2>/dev/null || true
-rm -f "${BUILD_DIR}"/*.deb "${BUILD_DIR}"/*.rpm "${BUILD_DIR}"/*.tar.gz "${BUILD_DIR}"/*.zip "${BUILD_DIR}"/*.AppImage 2>/dev/null || true
 
-cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" -DCMAKE_BUILD_TYPE=Release
+# Clean up any existing artifacts in dist
+rm -f "${DIST_DIR}"/*.deb "${DIST_DIR}"/*.rpm "${DIST_DIR}"/*.tar.gz "${DIST_DIR}"/*.zip "${DIST_DIR}"/*.AppImage 2>/dev/null || true
+
+# Run CMake with a specific output directory for QML to prevent name collision with binary
+cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -G Ninja
+
 cmake --build "${BUILD_DIR}" -j"$(nproc)"
 ctest --test-dir "${BUILD_DIR}" --output-on-failure
 
+# Prepare AppDir for AppImage and generic packaging
 rm -rf "${APPDIR}"
-cmake --install "${BUILD_DIR}" --prefix "${APPDIR}/usr"
-
-mkdir -p "${APPDIR}/usr/share/applications" "${APPDIR}/usr/share/icons/hicolor/512x512/apps"
-cp "${ROOT_DIR}/packaging/liphis.desktop" "${APPDIR}/usr/share/applications/liphis.desktop"
-cp "${ROOT_DIR}/LiphisApp-Logo.png" "${APPDIR}/usr/share/icons/hicolor/512x512/apps/liphis.png"
+DESTDIR="${APPDIR}" cmake --install "${BUILD_DIR}"
 
 pushd "${BUILD_DIR}" >/dev/null
+# Generate standard packages
 if command -v dpkg >/dev/null 2>&1; then
   cpack -G DEB
 else
@@ -53,11 +56,13 @@ cpack -G TGZ
 cpack -G ZIP
 popd >/dev/null
 
+# Copy artifacts to dist
 cp -f "${BUILD_DIR}"/*.deb "${DIST_DIR}/" 2>/dev/null || true
 cp -f "${BUILD_DIR}"/*.rpm "${DIST_DIR}/" 2>/dev/null || true
 cp -f "${BUILD_DIR}"/*.tar.gz "${DIST_DIR}/" 2>/dev/null || true
 cp -f "${BUILD_DIR}"/*.zip "${DIST_DIR}/" 2>/dev/null || true
 
+# AppImage generation (x86_64 only)
 ARCH="$(uname -m)"
 if [[ "${SKIP_APPIMAGE}" -eq 1 ]]; then
   echo "Skipping AppImage by request (--skip-appimage)."
@@ -84,7 +89,6 @@ elif [[ "${ARCH}" == "x86_64" ]]; then
   ln -sf "${QT_PLUGIN}" "${QT_PLUGIN_BIN}"
 
   export QML_SOURCES_PATHS="${ROOT_DIR}/src/qml"
-  export LD_LIBRARY_PATH="${APPDIR}/usr/lib:${LD_LIBRARY_PATH:-}"
   export APPIMAGE_EXTRACT_AND_RUN=1
   export PATH="${TOOLS_DIR}:${PATH}"
 
@@ -92,7 +96,7 @@ elif [[ "${ARCH}" == "x86_64" ]]; then
     "${LINUXDEPLOY_BIN}" \
       --appdir "${APPDIR}" \
       -d "${ROOT_DIR}/packaging/liphis.desktop" \
-      -i "${ROOT_DIR}/LiphisApp-Logo.png" \
+      -i "${ROOT_DIR}/src/qml/assets/logo-dark.png" \
       --plugin qt \
       --output appimage)
 else
