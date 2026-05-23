@@ -36,8 +36,8 @@ target_include_directories(liphis_core PUBLIC
 # =========================
 # GUI Executable
 # =========================
-# Target name is 'liphis_bin' to avoid conflict with the 'liphis' module directory.
-qt_add_executable(liphis_bin
+# Use 'liphis_gui' to avoid collision with 'liphis' directory
+qt_add_executable(liphis_gui
     src/main.cpp
     src/AppController.cpp
     src/AppController.hpp
@@ -65,20 +65,22 @@ qt_add_executable(liphis_bin
     src/CommandManager.hpp
 )
 
-# We ensure the final binary is still named 'liphis'
-set_target_properties(liphis_bin PROPERTIES OUTPUT_NAME "liphis")
+# Force the disk filename to be 'liphis'
+set_target_properties(liphis_gui PROPERTIES OUTPUT_NAME "liphis")
 
-target_include_directories(liphis_bin PRIVATE
+target_include_directories(liphis_gui PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
 )
 
-# Collecting all icons with RELATIVE paths to src/qml/assets/icons/
+# Collecting all icons
 file(GLOB_RECURSE OUTLINE_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/outline/*.svg")
 file(GLOB_RECURSE FILLED_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/filled/*.svg")
 
-qt_add_qml_module(liphis_bin
-    URI liphis
+# QML Module - Rename URI slightly to avoid the directory clash
+# We will update main.cpp to match
+qt_add_qml_module(liphis_gui
+    URI "liphis.app"
     VERSION 1.0
     QML_FILES
         src/qml/AppTheme.qml
@@ -127,7 +129,7 @@ qt_add_qml_module(liphis_bin
         ${FILLED_ICONS}
 )
 
-target_link_libraries(liphis_bin
+target_link_libraries(liphis_gui
     PRIVATE Qt6::Core
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Concurrent
@@ -139,7 +141,7 @@ target_link_libraries(liphis_bin
     PRIVATE ${LIBARCHIVE_LIBRARIES}
 )
 
-target_include_directories(liphis_bin PRIVATE
+target_include_directories(liphis_gui PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${LIBGIT2_INCLUDE_DIRS}
@@ -158,7 +160,7 @@ if(BUILD_TESTS)
 endif()
 
 # Installation rules
-install(TARGETS liphis_bin
+install(TARGETS liphis_gui
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 

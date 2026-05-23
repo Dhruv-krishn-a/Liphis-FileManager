@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     engine.addImageProvider("thumbs", new ThumbnailImageProvider(&thumbManager));
     engine.addImageProvider("icon", iconProvider);
 
-    engine.loadFromModule("liphis", "Main");
+    engine.loadFromModule("liphis.app", "Main");
     if (engine.rootObjects().isEmpty()) return -1;
 
     // Handle new instances attempting to start
