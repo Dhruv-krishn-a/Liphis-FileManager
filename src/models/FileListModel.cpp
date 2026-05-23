@@ -348,17 +348,27 @@ void FileListModel::removeItems(const QStringList &paths)
 {
     if (paths.isEmpty()) return;
 
+    // Collect rows to remove
+    std::vector<int> rowsToRemove;
     for (const QString &path : paths) {
-        std::string p = path.toStdString();
-        auto it = m_pathToIndex.find(p);
+        auto it = m_pathToIndex.find(path.toStdString());
         if (it != m_pathToIndex.end()) {
-            int row = static_cast<int>(it->second);
-            beginRemoveRows(QModelIndex(), row, row);
-            m_entries.erase(m_entries.begin() + row);
-            rebuildPathMap();
-            endRemoveRows();
+            rowsToRemove.push_back(static_cast<int>(it->second));
         }
     }
+
+    if (rowsToRemove.empty()) return;
+
+    // Sort rows in descending order so we can remove them without shifting issues
+    std::sort(rowsToRemove.begin(), rowsToRemove.end(), std::greater<int>());
+
+    for (int row : rowsToRemove) {
+        beginRemoveRows(QModelIndex(), row, row);
+        m_entries.erase(m_entries.begin() + row);
+        endRemoveRows();
+    }
+
+    rebuildPathMap();
     emit countChanged();
 }
 

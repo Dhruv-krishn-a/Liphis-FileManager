@@ -127,7 +127,7 @@ Menu {
     MenuItem { 
         text: "Move to Trash"
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.trashItems([root.targetPath])
+        onTriggered: if (controller) appWindow.requestTrash(controller, [root.targetPath])
         icon.source: root.iconSource("user-trash")
     }
 

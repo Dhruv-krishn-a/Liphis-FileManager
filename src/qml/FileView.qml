@@ -72,6 +72,23 @@ Item {
         createFolderDialog.open()
     }
 
+    function commitRename(path, nextName) {
+        var trimmed = nextName ? nextName.trim() : ""
+        if (!path || path.length === 0) return
+        renamingPath = ""
+        if (trimmed.length === 0) {
+            Qt.callLater(root.forceActiveFocus)
+            return
+        }
+        controller.renameItem(path, trimmed)
+        Qt.callLater(root.forceActiveFocus)
+    }
+
+    function cancelRename() {
+        renamingPath = ""
+        Qt.callLater(root.forceActiveFocus)
+    }
+
     function currentRowCount() {
         var flick = activeFlickable()
         return (flick && flick.count !== undefined) ? flick.count : 0
@@ -221,6 +238,13 @@ Item {
         return String(name || "")
     }
 
+    function displayGridName(name) {
+        var text = String(name || "")
+        text = text.replace(/([._-])/g, "$1\u200B")
+        text = text.replace(/([a-z0-9])([A-Z])/g, "$1\u200B$2")
+        return text
+    }
+
     function normalizePath(path) {
         if (!path) return ""
         var p = String(path)
@@ -329,7 +353,13 @@ Item {
             return
         }
         if (event.key === Qt.Key_Delete) {
-            if (controller.selectedPaths.length > 0) controller.trashItems(controller.selectedPaths)
+            if (controller.selectedPaths.length > 0) {
+                if ((event.modifiers & Qt.ShiftModifier) || controller.currentPath.startsWith("trash:")) {
+                    appWindow.requestPermanentDelete(controller, controller.selectedPaths)
+                } else {
+                    appWindow.requestTrash(controller, controller.selectedPaths)
+                }
+            }
             event.accepted = true
             return
         }
@@ -415,6 +445,7 @@ Item {
         onRenameRequested: (path) => renamingPath = path
         onCurrentPathChanged: {
             root.tabTitleChanged(controller.title)
+            renamingPath = ""
             Qt.callLater(root.forceActiveFocus)
         }
         onOperationSuccess: (msg) => {
@@ -430,6 +461,10 @@ Item {
         onOperationError: (msg) => {
             progressDialog.close()
             toastManager.show(msg, true)
+        }
+        onOperationProgress: (value) => {
+            if (!progressDialog.visible) progressDialog.open()
+            progressDialog.progress = value
         }
     }
 
@@ -534,14 +569,44 @@ Item {
                             theme: root.theme
                             gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
                         }
-                        Text {
-                            text: (model.name !== undefined ? root.displayName(model.name) : "")
-                            textFormat: Text.PlainText
+                        Item {
                             Layout.fillWidth: true
-                            elide: Text.ElideRight
-                            color: root.colTextPrimary
-                            font.pixelSize: Math.max(8, 13 * (root.zoomScale || 1.0))
-                            font.weight: listRoot.isActuallySelected ? Font.Medium : Font.Normal
+                            Layout.fillHeight: true
+
+                            Text {
+                                anchors.fill: parent
+                                visible: root.renamingPath !== model.path
+                                text: (model.name !== undefined ? root.displayName(model.name) : "")
+                                textFormat: Text.PlainText
+                                elide: Text.ElideRight
+                                color: root.colTextPrimary
+                                font.pixelSize: Math.max(8, 13 * (root.zoomScale || 1.0))
+                                font.weight: listRoot.isActuallySelected ? Font.Medium : Font.Normal
+                                verticalAlignment: Text.AlignVCenter
+                            }
+
+                            TextField {
+                                id: listRenameField
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: parent.width
+                                visible: root.renamingPath === model.path
+                                text: (model.name !== undefined ? String(model.name) : "")
+                                selectByMouse: true
+                                onVisibleChanged: {
+                                    if (!visible) return
+                                    text = (model.name !== undefined ? String(model.name) : "")
+                                    Qt.callLater(function() {
+                                        listRenameField.forceActiveFocus()
+                                        listRenameField.selectAll()
+                                    })
+                                }
+                                onAccepted: root.commitRename(model.path, text)
+                                onActiveFocusChanged: if (visible && !activeFocus) root.commitRename(model.path, text)
+                                Keys.onEscapePressed: (event) => {
+                                    root.cancelRename()
+                                    event.accepted = true
+                                }
+                            }
                         }
                         ToolTip.visible: listMA.containsMouse && root.allowHoverTooltips()
                         ToolTip.delay: 450
@@ -738,23 +803,51 @@ Item {
         id: gridDelegate
         Item {
             id: gridRoot
-            // We use the cellWidth/Height from the GridView that is loading us.
-            // Since GridView sets width/height of delegates to cellWidth/Height by default,
-            // we can just fill parent or rely on the parent sizing.
-            implicitWidth: 100; implicitHeight: 100
+            readonly property real dynamicZoom: root.zoomLevel / 100.0
+            readonly property var gridView: GridView.view
+            width: gridView ? gridView.cellWidth : 100
+            height: gridView ? gridView.cellHeight : 100
+            implicitWidth: width
+            implicitHeight: height
+            readonly property int cellPadding: gridView ? gridView.gridPadding : Math.round(Math.max(6, 8 * dynamicZoom))
+            readonly property int labelGap: gridView ? gridView.gridLabelGap : Math.round(Math.max(4, 5 * dynamicZoom))
+            readonly property int iconBoxSize: gridView ? gridView.iconBoxSize : Math.round(Math.max(84, baseIconSize * dynamicZoom))
+            readonly property int labelPixelSize: gridView ? gridView.labelPixelSize : Math.round(Math.max(9, 8 + (4.5 * dynamicZoom)))
+            readonly property int labelHeight: gridView ? gridView.labelHeight : Math.round(labelPixelSize * 2.8)
+            readonly property int contentHeight: iconBoxSize + labelGap + labelHeight
+            readonly property int contentWidth: Math.max(iconBoxSize + Math.round(cellPadding * 0.5),
+                Math.min(width - (cellPadding * 2), Math.ceil(labelMetrics.advanceWidth) + Math.round(cellPadding * 1.7)))
+
             readonly property bool isActuallySelected: model.isSelected !== undefined ? model.isSelected : false
             readonly property bool inClipboard: !!(controller && controller.clipboardPaths && controller.clipboardPaths.includes(model.path))
             readonly property bool clipboardCut: !!(controller && controller.isCutOp)
             readonly property bool isHidden: model.name !== undefined && model.name.startsWith(".")
             opacity: isHidden ? 0.6 : 1.0
 
+            TextMetrics {
+                id: labelMetrics
+                text: (model.name !== undefined ? root.displayName(model.name) : "")
+                font.pixelSize: gridRoot.labelPixelSize
+                font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
+            }
+
             Rectangle {
-                anchors.fill: parent; anchors.margins: 4; radius: theme ? theme.radius : 8
+                anchors.horizontalCenter: contentFrame.horizontalCenter
+                anchors.verticalCenter: contentFrame.verticalCenter
+                width: contentFrame.width + (gridRoot.cellPadding + 6)
+                height: contentFrame.height + (gridRoot.cellPadding + 8)
+                radius: theme ? theme.radius : 8
                 color: gridRoot.isActuallySelected ? theme.selection : (gridMA.containsMouse ? theme.hover : "transparent")
+                border.width: gridRoot.isActuallySelected ? 1 : 0
+                border.color: gridRoot.isActuallySelected ? theme.borderStrong : "transparent"
                 visible: gridRoot.isActuallySelected || gridMA.containsMouse
             }
             Rectangle {
-                anchors.fill: parent; anchors.margins: 4; radius: theme ? theme.radius : 8
+                anchors.horizontalCenter: contentFrame.horizontalCenter
+                anchors.verticalCenter: contentFrame.verticalCenter
+                width: contentFrame.width + (gridRoot.cellPadding + 6)
+                height: contentFrame.height + (gridRoot.cellPadding + 8)
+                radius: theme ? theme.radius : 8
                 visible: gridRoot.inClipboard
                 color: gridRoot.clipboardCut ? Qt.rgba(0.85, 0.45, 0.15, 0.16) : Qt.rgba(0.15, 0.55, 0.85, 0.12)
                 border.width: 1
@@ -762,14 +855,29 @@ Item {
             }
 
             ColumnLayout {
-                anchors.fill: parent; anchors.margins: Math.max(3, 5 * (zoomLevel / 100.0)); spacing: 0
+                id: contentFrame
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                width: gridRoot.contentWidth
+                height: gridRoot.contentHeight
+                spacing: gridRoot.labelGap
                 Item {
-                    Layout.fillWidth: true; Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: gridRoot.iconBoxSize
+                    Layout.alignment: Qt.AlignTop
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: Math.max(42, gridRoot.iconBoxSize - Math.round(gridRoot.cellPadding * 0.6))
+                        height: width
+                        radius: theme ? theme.radiusSmall : 8
+                        color: gridThumb.visible ? theme.surfaceRaised : "transparent"
+                        border.width: gridThumb.visible ? 1 : 0
+                        border.color: gridThumb.visible ? theme.border : "transparent"
+                    }
                     FileIcon {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottom: parent.bottom
-                        width: Math.min(parent.width, baseIconSize * (zoomLevel / 100.0))
-                        height: Math.min(parent.height, baseIconSize * (zoomLevel / 100.0))
+                        anchors.centerIn: parent
+                        width: Math.floor(Math.min(parent.width, gridRoot.iconBoxSize))
+                        height: width
                         isDir: (model.isDir !== undefined ? model.isDir : false)
                         fileName: (model.name !== undefined ? String(model.name) : "")
                         iconName: (model.iconName !== undefined ? model.iconName : "")
@@ -782,26 +890,58 @@ Item {
                         anchors.fill: parent
                         fillMode: Image.PreserveAspectFit
                         source: (model.thumbnail !== undefined ? model.thumbnail : "")
-                        sourceSize.width: Math.max(128, width)
-                        sourceSize.height: Math.max(128, height)
+                        sourceSize.width: Math.floor(Math.max(128, width))
+                        sourceSize.height: Math.floor(Math.max(128, height))
                         visible: status === Image.Ready
                         asynchronous: true
                         cache: true
                     }
                 }
-                Text {
-                    text: (model.name !== undefined ? root.displayName(model.name) : "")
-                    textFormat: Text.PlainText
+                    Item {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: font.pixelSize * 2.1
+                    Layout.preferredHeight: gridRoot.labelHeight
+
+                    Text {
+                    id: textItem
+                    anchors.fill: parent
+                    visible: root.renamingPath !== model.path
+                    text: (model.name !== undefined ? root.displayGridName(model.name) : "")
+                    textFormat: Text.PlainText
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignTop
                     elide: Text.ElideRight
-                    wrapMode: gridRoot.isActuallySelected ? Text.WrapAnywhere : Text.NoWrap
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     maximumLineCount: 2
+                    lineHeight: 1.05
+                    lineHeightMode: Text.ProportionalHeight
                     color: root.colTextPrimary
-                    font.pixelSize: Math.max(8, 8 + (4.5 * (zoomLevel / 100.0)))
+                    font.pixelSize: gridRoot.labelPixelSize
                     font.weight: gridRoot.isActuallySelected ? Font.Medium : Font.Normal
+                    }
+
+                    TextField {
+                        id: gridRenameField
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width
+                        visible: root.renamingPath === model.path
+                        text: (model.name !== undefined ? String(model.name) : "")
+                        horizontalAlignment: Text.AlignHCenter
+                        selectByMouse: true
+                        onVisibleChanged: {
+                            if (!visible) return
+                            text = (model.name !== undefined ? String(model.name) : "")
+                            Qt.callLater(function() {
+                                gridRenameField.forceActiveFocus()
+                                gridRenameField.selectAll()
+                            })
+                        }
+                        onAccepted: root.commitRename(model.path, text)
+                        onActiveFocusChanged: if (visible && !activeFocus) root.commitRename(model.path, text)
+                        Keys.onEscapePressed: (event) => {
+                            root.cancelRename()
+                            event.accepted = true
+                        }
+                    }
                 }
                 ToolTip.visible: gridMA.containsMouse && root.allowHoverTooltips()
                 ToolTip.delay: 450
@@ -1043,8 +1183,15 @@ Item {
                 if (controller) { controller.clearSelection(); event.accepted = true }
             }
 
-            cellWidth:  Math.max(102, baseCellSize * root.zoomScale)
-            cellHeight: Math.max(108, baseCellSize * root.zoomScale)
+            readonly property int zoomBand: root.zoomScale < 0.9 ? 0 : (root.zoomScale > 1.2 ? 2 : 1)
+            property int gridPadding: zoomBand === 0 ? 6 : (zoomBand === 1 ? 8 : 9)
+            property int gridLabelGap: zoomBand === 0 ? 4 : (zoomBand === 1 ? 5 : 6)
+            property int iconBoxSize: Math.round((zoomBand === 0 ? 78 : (zoomBand === 1 ? 84 : 90)) * root.zoomScale)
+            property int labelPixelSize: Math.round(Math.max(9, 8 + (4.5 * root.zoomScale)))
+            property int labelHeight: Math.round(labelPixelSize * 2.55)
+            cellWidth: iconBoxSize + (gridPadding * 4)
+            cellHeight: iconBoxSize + labelHeight + (gridPadding * 3) + gridLabelGap
+            
             reuseItems: true
             cacheBuffer: 800
             ScrollBar.vertical:   ScrollBar { policy: ScrollBar.AsNeeded }
@@ -1122,12 +1269,42 @@ Item {
                         gitStatus: (controller && model.path) ? (controller.gitStatus[model.path] || "") : ""
                     }
 
-                    Text {
-                        text: model.name
+                    Item {
                         Layout.fillWidth: true
-                        elide: Text.ElideRight
-                        color: treeDelegate.isActuallySelected ? theme.accent : theme.textPrimary
-                        font.pixelSize: 13 * root.zoomScale
+                        Layout.fillHeight: true
+
+                        Text {
+                            anchors.fill: parent
+                            visible: root.renamingPath !== model.path
+                            text: model.name
+                            elide: Text.ElideRight
+                            color: treeDelegate.isActuallySelected ? theme.accent : theme.textPrimary
+                            font.pixelSize: 13 * root.zoomScale
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        TextField {
+                            id: treeRenameField
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: parent.width
+                            visible: root.renamingPath === model.path
+                            text: model.name
+                            selectByMouse: true
+                            onVisibleChanged: {
+                                if (!visible) return
+                                text = model.name
+                                Qt.callLater(function() {
+                                    treeRenameField.forceActiveFocus()
+                                    treeRenameField.selectAll()
+                                })
+                            }
+                            onAccepted: root.commitRename(model.path, text)
+                            onActiveFocusChanged: if (visible && !activeFocus) root.commitRename(model.path, text)
+                            Keys.onEscapePressed: (event) => {
+                                root.cancelRename()
+                                event.accepted = true
+                            }
+                        }
                     }
                     ToolTip.visible: treeMA.containsMouse && root.allowHoverTooltips()
                     ToolTip.delay: 450
@@ -1236,7 +1413,7 @@ Item {
         acceptedButtons: Qt.RightButton | Qt.BackButton | Qt.ForwardButton | Qt.LeftButton
         onClicked: (mouse) => {
             root.forceActiveFocus()
-            if      (mouse.button === Qt.RightButton)   bgMenu.popup()
+            if      (mouse.button === Qt.RightButton)   appWindow.showDirectoryMenu(controller.currentPath, controller)
             else if (mouse.button === Qt.BackButton)    controller.goBack()
             else if (mouse.button === Qt.ForwardButton) controller.goForward()
             else if (mouse.button === Qt.LeftButton)    controller.clearSelection()

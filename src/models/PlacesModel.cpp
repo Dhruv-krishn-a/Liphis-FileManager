@@ -5,6 +5,12 @@
 #include <QSettings>
 #include <QUrl>
 #include <QVariantMap>
+#include <QProcess>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QSet>
+#include <functional>
 
 namespace {
 QString normalizePath(QString path) {
@@ -200,8 +206,9 @@ void PlacesModel::setupDefaultPlaces()
     }
 
     // 2. DEVICES + 4. NETWORK
+    QSet<QString> processedRoots;
     for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
-        if (storage.isValid() && storage.isReady() && !storage.isReadOnly()) {
+        if (storage.isValid() && storage.isReady()) {
             QString root = storage.rootPath();
             if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev")) continue;
             QString name = storage.displayName();
@@ -215,9 +222,10 @@ void PlacesModel::setupDefaultPlaces()
                 || fsType.contains("nfs") || fsType.contains("cifs") || fsType.contains("smb")
                 || fsType.contains("fuse.sshfs") || fsType.contains("davfs");
 
-            QString icon = isNetwork ? "network" : (root == "/" ? "drive-harddisk-system" : "drive-removable-media");
+            QString icon = isNetwork ? "network" : (root == "/" ? "drive-harddisk-system" : "drive-harddisk");
             int category = isNetwork ? 4 : 2;
             m_items.push_back({name, root, icon, category, total, used});
+            processedRoots.insert(QString::fromUtf8(storage.device()));
         }
     }
 

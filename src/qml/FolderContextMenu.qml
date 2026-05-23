@@ -122,7 +122,7 @@ Menu {
         text: "Move to Trash"
         visible: controller ? !controller.currentPath.startsWith("trash:") : true
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.trashItems([root.targetPath])
+        onTriggered: if (controller) appWindow.requestTrash(controller, [root.targetPath])
         icon.source: root.iconSource("user-trash")
     }
 
@@ -138,7 +138,7 @@ Menu {
         text: "Delete Permanently"
         visible: controller ? controller.currentPath.startsWith("trash:") : false
         Component.onCompleted: root.compact(this)
-        onTriggered: if (controller) controller.deleteItems([root.targetPath])
+        onTriggered: if (controller) appWindow.requestPermanentDelete(controller, [root.targetPath])
         icon.source: root.iconSource("user-trash")
     }
 

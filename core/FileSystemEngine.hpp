@@ -21,7 +21,7 @@ public:
     );
 
     static std::vector<FileMeta> listDirectorySync(const std::string& path, std::size_t limit = 0);
-    static FileMeta getFileMeta(const std::string& path);
+    static FileMeta getFileMeta(const std::string& path, bool includeMime = true);
 
     // Search
     static void searchRecursive(

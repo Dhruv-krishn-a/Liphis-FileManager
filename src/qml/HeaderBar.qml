@@ -47,8 +47,6 @@ Rectangle {
         var q = raw
         if (typePreset.currentValue && typePreset.currentValue !== "all")
             q = (q.length > 0 ? q + " " : "") + "kind:" + typePreset.currentValue
-        if (scopePreset.currentValue && scopePreset.currentValue !== root.activeController.searchScope)
-            root.activeController.searchScope = scopePreset.currentValue
         root.activeController.applySearchQuery(q)
         if (immediateSave) root.activeController.saveSearchQuery(q)
     }
@@ -61,9 +59,8 @@ Rectangle {
         if (root.activeController.searchMode === "global") {
             root.activeController.cancelSearch()
             root.activeController.searchMode = "local"
-            root.activeController.searchScope = "current"
+            root.activeController.refresh()
         }
-        if (scopePreset) scopePreset.currentIndex = 0
         root.activeController.applySearchQuery("")
     }
 
@@ -161,7 +158,7 @@ Rectangle {
         ToolButton {
             id: logoButton
             Layout.preferredHeight: theme ? theme.controlMd : 40
-            Layout.preferredWidth: 196
+            Layout.preferredWidth: root.narrow ? 168 : 196
             padding: 0
             onClicked: root.toggleThemeWithAnimation()
             ToolTip.visible: hovered
@@ -180,14 +177,15 @@ Rectangle {
 
                 Image {
                     id: logoBadge
-                    source: root.theme && root.theme.isDark ? "assets/logo-dark.png" : "assets/logo-light.png"
+                    source: root.theme && root.theme.isDark
+                        ? "qrc:/qt/qml/liphis/src/qml/assets/logo-dark.png"
+                        : "qrc:/qt/qml/liphis/src/qml/assets/logo-light.png"
                     Layout.preferredWidth: 30
                     Layout.preferredHeight: 30
                     fillMode: Image.PreserveAspectFit
                     sourceSize.width: 120
                     sourceSize.height: 120
                     smooth: true
-                    antialiasing: true
                     mipmap: true
                     opacity: 0.96
                     transformOrigin: Item.Center
@@ -195,12 +193,12 @@ Rectangle {
 
                 Text {
                     text: root.themeAnimating ? root.brandScrambleText : root.brandStableText
-                    visible: true
                     color: root.theme.textPrimary
                     font.pixelSize: 15
                     font.bold: true
                     font.letterSpacing: root.theme ? root.theme.letterSpacingBrand : 1.8
                     opacity: 0.95
+                    visible: !root.veryNarrow
                 }
             }
         }
@@ -431,56 +429,6 @@ Rectangle {
                     }
                 }
 
-                ComboBox {
-                    id: scopePreset
-                    Layout.preferredWidth: root.compactSearchControls ? 0 : 118
-                    Layout.preferredHeight: theme.controlSm
-                    visible: !root.compactSearchControls && !!root.activeController && root.activeController.searchMode === "global"
-                    model: [
-                        { label: "Current", value: "current" },
-                        { label: "Home", value: "home" },
-                        { label: "Mounted", value: "mounted" }
-                    ]
-                    textRole: "label"
-                    valueRole: "value"
-                    Component.onCompleted: {
-                        if (!root.activeController) return
-                        var idx = 0
-                        for (var i = 0; i < model.length; ++i) {
-                            if (model[i].value === root.activeController.searchScope) { idx = i; break }
-                        }
-                        currentIndex = idx
-                    }
-                    onActivated: {
-                        if (!root.activeController) return
-                        root.activeController.searchScope = currentValue
-                        root.applySearch(false)
-                    }
-                    background: Rectangle {
-                        radius: theme.rSm
-                        color: scopePreset.hovered ? theme.hover : theme.surface
-                        border.color: theme.border
-                        border.width: 1
-                    }
-                    contentItem: Text {
-                        leftPadding: 10
-                        rightPadding: 20
-                        text: scopePreset.displayText
-                        color: theme.textPrimary
-                        font.pixelSize: theme.fontBody - 1
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                    }
-                    indicator: Text {
-                        text: "▾"
-                        color: theme.textSecondary
-                        font.pixelSize: 10
-                        anchors.right: parent.right
-                        anchors.rightMargin: 8
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
-
                 Item {
                     Layout.preferredWidth: theme.iconSm + 2
                     Layout.fillHeight: true
@@ -655,19 +603,6 @@ Rectangle {
                     }
                 }
 
-                ComboBox {
-                    Layout.fillWidth: true
-                    model: scopePreset.model
-                    textRole: "label"
-                    valueRole: "value"
-                    visible: !!root.activeController && root.activeController.searchMode === "global"
-                    currentIndex: scopePreset.currentIndex
-                    onActivated: {
-                        scopePreset.currentIndex = currentIndex
-                        if (root.activeController) root.activeController.searchScope = currentValue
-                        root.applySearch(false)
-                    }
-                }
             }
         }
 

@@ -65,16 +65,9 @@ QImage SystemIconProvider::requestImage(const QString &id,
         }
     }
 
-    // 4. Final safety: If still null, return a transparent 1x1 image 
-    // to stop QML from flooding the terminal with "Failed to get image" errors.
+    // 4. Final safety: If still null, return a null image to trigger Image.Error
     if (icon.isNull() || icon.pixmap(width, height).isNull()) {
-        QImage empty(1, 1, QImage::Format_ARGB32);
-        empty.fill(Qt::transparent);
-        if (size) *size = QSize(width, height);
-        
-        QMutexLocker lock(&s_cacheMutex);
-        s_iconCache.insert(cacheKey, empty);
-        return empty;
+        return QImage();
     }
 
     QImage img = icon.pixmap(width, height).toImage();

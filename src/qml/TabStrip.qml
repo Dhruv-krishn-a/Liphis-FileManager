@@ -66,6 +66,7 @@ Rectangle {
                     ToolButton {
                         Layout.preferredWidth: 24
                         Layout.preferredHeight: 24
+                        visible: root.tabModel.count > 1
                         flat: true
                         padding: 0
                         contentItem: Item {

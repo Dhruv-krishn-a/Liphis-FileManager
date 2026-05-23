@@ -41,12 +41,14 @@ Menu {
         if (name === "refresh") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/refresh.svg"
         if (name === "terminal") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/terminal.svg"
         if (name === "info") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/info-circle.svg"
+        if (name === "user-trash") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/trash.svg"
         if (name === "zoom-in") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-in.svg"
         if (name === "zoom-out") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-out.svg"
         if (name === "zoom-reset") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/zoom-reset.svg"
         if (name === "file") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/file.svg"
         if (name === "doc-text") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/file-description.svg"
         if (name === "doc-spreadsheet") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/file-spreadsheet.svg"
+        if (name === "eye") return "qrc:/qt/qml/liphis/src/qml/assets/icons/outline/eye.svg"
         return ""
     }
 
@@ -81,9 +83,33 @@ Menu {
     MenuItem {
         text: "Paste"
         enabled: controller ? controller.hasClipboard : false
-        onTriggered: if (controller) controller.pasteItem()
+        onTriggered: if (controller) appWindow.requestPaste(controller)
         Component.onCompleted: root.compact(this)
         icon.source: root.iconSource("clipboard")
+    }
+
+    MenuItem {
+        text: "Show Hidden Files"
+        checkable: true
+        checked: controller ? controller.showHiddenFiles : false
+        onTriggered: if (controller) controller.showHiddenFiles = checked
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("eye")
+    }
+
+    MenuItem {
+        text: "Go to Parent"
+        enabled: controller ? !controller.currentPath.startsWith("trash:") : false
+        onTriggered: if (controller) controller.goUp()
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("arrow-up")
+    }
+
+    MenuItem {
+        text: "Refresh"
+        onTriggered: if (controller) controller.refresh()
+        Component.onCompleted: root.compact(this)
+        icon.source: root.iconSource("refresh")
     }
 
     MenuItem {
@@ -138,17 +164,8 @@ Menu {
     MenuItem {
         text: "Empty Trash"
         visible: controller ? controller.currentPath.startsWith("trash:") : false
-        onTriggered: if (controller) controller.emptyTrash()
+        onTriggered: if (controller) appWindow.requestEmptyTrash(controller)
         Component.onCompleted: root.compact(this)
         icon.source: root.iconSource("user-trash")
-    }
-
-    MenuSeparator { topPadding: 4; bottomPadding: 4 }
-
-    MenuItem {
-        text: "Properties"
-        onTriggered: if (controller) appWindow.showPropertiesForPath(root.targetPath, controller)
-        Component.onCompleted: root.compact(this)
-        icon.source: root.iconSource("info")
     }
 }

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls as QQC
 import QtQuick.Layouts
 import Qt.labs.platform
 import QtCore
@@ -248,10 +249,17 @@ ApplicationWindow {
         registerAppCommand("file.copy_path", "File", "Copy Path to Clipboard", "copy", "", function() { if (activeController) activeController.copyToClipboard(activeController.currentPath) })
         registerAppCommand("file.copy", "File", "Copy Selected Items", "copy", "Ctrl+C", function() { if (activeController) activeController.copyItem("") })
         registerAppCommand("file.cut", "File", "Cut Selected Items", "cut", "Ctrl+X", function() { if (activeController) activeController.cutItem("") })
-        registerAppCommand("file.trash", "File", "Move to Trash", "trash", "Delete", function() { if (activeController && activeController.selectedPaths.length > 0) activeController.trashItems(activeController.selectedPaths) })
+        registerAppCommand("file.trash", "File", "Move to Trash", "trash", "Delete", function() {
+            if (!activeController || activeController.selectedPaths.length === 0) return
+            requestTrash(activeController, activeController.selectedPaths)
+        })
+        registerAppCommand("file.delete_permanently", "File", "Delete Permanently", "trash-x", "Shift+Delete", function() {
+            if (activeController && activeController.selectedPaths.length > 0) requestPermanentDelete(activeController, activeController.selectedPaths)
+        })
+        registerAppCommand("file.close_split", "File", "Close Split View", "x", "", function() { centerWorkspace.closeSplit() })
         registerAppCommand("file.select_all", "File", "Select All", "select-all", "Ctrl+A", function() { if (activeController) activeController.selectAll() })
         registerAppCommand("file.clear_selection", "File", "Clear Selection", "x", "", function() { if (activeController) activeController.clearSelection() })
-        registerAppCommand("file.paste", "File", "Paste from Clipboard", "clipboard", "Ctrl+V", function() { if (activeController) activeController.pasteItem() })
+        registerAppCommand("file.paste", "File", "Paste from Clipboard", "clipboard", "Ctrl+V", function() { if (activeController) requestPaste(activeController) })
         registerAppCommand("file.undo", "File", "Undo last action", "arrow-back-up", "Ctrl+Z", function() { 
             if (activeController && activeController.canUndo) {
                 var desc = activeController.undoDescription
@@ -335,6 +343,14 @@ ApplicationWindow {
         }
     }
 
+    Connections {
+        target: activeController
+        function onOperationProgress(progress) {
+            progressDialog.progress = progress
+            if (!progressDialog.visible) progressDialog.open()
+        }
+    }
+
     background: Rectangle { color: theme.bg }
 
     function normalizePath(path) {
@@ -391,6 +407,65 @@ ApplicationWindow {
             }
             propsDialog.show(metadata)
         }
+    }
+
+    function requestPaste(controllerObj) {
+        if (!controllerObj || !controllerObj.hasClipboard) return
+        progressDialog.statusText = controllerObj.isCutOp ? "Moving items..." : "Copying items..."
+        progressDialog.progress = 0
+        progressDialog.open()
+        controllerObj.pasteItem()
+    }
+
+    function requestTrash(controllerObj, paths) {
+        if (!controllerObj || !paths || paths.length === 0) return
+        const items = paths.slice()
+        const isTrashView = controllerObj.currentPath && controllerObj.currentPath.startsWith("trash:")
+        const perform = function() {
+            if (isTrashView) controllerObj.deleteItems(items)
+            else controllerObj.trashItems(items)
+        }
+        if (generalSettings && generalSettings.confirmDelete) {
+            showActionConfirmation(
+                isTrashView ? "Delete Permanently" : "Move to Trash",
+                isTrashView
+                    ? "Permanently delete " + items.length + " selected item(s)? This cannot be undone."
+                    : "Move " + items.length + " selected item(s) to Trash?",
+                isTrashView ? "Delete" : "Move",
+                perform
+            )
+        } else {
+            perform()
+        }
+    }
+
+    function requestPermanentDelete(controllerObj, paths) {
+        if (!controllerObj || !paths || paths.length === 0) return
+        const items = paths.slice()
+        showActionConfirmation(
+            "Delete Permanently",
+            "Permanently delete " + items.length + " selected item(s)? This cannot be undone.",
+            "Delete",
+            function() { controllerObj.deleteItems(items) }
+        )
+    }
+
+    function requestEmptyTrash(controllerObj) {
+        if (!controllerObj) return
+        showActionConfirmation(
+            "Empty Trash",
+            "Permanently delete all items in Trash? This cannot be undone.",
+            "Empty Trash",
+            function() { controllerObj.emptyTrash() }
+        )
+    }
+
+    function showActionConfirmation(title, message, acceptText, action) {
+        actionConfirmDialog.dialogTitle = title
+        actionConfirmDialog.dialogMessage = message
+        actionConfirmDialog.acceptLabel = acceptText
+        actionConfirmDialog.onAcceptedAction = action
+        actionConfirmDialog.open()
     }
 
     function isMediaFile(name) {
@@ -494,6 +569,7 @@ ApplicationWindow {
             if (bulkRenameDialog.visible) { bulkRenameDialog.close(); return; }
             if (openWithDialog.visible) { openWithDialog.close(); return; }
             if (connectRemoteDialog.visible) { connectRemoteDialog.close(); return; }
+            if (actionConfirmDialog.visible) { actionConfirmDialog.close(); return; }
             if (analyseDialog.visible) { analyseDialog.close(); return; }
             if (progressDialog.visible) { progressDialog.close(); return; }
             if (docInboxDialog.visible) { docInboxDialog.close(); return; }
@@ -545,7 +621,6 @@ ApplicationWindow {
                 docIntelController: docIntelController
                 activePath: (activeController && activeController.currentPath !== undefined) ? activeController.currentPath : ""
                 homePath: appWindow.homePath
-                expanded: generalSettings.sidebarExpanded
                 onToggleExpanded: generalSettings.sidebarExpanded = !generalSettings.sidebarExpanded
                 onPathActivated: (path) => {
                     if (activeController) activeController.openPath(path)
@@ -682,6 +757,58 @@ ApplicationWindow {
     ProgressDialog {
         id: progressDialog
         theme: appWindow.theme
+    }
+
+    QQC.Dialog {
+        id: actionConfirmDialog
+        modal: true
+        closePolicy: Popup.CloseOnEscape
+        anchors.centerIn: parent
+        width: 420
+
+        property string dialogTitle: ""
+        property string dialogMessage: ""
+        property string acceptLabel: "Confirm"
+        property var onAcceptedAction: null
+
+        title: dialogTitle
+
+        background: Rectangle {
+            color: theme.surfaceRaised
+            radius: 12
+            border.color: theme.border
+            border.width: 1
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 12
+            Text {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                text: actionConfirmDialog.dialogMessage
+                color: theme.textPrimary
+                font.pixelSize: 13
+            }
+        }
+
+        footer: RowLayout {
+            spacing: 8
+            Item { Layout.fillWidth: true }
+            Button {
+                text: "Cancel"
+                flat: true
+                onClicked: actionConfirmDialog.close()
+            }
+            Button {
+                text: actionConfirmDialog.acceptLabel
+                highlighted: true
+                onClicked: {
+                    const action = actionConfirmDialog.onAcceptedAction
+                    actionConfirmDialog.close()
+                    if (typeof action === "function") action()
+                }
+            }
+        }
     }
 
     DocumentInboxDialog {

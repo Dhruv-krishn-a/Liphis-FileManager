@@ -42,6 +42,10 @@ class AppController : public QObject
     Q_PROPERTY(bool hasClipboard READ hasClipboard NOTIFY clipboardChanged)
     Q_PROPERTY(QStringList clipboardPaths READ clipboardPaths NOTIFY clipboardChanged)
     Q_PROPERTY(bool isCutOp READ isCutOp NOTIFY clipboardChanged)
+    Q_PROPERTY(int clipboardItemCount READ clipboardItemCount NOTIFY clipboardChanged)
+    Q_PROPERTY(QString clipboardPreview READ clipboardPreview NOTIFY clipboardChanged)
+    Q_PROPERTY(qlonglong clipboardTotalSize READ clipboardTotalSize NOTIFY clipboardChanged)
+    Q_PROPERTY(bool clipboardSizePending READ clipboardSizePending NOTIFY clipboardChanged)
     Q_PROPERTY(int iconSize READ iconSize WRITE setIconSize NOTIFY iconSizeChanged)
     Q_PROPERTY(QString viewMode READ viewMode WRITE setViewMode NOTIFY viewModeChanged)
     Q_PROPERTY(QStringList availableExtensions READ availableExtensions NOTIFY availableExtensionsChanged)
@@ -56,6 +60,8 @@ class AppController : public QObject
     Q_PROPERTY(bool canUndo READ canUndo NOTIFY canUndoChanged)
     Q_PROPERTY(bool canRedo READ canRedo NOTIFY canRedoChanged)
     Q_PROPERTY(QString undoDescription READ undoDescription NOTIFY canUndoChanged)
+    Q_PROPERTY(qlonglong trashSize READ trashSize NOTIFY trashMetricsChanged)
+    Q_PROPERTY(int trashItemCount READ trashItemCount NOTIFY trashMetricsChanged)
 
 public:
     explicit AppController(QObject *parent = nullptr);
@@ -81,6 +87,10 @@ public:
     bool hasClipboard() const;
     QStringList clipboardPaths() const;
     bool isCutOp() const;
+    int clipboardItemCount() const { return m_clipboardItemCount; }
+    QString clipboardPreview() const { return m_clipboardPreview; }
+    qlonglong clipboardTotalSize() const { return m_clipboardTotalSize; }
+    bool clipboardSizePending() const { return m_clipboardSizePending; }
 
     int iconSize() const;
     void setIconSize(int size);
@@ -100,6 +110,8 @@ public:
     bool searchContent() const { return m_searchContent; }
     void setSearchContent(bool enabled);
     QStringList recentSearches() const { return m_recentSearches; }
+    qlonglong trashSize() const { return m_trashSize; }
+    int trashItemCount() const { return m_trashItemCount; }
 
     // Navigation
     Q_INVOKABLE void openPath(const QString &path);
@@ -162,6 +174,7 @@ public:
     Q_INVOKABLE QString runGitCommand(const QString &cmd, const QString &path);
     Q_INVOKABLE QVariantMap getFolderMetadata(const QString &path);
     Q_INVOKABLE void requestFolderSize(const QString &path);
+    Q_INVOKABLE void requestTrashMetrics();
     
     // New Advanced Features
     Q_INVOKABLE void compressItems(const QStringList &paths);
@@ -213,6 +226,7 @@ signals:
     void canUndoChanged();
     void canRedoChanged();
     void folderSizeResolved(const QString &path, qlonglong size);
+    void trashMetricsChanged();
     
     void operationError(const QString &message);
     void operationSuccess(const QString &message);
@@ -225,6 +239,8 @@ private:
     void addEntriesForPaths(const QStringList &paths, bool selectAdded = false);
     bool isTrashPath(const QString &path) const;
     void loadTrashInternal();
+    void refreshTrashMetrics();
+    void refreshClipboardMetadata();
 
     FileListModel m_fileModel;
     FileTreeModel m_treeModel;
@@ -254,6 +270,11 @@ private:
     // Clipboard
     QStringList m_clipboardPaths;
     bool m_isCutOp{false};
+    int m_clipboardItemCount{0};
+    QString m_clipboardPreview;
+    qlonglong m_clipboardTotalSize{0};
+    bool m_clipboardSizePending{false};
+    std::atomic<std::uint64_t> m_clipboardMetricsGeneration{0};
 
     QVariantMap m_gitStatus;
     int m_bookmarksRevision{0};
@@ -270,6 +291,9 @@ private:
     QTimer* m_searchTimer = nullptr;
     QHash<QString, qlonglong> m_folderSizeCache;
     QSet<QString> m_pendingFolderSizeRequests;
+    qlonglong m_trashSize{0};
+    int m_trashItemCount{0};
+    bool m_trashMetricsPending{false};
     void loadRecentSearches();
     void persistRecentSearches();
     void updateModelSelection();

@@ -69,6 +69,11 @@ SplitView {
         }
     }
 
+    function closeSplit() {
+        splitVisible = false
+        splitPath = ""
+    }
+
     function closeCurrentTab() {
         var idx = tabView.currentIndex
         if (idx >= 0 && idx < tabModel.count) {
@@ -177,15 +182,15 @@ SplitView {
                         Component {
                             id: fileViewComponent
                             FileView {
-                                initialPath: parent.tabModelData.path
+                                initialPath: parent.tabModelData ? parent.tabModelData.path : root.homePath
                                 theme: root.theme
                                 itemMenuHandler: root.itemMenuHandler
                                 onRequestedActive: {
-                                    tabView.currentIndex = parent.tabIndex
+                                    tabView.currentIndex = parent.tabIndex !== undefined ? parent.tabIndex : -1
                                     Qt.callLater(focusFileArea)
                                 }
                                 onTabTitleChanged: (title) => {
-                                    if (parent.tabIndex >= 0 && parent.tabIndex < tabModel.count && title && title.length > 0) {
+                                    if (parent.tabIndex !== undefined && parent.tabIndex >= 0 && parent.tabIndex < tabModel.count && title && title.length > 0) {
                                         tabModel.setProperty(parent.tabIndex, "title", title)
                                     }
                                 }
@@ -198,7 +203,7 @@ SplitView {
                                 theme: root.theme
                                 controller: root.docIntelController
                                 toastManager: root.toastManager
-                                section: parent.tabModelData.section
+                                section: parent.tabModelData ? parent.tabModelData.section : ""
                             }
                         }
                     }
@@ -215,12 +220,49 @@ SplitView {
                         border.color: theme.border
                         border.width: 1
 
-                        FileView {
-                            id: secondaryView
+                        ColumnLayout {
                             anchors.fill: parent
-                            initialPath: root.splitPath && root.splitPath.length > 0 ? root.splitPath : root.homePath
-                            theme: root.theme
-                            itemMenuHandler: root.itemMenuHandler
+                            spacing: 0
+
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 34
+                                color: theme.surfaceRaised
+                                border.color: theme.border
+
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 12
+                                    anchors.rightMargin: 6
+                                    spacing: 8
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        text: secondaryView && secondaryView.controller ? secondaryView.controller.title : "Split View"
+                                        color: theme.textPrimary
+                                        font.pixelSize: 12
+                                        font.weight: Font.Medium
+                                        elide: Text.ElideRight
+                                    }
+
+                                    ThemedIconButton {
+                                        theme: root.theme
+                                        iconName: "x"
+                                        iconSize: 13
+                                        toolTip: "Close Split View"
+                                        onClicked: root.closeSplit()
+                                    }
+                                }
+                            }
+
+                            FileView {
+                                id: secondaryView
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                initialPath: root.splitPath && root.splitPath.length > 0 ? root.splitPath : root.homePath
+                                theme: root.theme
+                                itemMenuHandler: root.itemMenuHandler
+                            }
                         }
                     }
                 }

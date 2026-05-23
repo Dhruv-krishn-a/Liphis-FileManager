@@ -6,18 +6,21 @@ import QtCore
 
 Item {
     id: root
+
     property var theme: null
     property var activeController: null
     property var placesModel: null
     property var docIntelController: null
     property string activePath: ""
     property string homePath: ""
-    property bool expanded: generalSettings.sidebarExpanded
-    property bool compact: !expanded
+
+    readonly property bool expanded: (typeof generalSettings !== "undefined" && generalSettings) ? generalSettings.sidebarExpanded : true
+    readonly property bool compact: !expanded
+
     property var networkEntries: []
     property var deviceEntries: []
     property var bookmarkEntries: []
-    
+
     signal toggleExpanded()
     signal pathActivated(string path)
     signal removeBookmarkRequested(string path)
@@ -25,13 +28,33 @@ Item {
     signal openDocDuplicatesRequested()
     signal openDocHealthRequested()
 
-    width: expanded ? (theme ? theme.sidebarWidth : 220) : 64
-    Behavior on width {
-        NumberAnimation {
-            duration: 170
-            easing.type: Easing.OutQuad
-            running: !generalSettings || generalSettings.showAnimations
-        }
+    function value(key, fallback) {
+        return (theme && theme[key] !== undefined && theme[key] !== null) ? theme[key] : fallback
+    }
+
+    function settingValue(key, fallback) {
+        return (typeof generalSettings !== "undefined" && generalSettings && generalSettings[key] !== undefined)
+                ? generalSettings[key]
+                : fallback
+    }
+
+    function storageRatio(usedBytes, totalBytes) {
+        var total = Number(totalBytes || 0)
+        if (total <= 0)
+            return 0
+        return Math.max(0, Math.min(1, Number(usedBytes || 0) / total))
+    }
+
+    function formatGiB(bytes) {
+        var b = Number(bytes || 0)
+        if (b <= 0)
+            return ""
+        return (b / (1024.0 * 1024.0 * 1024.0)).toFixed(1) + " GiB"
+    }
+
+    function shortName(path) {
+        var parts = String(path || "").split("/")
+        return parts.length ? parts[parts.length - 1] : String(path || "")
     }
 
     function refreshSidebarLists() {
@@ -41,48 +64,85 @@ Item {
             bookmarkEntries = []
             return
         }
+
         networkEntries = placesModel.entriesByCategory(4)
         deviceEntries = placesModel.entriesByCategory(2)
         bookmarkEntries = placesModel.entriesByCategory(1)
     }
 
-    function formatGiB(bytes) {
-        var b = Number(bytes || 0)
-        if (b <= 0) return ""
-        return (b / (1024.0 * 1024.0 * 1024.0)).toFixed(1) + " GiB"
+    width: root.expanded ? root.value("sidebarWidth", 220) : 64
+
+    Behavior on width {
+        enabled: root.settingValue("showAnimations", true)
+        NumberAnimation {
+            duration: 170
+            easing.type: Easing.OutQuad
+        }
     }
 
     Rectangle {
         anchors.fill: parent
-        color: theme.surfaceMuted
+        color: root.value("surfaceMuted", "#1f232a")
     }
 
     Rectangle {
         anchors.right: parent.right
-        width: 1; height: parent.height
-        color: theme.border
-        opacity: 0.5
+        width: 1
+        height: parent.height
+        color: root.value("border", "#ffffff")
+        opacity: 0.18
     }
 
     Menu {
         id: sidebarBgMenu
-        Material.theme: (theme && theme.isDark) ? Material.Dark : Material.Light
-        Material.background: theme.surfaceElevated
-        
-        MenuItem { text: "Show Places"; checkable: true; checked: generalSettings.showPlaces; onTriggered: generalSettings.showPlaces = checked }
-        MenuItem { text: "Show Bookmarks"; checkable: true; checked: generalSettings.showBookmarks; onTriggered: generalSettings.showBookmarks = checked }
-        MenuItem { text: "Show Devices"; checkable: true; checked: generalSettings.showDevices; onTriggered: generalSettings.showDevices = checked }
-        MenuItem { text: "Show Recent"; checkable: true; checked: generalSettings.showRecent; onTriggered: generalSettings.showRecent = checked }
+        Material.theme: root.value("isDark", true) ? Material.Dark : Material.Light
+        Material.background: root.value("surfaceElevated", "#2a2f37")
+
+        MenuItem {
+            text: "Show Places"
+            checkable: true
+            checked: root.settingValue("showPlaces", true)
+            onTriggered: {
+                if (typeof generalSettings !== "undefined" && generalSettings)
+                    generalSettings.showPlaces = checked
+            }
+        }
+        MenuItem {
+            text: "Show Bookmarks"
+            checkable: true
+            checked: root.settingValue("showBookmarks", true)
+            onTriggered: {
+                if (typeof generalSettings !== "undefined" && generalSettings)
+                    generalSettings.showBookmarks = checked
+            }
+        }
+        MenuItem {
+            text: "Show Devices"
+            checkable: true
+            checked: root.settingValue("showDevices", true)
+            onTriggered: {
+                if (typeof generalSettings !== "undefined" && generalSettings)
+                    generalSettings.showDevices = checked
+            }
+        }
+        MenuItem {
+            text: "Show Recent"
+            checkable: true
+            checked: root.settingValue("showRecent", true)
+            onTriggered: {
+                if (typeof generalSettings !== "undefined" && generalSettings)
+                    generalSettings.showRecent = checked
+            }
+        }
     }
 
     MouseArea {
         anchors.fill: parent
         z: -1
         acceptedButtons: Qt.RightButton
-        onClicked: (mouse) => {
-            if (mouse.button === Qt.RightButton) {
+        onClicked: function(mouse) {
+            if (mouse.button === Qt.RightButton)
                 sidebarBgMenu.popup()
-            }
         }
     }
 
@@ -99,34 +159,39 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 0
         spacing: 0
 
-        // Sidebar Header / Toggle
+        // Header
         Rectangle {
             Layout.fillWidth: true
-            height: theme.headerHeight
+            Layout.preferredHeight: root.value("headerHeight", 52)
             color: "transparent"
 
-            ThemedIconButton {
-                id: toggleBtn
-                anchors.right: root.expanded ? parent.right : undefined
-                anchors.rightMargin: root.expanded ? (theme ? theme.space8 : 8) : 0
-                anchors.horizontalCenter: root.expanded ? undefined : parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                
-                theme: root.theme
-                iconName: root.expanded ? "layout-sidebar-left-collapse" : "layout-sidebar-left-expand"
-                toolTip: root.expanded ? "Collapse Sidebar" : "Expand Sidebar"
-                onClicked: root.toggleExpanded()
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.topMargin: 4
+                anchors.bottomMargin: 4
+
+                Item { Layout.fillWidth: true }
+
+                ThemedIconButton {
+                    theme: root.theme
+                    iconName: root.expanded ? "layout-sidebar-left-collapse" : "layout-sidebar-left-expand"
+                    iconSize: 18
+                    toolTip: root.expanded ? "Collapse Sidebar" : "Expand Sidebar"
+                    onClicked: root.toggleExpanded()
+                }
             }
 
             Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                width: parent.width
                 height: 1
-                color: theme.border
-                opacity: 0.3
+                color: root.value("border", "#ffffff")
+                opacity: 0.14
             }
         }
 
@@ -135,38 +200,95 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
-            ScrollBar.vertical.policy: ScrollBar.AlwaysOff
-            
+            contentWidth: availableWidth
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
             ColumnLayout {
-                width: Math.max(0, sidebarScroll.availableWidth)
+                width: sidebarScroll.availableWidth
                 spacing: 12
                 Layout.topMargin: 12
                 Layout.bottomMargin: 16
 
-                // Section: Places
+                // Places
                 ColumnLayout {
-                    visible: generalSettings.showPlaces
+                    visible: root.settingValue("showPlaces", true)
                     Layout.fillWidth: true
                     spacing: 2
-                    
+
                     Text {
                         text: "PLACES"
-                        Layout.leftMargin: root.expanded ? 16 : 0
-                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
-                        font.pixelSize: 10
-                        color: theme.textTertiary
+                        Layout.leftMargin: 16
                         visible: root.expanded
-                        font.bold: true
-                        font.letterSpacing: 1.0
+                        color: root.value("textTertiary", "#94a3b8")
+                        font.pixelSize: 9
+                        font.weight: Font.Normal
+                        font.letterSpacing: 1.2
                     }
-                    
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath === root.homePath; iconName: "home"; text: "Home"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath) }
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Documents"); iconName: "folder"; text: "Documents"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Documents") }
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Downloads"); iconName: "download"; text: "Downloads"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Downloads") }
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Pictures"); iconName: "photo"; text: "Pictures"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Pictures") }
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Videos"); iconName: "video"; text: "Videos"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Videos") }
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath.endsWith("/Music"); iconName: "music"; text: "Music"; expanded: root.expanded; onClicked: root.pathActivated(root.homePath + "/Music") }
-                    SidebarItem { Layout.fillWidth: true; theme: root.theme; active: root.activePath === "trash:///"; iconName: "trash"; text: "Trash"; expanded: root.expanded; onClicked: root.pathActivated("trash:///") }
+
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "") === String(root.homePath || "")
+                        iconName: "home"
+                        text: "Home"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated(root.homePath)
+                    }
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "").endsWith("/Documents")
+                        iconName: "folder"
+                        text: "Documents"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated(root.homePath + "/Documents")
+                    }
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "").endsWith("/Downloads")
+                        iconName: "download"
+                        text: "Downloads"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated(root.homePath + "/Downloads")
+                    }
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "").endsWith("/Pictures")
+                        iconName: "photo"
+                        text: "Pictures"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated(root.homePath + "/Pictures")
+                    }
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "").endsWith("/Videos")
+                        iconName: "video"
+                        text: "Videos"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated(root.homePath + "/Videos")
+                    }
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "").endsWith("/Music")
+                        iconName: "music"
+                        text: "Music"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated(root.homePath + "/Music")
+                    }
+                    SidebarItem {
+                        Layout.fillWidth: true
+                        theme: root.theme
+                        active: String(root.activePath || "") === "trash:///"
+                        iconName: "trash"
+                        text: "Trash"
+                        expanded: root.expanded
+                        onClicked: root.pathActivated("trash:///")
+                    }
 
                     Repeater {
                         model: root.bookmarkEntries
@@ -182,22 +304,20 @@ Item {
                     }
                 }
 
-                // Section: Network
+                // Network
                 ColumnLayout {
                     visible: root.networkEntries && root.networkEntries.length > 0
                     Layout.fillWidth: true
-                    Layout.topMargin: 8
                     spacing: 2
 
                     Text {
                         text: "NETWORK"
-                        Layout.leftMargin: root.expanded ? 16 : 0
-                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
-                        font.pixelSize: 10
-                        color: theme.textTertiary
+                        Layout.leftMargin: 16
                         visible: root.expanded
-                        font.bold: true
-                        font.letterSpacing: 1.0
+                        color: root.value("textTertiary", "#94a3b8")
+                        font.pixelSize: 9
+                        font.weight: Font.Normal
+                        font.letterSpacing: 1.2
                     }
 
                     Repeater {
@@ -214,60 +334,61 @@ Item {
                     }
                 }
 
-                // Section: Devices
+                // Devices
                 ColumnLayout {
-                    visible: generalSettings.showDevices && root.deviceEntries && root.deviceEntries.length > 0
+                    visible: root.settingValue("showDevices", true) && root.deviceEntries && root.deviceEntries.length > 0
                     Layout.fillWidth: true
-                    Layout.topMargin: 8
                     spacing: 2
 
                     Text {
                         text: "DEVICES"
-                        Layout.leftMargin: root.expanded ? 16 : 0
-                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
-                        font.pixelSize: 10
-                        color: theme.textTertiary
+                        Layout.leftMargin: 16
                         visible: root.expanded
-                        font.bold: true
-                        font.letterSpacing: 1.0
+                        color: root.value("textTertiary", "#94a3b8")
+                        font.pixelSize: 9
+                        font.weight: Font.Normal
+                        font.letterSpacing: 1.2
                     }
 
                     Repeater {
                         model: root.deviceEntries
-                        Item {
+                        delegate: Item {
                             Layout.fillWidth: true
-                            height: root.expanded ? 44 : 32
+                            Layout.preferredHeight: root.expanded ? 52 : 36
 
                             SidebarItem {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.top: parent.top
-                                anchors.bottom: root.expanded ? undefined : parent.bottom
-                                height: root.expanded ? 24 : parent.height
+                                height: root.expanded ? 28 : parent.height
                                 theme: root.theme
                                 active: root.activePath === modelData.path
-                                iconName: modelData.icon || "drive-harddisk-system"
-                                text: modelData.name
+                                iconName: modelData.icon || "drive-harddisk"
+                                text: root.expanded ? modelData.name : ""
                                 expanded: root.expanded
                                 onClicked: root.pathActivated(modelData.path)
+                                ToolTip.visible: !root.expanded && hovered
+                                ToolTip.text: modelData.name + (modelData.totalBytes > 0 ? ("\n" + root.formatGiB(modelData.usedBytes) + " / " + root.formatGiB(modelData.totalBytes)) : "")
                             }
 
                             Item {
+                                id: storageMeter
                                 visible: root.expanded && modelData.totalBytes > 0
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                anchors.leftMargin: 14
-                                anchors.rightMargin: 14
-                                height: 18
+                                anchors.leftMargin: 16
+                                anchors.rightMargin: 16
+                                height: 16
+                                clip: true
 
-                                readonly property real ratio: Math.max(0, Math.min(1, modelData.usedBytes / modelData.totalBytes))
+                                readonly property real ratio: root.storageRatio(modelData.usedBytes, modelData.totalBytes)
 
                                 Text {
                                     anchors.left: parent.left
                                     anchors.top: parent.top
-                                    text: root.formatGiB(modelData.totalBytes)
-                                    color: theme.textTertiary
+                                    text: root.formatGiB(modelData.usedBytes) + " / " + root.formatGiB(modelData.totalBytes)
+                                    color: root.value("textTertiary", "#94a3b8")
                                     font.pixelSize: 9
                                 }
 
@@ -275,43 +396,41 @@ Item {
                                     anchors.left: parent.left
                                     anchors.right: parent.right
                                     anchors.bottom: parent.bottom
-                                    height: 3
+                                    anchors.bottomMargin: 2
+                                    height: 4
                                     radius: 2
-                                    color: theme.surfaceRaised
-                                    border.width: 1
-                                    border.color: theme.border
+                                    color: root.value("surfaceRaised", "#334155")
                                 }
                                 Rectangle {
-                                    width: Math.max(3, (parent.width) * parent.ratio)
                                     anchors.left: parent.left
                                     anchors.bottom: parent.bottom
-                                    height: 3
+                                    anchors.bottomMargin: 2
+                                    width: Math.max(4, parent.width * storageMeter.ratio)
+                                    height: 4
                                     radius: 2
-                                    color: theme.accent
+                                    color: storageMeter.ratio > 0.9 ? root.value("error", "#ef4444") : root.value("accent", "#60a5fa")
                                 }
                             }
                         }
                     }
                 }
 
-                // Section: Recent
+                // Recent
                 ColumnLayout {
-                    visible: generalSettings.showRecent && root.activeController
+                    visible: root.settingValue("showRecent", true) && root.activeController
                     Layout.fillWidth: true
-                    Layout.topMargin: 8
                     spacing: 2
-                    
+
                     Text {
                         text: "RECENT"
-                        Layout.leftMargin: root.expanded ? 16 : 0
-                        Layout.alignment: root.expanded ? Qt.AlignLeft : Qt.AlignHCenter
-                        font.pixelSize: 10
-                        color: theme.textTertiary
+                        Layout.leftMargin: 16
                         visible: root.expanded
-                        font.bold: true
-                        font.letterSpacing: 1.0
+                        color: root.value("textTertiary", "#94a3b8")
+                        font.pixelSize: 9
+                        font.weight: Font.Normal
+                        font.letterSpacing: 1.2
                     }
-                    
+
                     Repeater {
                         model: root.activeController ? root.activeController.recentPaths : []
                         SidebarItem {
@@ -319,7 +438,7 @@ Item {
                             theme: root.theme
                             active: false
                             iconName: "folder"
-                            text: modelData.split('/').pop()
+                            text: root.expanded ? root.shortName(modelData) : ""
                             expanded: root.expanded
                             onClicked: root.pathActivated(modelData)
                             ToolTip.visible: hovered
@@ -327,111 +446,155 @@ Item {
                         }
                     }
                 }
-                
+
                 Item { Layout.fillHeight: true }
             }
         }
 
-        // Section: Doc Intel
+        // Doc Intel
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.margins: 12
-            spacing: 8
-            visible: true
+            Layout.leftMargin: root.expanded ? 12 : 6
+            Layout.rightMargin: root.expanded ? 12 : 6
+            Layout.topMargin: 8
+            Layout.bottomMargin: 10
+            spacing: root.expanded ? 8 : 6
 
             Rectangle {
-                Layout.fillWidth: true; height: 1; color: theme.border; opacity: 0.2
+                Layout.fillWidth: true
+                Layout.preferredHeight: 1
+                color: root.value("border", "#ffffff")
+                opacity: 0.10
             }
 
             Text {
                 text: "DOC INTEL"
-                font.pixelSize: 10
-                color: theme.textTertiary
-                font.bold: true
-                font.letterSpacing: 1.0
+                visible: root.expanded
+                font.pixelSize: 9
+                color: root.value("textTertiary", "#94a3b8")
+                font.weight: Font.Normal
+                font.letterSpacing: 1.2
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
-                visible: root.expanded
             }
-            Flow {
+
+            GridLayout {
                 Layout.fillWidth: true
-                spacing: 6
                 visible: root.expanded
+                columns: 3
+                columnSpacing: 8
+                rowSpacing: 8
+
                 Button {
                     id: inboxBtn
-                    text: "Inbox"
                     Layout.fillWidth: true
-                    Layout.minimumWidth: 0
+                    Layout.preferredWidth: 1
+                    text: "Inbox"
                     onClicked: root.openDocInboxRequested()
-                    background: Rectangle { radius: 6; color: inboxBtn.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    background: Rectangle {
+                        radius: 8
+                        color: inboxBtn.hovered ? root.value("hover", "#334155") : root.value("surfaceRaised", "#2b313a")
+                        border.color: root.value("border", "#ffffff")
+                        border.width: 1
+                    }
                     contentItem: RowLayout {
-                        spacing: 4
-                        Icon { name: "folder-open"; iconSize: 12; color: theme.textSecondary }
+                        spacing: 6
+                        Icon { name: "folder-open"; iconSize: 12; color: root.value("textSecondary", "#cbd5e1") }
                         Text {
-                            text: parent.parent.text
-                            color: theme.textPrimary
+                            text: inboxBtn.text
+                            color: root.value("textPrimary", "#f8fafc")
                             font.pixelSize: 11
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignHCenter
                         }
                     }
-                    ToolTip.visible: hovered && !root.expanded
-                    ToolTip.text: "Doc Intel: Inbox"
                 }
+
                 Button {
                     id: dupesBtn
-                    text: "Dupes"
                     Layout.fillWidth: true
-                    Layout.minimumWidth: 0
+                    Layout.preferredWidth: 1
+                    text: "Dupes"
                     onClicked: root.openDocDuplicatesRequested()
-                    background: Rectangle { radius: 6; color: dupesBtn.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    background: Rectangle {
+                        radius: 8
+                        color: dupesBtn.hovered ? root.value("hover", "#334155") : root.value("surfaceRaised", "#2b313a")
+                        border.color: root.value("border", "#ffffff")
+                        border.width: 1
+                    }
                     contentItem: RowLayout {
-                        spacing: 4
-                        Icon { name: "copy"; iconSize: 12; color: theme.textSecondary }
+                        spacing: 6
+                        Icon { name: "copy"; iconSize: 12; color: root.value("textSecondary", "#cbd5e1") }
                         Text {
-                            text: parent.parent.text
-                            color: theme.textPrimary
+                            text: dupesBtn.text
+                            color: root.value("textPrimary", "#f8fafc")
                             font.pixelSize: 11
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignHCenter
                         }
                     }
-                    ToolTip.visible: hovered && !root.expanded
-                    ToolTip.text: "Doc Intel: Duplicates"
                 }
+
                 Button {
                     id: healthBtn
-                    text: "Health"
                     Layout.fillWidth: true
-                    Layout.minimumWidth: 0
+                    Layout.preferredWidth: 1
+                    text: "Health"
                     onClicked: root.openDocHealthRequested()
-                    background: Rectangle { radius: 6; color: healthBtn.hovered ? theme.hover : theme.surfaceRaised; border.color: theme.border }
+                    background: Rectangle {
+                        radius: 8
+                        color: healthBtn.hovered ? root.value("hover", "#334155") : root.value("surfaceRaised", "#2b313a")
+                        border.color: root.value("border", "#ffffff")
+                        border.width: 1
+                    }
                     contentItem: RowLayout {
-                        spacing: 4
-                        Icon { name: "chart-pie"; iconSize: 12; color: theme.textSecondary }
+                        spacing: 6
+                        Icon { name: "chart-pie"; iconSize: 12; color: root.value("textSecondary", "#cbd5e1") }
                         Text {
-                            text: parent.parent.text
-                            color: theme.textPrimary
+                            text: healthBtn.text
+                            color: root.value("textPrimary", "#f8fafc")
                             font.pixelSize: 11
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                             horizontalAlignment: Text.AlignHCenter
                         }
                     }
-                    ToolTip.visible: hovered && !root.expanded
-                    ToolTip.text: "Doc Intel: Health"
                 }
             }
 
-            RowLayout {
+            ColumnLayout {
                 Layout.fillWidth: true
-                spacing: 6
+                spacing: 8
                 visible: root.compact
-                ThemedIconButton { theme: root.theme; iconName: "folder-open"; iconSize: 13; toolTip: "Doc Intel: Inbox"; onClicked: root.openDocInboxRequested() }
-                ThemedIconButton { theme: root.theme; iconName: "copy"; iconSize: 13; toolTip: "Doc Intel: Duplicates"; onClicked: root.openDocDuplicatesRequested() }
-                ThemedIconButton { theme: root.theme; iconName: "chart-pie"; iconSize: 13; toolTip: "Doc Intel: Health"; onClicked: root.openDocHealthRequested() }
+                Layout.alignment: Qt.AlignHCenter
+                Layout.bottomMargin: 2
+
+                ThemedIconButton {
+                    Layout.alignment: Qt.AlignHCenter
+                    theme: root.theme
+                    iconName: "folder-open"
+                    iconSize: 18
+                    toolTip: "Doc Intel: Inbox"
+                    onClicked: root.openDocInboxRequested()
+                }
+                ThemedIconButton {
+                    Layout.alignment: Qt.AlignHCenter
+                    theme: root.theme
+                    iconName: "copy"
+                    iconSize: 18
+                    toolTip: "Doc Intel: Duplicates"
+                    onClicked: root.openDocDuplicatesRequested()
+                }
+                ThemedIconButton {
+                    Layout.alignment: Qt.AlignHCenter
+                    theme: root.theme
+                    iconName: "chart-pie"
+                    iconSize: 18
+                    toolTip: "Doc Intel: Health"
+                    onClicked: root.openDocHealthRequested()
+                }
             }
         }
     }

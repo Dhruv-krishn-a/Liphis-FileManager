@@ -254,10 +254,19 @@ QString permissionsToString(const QFile::Permissions perms) {
 
 bool commandExists(const QString &command)
 {
+    static QHash<QString, bool> cache;
+    auto it = cache.constFind(command);
+    if (it != cache.constEnd()) return it.value();
+
     QProcess p;
     p.start("sh", {"-lc", "command -v " + command});
-    if (!p.waitForFinished(600)) return false;
-    return p.exitCode() == 0 && !p.readAllStandardOutput().trimmed().isEmpty();
+    if (!p.waitForFinished(600)) {
+        cache.insert(command, false);
+        return false;
+    }
+    const bool exists = p.exitCode() == 0 && !p.readAllStandardOutput().trimmed().isEmpty();
+    cache.insert(command, exists);
+    return exists;
 }
 }
 
@@ -458,8 +467,51 @@ void AppController::openPath(const QString &path)
 
     QFileInfo fi(resolvedPath);
     if (!fi.isDir()) {
+        if (resolvedPath.startsWith("/dev/")) {
+            m_loading = true;
+            emit loadingChanged();
+            QPointer<AppController> safeThis(this);
+            ThreadPool::instance().submit([safeThis, resolvedPath]() {
+                QProcess p;
+                p.start("gio", {"mount", "-d", resolvedPath});
+                p.waitForFinished(-1);
+                QString output = p.readAllStandardOutput();
+                QString error = p.readAllStandardError();
+                QMetaObject::invokeMethod(safeThis, [safeThis, output, error, resolvedPath]() {
+                    if (!safeThis) return;
+                    safeThis->m_loading = false;
+                    emit safeThis->loadingChanged();
+                    // Extract mount point or refresh. Usually gio mount works silently on success.
+                    if (error.isEmpty() || output.contains("Mounted") || output.contains("mounted")) {
+                        if (safeThis->m_placesModel) safeThis->m_placesModel->refresh();
+                        // After mounting, the volume will be mounted somewhere like /media or /run/media.
+                        // For a seamless UX, since we don't know the exact path from gio easily if it's silent,
+                        // we can just let the PlacesModel refresh and user can click the new mounted path.
+                        // Or we can parse lsblk to find the new mountpoint.
+                        QProcess lsblk;
+                        lsblk.start("lsblk", QStringList{"-n", "-o", "MOUNTPOINT", resolvedPath});
+                        lsblk.waitForFinished(1000);
+                        QString mp = lsblk.readAllStandardOutput().trimmed();
+                        if (!mp.isEmpty()) {
+                            safeThis->openPath(mp);
+                        } else {
+                            emit safeThis->operationSuccess("Device mounted successfully");
+                        }
+                    } else {
+                        emit safeThis->operationError("Mount failed: " + error);
+                    }
+                });
+            });
+            return;
+        }
         QDesktopServices::openUrl(QUrl::fromLocalFile(resolvedPath));
         return;
+    }
+
+    if (!fi.isReadable()) {
+        emit operationError("Permission denied: Cannot read directory");
+        return; // Alternatively, pkexec ls here? Usually just mounting is enough, or polkit prompt. 
+        // For actual dir browsing, gio open or similar if we want. But let's just error for now unless it's a mount.
     }
 
     if (m_historyIndex < m_history.size() - 1) m_history.resize(m_historyIndex + 1);
@@ -844,6 +896,65 @@ static QString userTrashInfoDir()
     return QDir::homePath() + "/.local/share/Trash/info";
 }
 
+void AppController::requestTrashMetrics()
+{
+    refreshTrashMetrics();
+}
+
+void AppController::refreshTrashMetrics()
+{
+    if (m_trashMetricsPending) return;
+    m_trashMetricsPending = true;
+
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis]() {
+        if (!safeThis) return;
+
+        const QDir dir(userTrashFilesDir());
+        const QFileInfoList entries = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Hidden, QDir::Name);
+        qlonglong totalSize = 0;
+        const int itemCount = entries.size();
+
+        for (const QFileInfo &entry : entries) {
+            if (!safeThis) return;
+
+            if (entry.isFile() && !entry.isSymLink()) {
+                totalSize += entry.size();
+                continue;
+            }
+
+            std::error_code ec;
+            for (auto it = fs::recursive_directory_iterator(
+                     entry.absoluteFilePath().toStdString(),
+                     fs::directory_options::skip_permission_denied, ec);
+                 it != fs::recursive_directory_iterator();
+                 it.increment(ec))
+            {
+                if (!safeThis) return;
+                if (ec) {
+                    ec.clear();
+                    continue;
+                }
+                std::error_code stEc;
+                if (!fs::is_regular_file(it->symlink_status(stEc)) || stEc) continue;
+                std::error_code szEc;
+                const auto sz = fs::file_size(it->path(), szEc);
+                if (szEc) continue;
+                totalSize += static_cast<qlonglong>(sz);
+            }
+        }
+
+        QMetaObject::invokeMethod(safeThis, [safeThis, totalSize, itemCount]() {
+            if (!safeThis) return;
+            safeThis->m_trashMetricsPending = false;
+            if (safeThis->m_trashSize == totalSize && safeThis->m_trashItemCount == itemCount) return;
+            safeThis->m_trashSize = totalSize;
+            safeThis->m_trashItemCount = itemCount;
+            emit safeThis->trashMetricsChanged();
+        }, Qt::QueuedConnection);
+    });
+}
+
 void AppController::loadTrashInternal()
 {
     const std::uint64_t generation = ++m_operationGeneration;
@@ -884,6 +995,7 @@ void AppController::loadTrashInternal()
         QMetaObject::invokeMethod(safeThis, [safeThis, generation, entries = std::move(entries)]() mutable {
             if (!safeThis || safeThis->m_operationGeneration.load() != generation) return;
             safeThis->m_fileModel.setEntries(std::move(entries));
+            safeThis->refreshTrashMetrics();
             safeThis->m_loading = false;
             emit safeThis->loadingChanged();
             emit safeThis->availableExtensionsChanged();
@@ -948,6 +1060,13 @@ void AppController::startGlobalSearch(const QString &pattern)
     if (pattern.trimmed().isEmpty() && parsed.extension.isEmpty()
         && parsed.type == "all" && parsed.minSize < 0 && parsed.maxSize < 0
         && parsed.minDate < 0 && parsed.maxDate < 0) return;
+    if (!parsed.term.isEmpty() && parsed.term.trimmed().size() < 2
+        && parsed.extension.isEmpty() && parsed.type == "all"
+        && parsed.minSize < 0 && parsed.maxSize < 0
+        && parsed.minDate < 0 && parsed.maxDate < 0
+        && !m_searchContent) {
+        return;
+    }
 
     const std::uint64_t generation = ++m_operationGeneration;
     m_loading = true;
@@ -960,15 +1079,16 @@ void AppController::startGlobalSearch(const QString &pattern)
         emit activeSearchTermChanged();
     }
     m_fileModel.clear();
-    m_proxyModel.setSearchQuery(parsed.term);
-    m_proxyModel.setExtensionFilter(parsed.extension);
-    m_proxyModel.setTypeFilter(parsed.type);
-    m_proxyModel.setMinSize(parsed.minSize);
-    m_proxyModel.setMaxSize(parsed.maxSize);
-    m_proxyModel.setMinDate(parsed.minDate);
-    m_proxyModel.setMaxDate(parsed.maxDate);
     m_proxyModel.setShowHidden(parsed.showHidden);
-    m_proxyModel.setExactMatch(parsed.exact);
+    m_proxyModel.setSearchQuery("");
+    m_proxyModel.setExtensionFilter("");
+    m_proxyModel.setTypeFilter("all");
+    m_proxyModel.setMinSize(-1);
+    m_proxyModel.setMaxSize(-1);
+    m_proxyModel.setMinDate(-1);
+    m_proxyModel.setMaxDate(-1);
+    m_proxyModel.setExactMatch(false);
+    m_proxyModel.setDynamicSortFilter(false);
     m_cancelRequested = true;
     QPointer<AppController> safeThis(this);
     m_cancelRequested = false;
@@ -977,42 +1097,26 @@ void AppController::startGlobalSearch(const QString &pattern)
     };
     const bool searchInFiles = m_searchContent && !parsed.term.isEmpty();
 
-    const QString scope = m_searchScope;
-    const QString currentPath = m_currentPath;
-    ThreadPool::instance().submit([safeThis, parsed, shouldCancel, generation, searchInFiles, scope, currentPath]() {
+    ThreadPool::instance().submit([safeThis, parsed, shouldCancel, generation, searchInFiles]() {
         QStringList roots;
         if (!safeThis) return;
-
-        if (scope == "current") {
-            if (!currentPath.isEmpty()) roots << currentPath;
-        } else if (scope == "home") {
-            roots << QDir::homePath();
-        } else { // mounted
-            for (const QStorageInfo &storage : QStorageInfo::mountedVolumes()) {
-                if (!storage.isValid() || !storage.isReady()) continue;
-                const QString root = storage.rootPath();
-                if (root.startsWith("/proc") || root.startsWith("/sys") || root.startsWith("/dev") || root.startsWith("/run/user")) continue;
-                roots << root;
-            }
-        }
+        roots << QDir::homePath();
         if (roots.isEmpty()) roots << QDir::homePath();
         roots = prunedRoots(roots);
 
         const bool hasFd = commandExists("fd");
         const bool hasRg = commandExists("rg");
         QSet<QString> seenPaths;
-        int thumbnailBudget = 60;
         static constexpr int kMaxGlobalResults = 3500;
         int emittedCount = 0;
         bool hitResultLimit = false;
         for (const QString &rootPath : roots) {
             if (shouldCancel() || hitResultLimit) break;
             
-            const auto publishBatch = [safeThis, generation, &seenPaths, &thumbnailBudget, &emittedCount, &hitResultLimit](std::vector<FileMeta>&& filtered) {
+            const auto publishBatch = [safeThis, generation, &seenPaths, &emittedCount, &hitResultLimit](std::vector<FileMeta>&& filtered) {
                 if (filtered.empty() || !safeThis) return;
                 std::vector<FileMeta> unique;
                 unique.reserve(filtered.size());
-                QStringList thumbBatch;
                 for (auto &entry : filtered) {
                     if (emittedCount >= kMaxGlobalResults) {
                         hitResultLimit = true;
@@ -1021,10 +1125,6 @@ void AppController::startGlobalSearch(const QString &pattern)
                     const QString key = QString::fromStdString(entry.path);
                     if (seenPaths.contains(key)) continue;
                     seenPaths.insert(key);
-                    if (thumbnailBudget > 0) {
-                        thumbBatch << key;
-                        --thumbnailBudget;
-                    }
                     unique.push_back(std::move(entry));
                     emittedCount++;
                 }
@@ -1032,13 +1132,9 @@ void AppController::startGlobalSearch(const QString &pattern)
                     hitResultLimit = true;
                 }
                 if (unique.empty()) return;
-                QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(unique), thumbBatch]() mutable {
+                QMetaObject::invokeMethod(safeThis, [safeThis, generation, b = std::move(unique)]() mutable {
                     if (!safeThis || safeThis->m_operationGeneration.load() != generation) return;
                     safeThis->m_fileModel.insertBatch(std::move(b));
-                    // Request thumbnails for the batch
-                    for (const QString& tPath : thumbBatch) {
-                        if (safeThis->m_thumbnailManager) safeThis->m_thumbnailManager->requestThumbnail(tPath);
-                    }
                 }, Qt::QueuedConnection);
             };
 
@@ -1046,8 +1142,11 @@ void AppController::startGlobalSearch(const QString &pattern)
                 if (hasRg) {
                     QProcess rg;
                     QStringList args;
-                    args << "--files-with-matches" << "--smart-case"
-                         << "-g" << "!.git/*" << "-g" << "!node_modules/*" << "-g" << "!.cache/*";
+                    args << "--files-with-matches" << "--smart-case" << "--no-messages"
+                         << "-m" << "1" << "-j" << "1"
+                         << "-g" << "!.git/*" << "-g" << "!node_modules/*" << "-g" << "!.cache/*"
+                         << "-g" << "!build/*" << "-g" << "!dist/*" << "-g" << "!target/*"
+                         << "-g" << "!.venv/*" << "-g" << "!venv/*";
                     if (parsed.showHidden) args << "--hidden";
                     args << parsed.term << rootPath;
                     rg.start("rg", args);
@@ -1062,7 +1161,7 @@ void AppController::startGlobalSearch(const QString &pattern)
                             while (rg.canReadLine()) {
                                 const QString path = QString::fromUtf8(rg.readLine()).trimmed();
                                 if (path.isEmpty()) continue;
-                                FileMeta m = FileSystemEngine::getFileMeta(path.toStdString());
+                                FileMeta m = FileSystemEngine::getFileMeta(path.toStdString(), false);
                                 if (matchesStructuredFilters(m, parsed)) currentBatch.push_back(std::move(m));
                             }
                             if (currentBatch.size() >= 40) {
@@ -1097,7 +1196,7 @@ void AppController::startGlobalSearch(const QString &pattern)
                         while (grep.canReadLine()) {
                             QString path = QString::fromUtf8(grep.readLine()).trimmed();
                             if (!path.isEmpty()) {
-                                FileMeta m = FileSystemEngine::getFileMeta(path.toStdString());
+                                FileMeta m = FileSystemEngine::getFileMeta(path.toStdString(), false);
                                 if (matchesStructuredFilters(m, parsed)) currentBatch.push_back(std::move(m));
                             }
                         }
@@ -1118,9 +1217,12 @@ void AppController::startGlobalSearch(const QString &pattern)
                 if (hasFd) {
                     QProcess fd;
                     QStringList args;
-                    args << "--absolute-path" << "--color=never" << "--hidden" << "--no-ignore-vcs"
-                         << "--exclude" << ".git" << "--exclude" << "node_modules" << "--exclude" << ".cache";
-                    if (!parsed.showHidden) args << "--exclude" << ".*";
+                    args << "--absolute-path" << "--color=never" << "--ignore-case" << "--fixed-strings"
+                         << "-j" << "1"
+                         << "--exclude" << ".git" << "--exclude" << "node_modules" << "--exclude" << ".cache"
+                         << "--exclude" << "build" << "--exclude" << "dist" << "--exclude" << "target"
+                         << "--exclude" << ".venv" << "--exclude" << "venv";
+                    if (parsed.showHidden) args << "--hidden";
                     if (parsed.type == "folder") args << "--type=d";
                     else if (parsed.type == "file") args << "--type=f";
                     args << (parsed.term.isEmpty() ? "." : parsed.term) << rootPath;
@@ -1137,7 +1239,7 @@ void AppController::startGlobalSearch(const QString &pattern)
                             while (fd.canReadLine()) {
                                 const QString p = QString::fromUtf8(fd.readLine()).trimmed();
                                 if (p.isEmpty()) continue;
-                                FileMeta meta = FileSystemEngine::getFileMeta(p.toStdString());
+                                FileMeta meta = FileSystemEngine::getFileMeta(p.toStdString(), false);
                                 if (matchesStructuredFilters(meta, parsed)) currentBatch.push_back(std::move(meta));
                             }
                             if (currentBatch.size() >= 60) {
@@ -1170,6 +1272,8 @@ void AppController::startGlobalSearch(const QString &pattern)
             QMetaObject::invokeMethod(safeThis, [safeThis, generation]() {
                 if (safeThis) {
                     if (safeThis->m_operationGeneration.load() != generation) return;
+                    safeThis->m_proxyModel.setDynamicSortFilter(true);
+                    safeThis->m_proxyModel.sort(0);
                     safeThis->m_loading = false;
                     safeThis->m_searchInProgress = false;
                     emit safeThis->loadingChanged();
@@ -1226,6 +1330,8 @@ void AppController::cancelSearch()
 {
     m_cancelRequested = true;
     ++m_operationGeneration;
+    m_proxyModel.setDynamicSortFilter(true);
+    m_proxyModel.sort(0);
     if (m_loading || m_searchInProgress) {
         m_loading = false;
         m_searchInProgress = false;
@@ -1238,18 +1344,80 @@ void AppController::createFolder(const QString &name)
 {
     if (name.isEmpty() || m_currentPath.isEmpty()) return;
     QString fullPath = m_currentPath + "/" + name;
-    m_historyStack.push(std::make_unique<CreateFolderCommand>(fullPath.toStdString()));
-    m_lastUserInitiatedOp.restart();
-    addEntriesForPaths({fullPath}, /*selectAdded*/ true);
+    
+    auto res = FileSystemEngine::createDirectory(fullPath.toStdString());
+    if (res.success) {
+        m_lastUserInitiatedOp.restart();
+        addEntriesForPaths({fullPath}, true);
+        emit operationSuccess("Folder created");
+    } else {
+        QString errMsg = QString::fromStdString(res.message);
+        if (errMsg.contains("Permission denied", Qt::CaseInsensitive) || errMsg.contains("Access denied", Qt::CaseInsensitive)) {
+            QPointer<AppController> safeThis(this);
+            ThreadPool::instance().submit([safeThis, fullPath]() {
+                QProcess p;
+                p.start("pkexec", {"mkdir", "-p", fullPath});
+                p.waitForFinished(-1);
+                if (p.exitCode() == 0) {
+                    QMetaObject::invokeMethod(safeThis, [safeThis, fullPath]() {
+                        if (safeThis) {
+                            safeThis->m_lastUserInitiatedOp.restart();
+                            safeThis->addEntriesForPaths({fullPath}, true);
+                            emit safeThis->operationSuccess("Folder created with elevated privileges");
+                        }
+                    }, Qt::QueuedConnection);
+                } else {
+                    QString err = p.readAllStandardError().trimmed();
+                    if (err.isEmpty()) err = "Authentication cancelled or failed";
+                    QMetaObject::invokeMethod(safeThis, [safeThis, err]() {
+                        if (safeThis) emit safeThis->operationError(err);
+                    }, Qt::QueuedConnection);
+                }
+            });
+            return;
+        }
+        emit operationError(errMsg);
+    }
 }
 
 void AppController::createFile(const QString &name)
 {
     if (name.isEmpty() || m_currentPath.isEmpty()) return;
     QString fullPath = m_currentPath + "/" + name;
-    m_historyStack.push(std::make_unique<CreateFileCommand>(fullPath.toStdString()));
-    m_lastUserInitiatedOp.restart();
-    addEntriesForPaths({fullPath}, /*selectAdded*/ true);
+    
+    auto res = FileSystemEngine::createFile(fullPath.toStdString());
+    if (res.success) {
+        m_lastUserInitiatedOp.restart();
+        addEntriesForPaths({fullPath}, true);
+        emit operationSuccess("File created");
+    } else {
+        QString errMsg = QString::fromStdString(res.message);
+        if (errMsg.contains("Permission denied", Qt::CaseInsensitive) || errMsg.contains("Access denied", Qt::CaseInsensitive)) {
+            QPointer<AppController> safeThis(this);
+            ThreadPool::instance().submit([safeThis, fullPath]() {
+                QProcess p;
+                p.start("pkexec", {"touch", fullPath});
+                p.waitForFinished(-1);
+                if (p.exitCode() == 0) {
+                    QMetaObject::invokeMethod(safeThis, [safeThis, fullPath]() {
+                        if (safeThis) {
+                            safeThis->m_lastUserInitiatedOp.restart();
+                            safeThis->addEntriesForPaths({fullPath}, true);
+                            emit safeThis->operationSuccess("File created with elevated privileges");
+                        }
+                    }, Qt::QueuedConnection);
+                } else {
+                    QString err = p.readAllStandardError().trimmed();
+                    if (err.isEmpty()) err = "Authentication cancelled or failed";
+                    QMetaObject::invokeMethod(safeThis, [safeThis, err]() {
+                        if (safeThis) emit safeThis->operationError(err);
+                    }, Qt::QueuedConnection);
+                }
+            });
+            return;
+        }
+        emit operationError(errMsg);
+    }
 }
 
 void AppController::renameItem(const QString &oldPath, const QString &newName)
@@ -1257,16 +1425,50 @@ void AppController::renameItem(const QString &oldPath, const QString &newName)
     if (oldPath.isEmpty() || newName.isEmpty()) return;
     QFileInfo fi(oldPath);
     QString newPath = fi.absolutePath() + "/" + newName;
-    m_historyStack.push(std::make_unique<RenameCommand>(oldPath.toStdString(), newPath.toStdString()));
-    m_lastUserInitiatedOp.restart();
-    const bool oldInCurrent = (fi.absolutePath() == m_currentPath);
-    const bool newInCurrent = (QFileInfo(newPath).absolutePath() == m_currentPath);
-    if (oldInCurrent) {
-        m_fileModel.removeItems({oldPath});
-        removeFromSelection({oldPath});
-    }
-    if (newInCurrent) {
-        addEntriesForPaths({newPath}, /*selectAdded*/ true);
+    
+    auto res = FileSystemEngine::renamePath(oldPath.toStdString(), newPath.toStdString());
+    
+    auto updateUI = [this, oldPath, newPath, fi]() {
+        m_lastUserInitiatedOp.restart();
+        const bool oldInCurrent = (fi.absolutePath() == m_currentPath);
+        const bool newInCurrent = (QFileInfo(newPath).absolutePath() == m_currentPath);
+        if (oldInCurrent) {
+            m_fileModel.removeItems({oldPath});
+            removeFromSelection({oldPath});
+        }
+        if (newInCurrent) {
+            addEntriesForPaths({newPath}, /*selectAdded*/ true);
+        }
+        emit operationSuccess("Renamed successfully");
+    };
+
+    if (res.success) {
+        updateUI();
+    } else {
+        QString errMsg = QString::fromStdString(res.message);
+        if (errMsg.contains("Permission denied", Qt::CaseInsensitive) || errMsg.contains("Access denied", Qt::CaseInsensitive)) {
+            QPointer<AppController> safeThis(this);
+            ThreadPool::instance().submit([safeThis, oldPath, newPath, updateUI]() {
+                QProcess p;
+                p.start("pkexec", {"mv", oldPath, newPath});
+                p.waitForFinished(-1);
+                if (p.exitCode() == 0) {
+                    QMetaObject::invokeMethod(safeThis, [safeThis, updateUI]() {
+                        if (safeThis) {
+                            updateUI();
+                        }
+                    }, Qt::QueuedConnection);
+                } else {
+                    QString err = p.readAllStandardError().trimmed();
+                    if (err.isEmpty()) err = "Authentication cancelled or failed";
+                    QMetaObject::invokeMethod(safeThis, [safeThis, err]() {
+                        if (safeThis) emit safeThis->operationError(err);
+                    }, Qt::QueuedConnection);
+                }
+            });
+            return;
+        }
+        emit operationError(errMsg);
     }
 }
 
@@ -1285,20 +1487,50 @@ void AppController::deleteItem(const QString &path)
 {
     const QString target = safePath(path);
     if (target.isEmpty()) return;
+    const bool refreshTrash = isTrashPath(m_currentPath);
     auto res = FileSystemEngine::deletePath(target.toStdString());
-    if (res.success) { 
+    if (res.success) {
         m_fileModel.removeItems({path});
         removeFromSelection({path});
-        emit operationSuccess("Deleted"); 
+        if (refreshTrash) refreshTrashMetrics();
+        emit operationSuccess("Deleted");
     }
-    else emit operationError(QString::fromStdString(res.message));
+    else {
+        QString errMsg = QString::fromStdString(res.message);
+        if (errMsg.contains("Permission denied", Qt::CaseInsensitive) || errMsg.contains("Access denied", Qt::CaseInsensitive)) {
+            QPointer<AppController> safeThis(this);
+            ThreadPool::instance().submit([safeThis, target, path, refreshTrash]() {
+                QProcess p;
+                p.start("pkexec", {"rm", "-rf", target});
+                p.waitForFinished(-1);
+                if (p.exitCode() == 0) {
+                    QMetaObject::invokeMethod(safeThis, [safeThis, path, refreshTrash]() {
+                        if (safeThis) {
+                            safeThis->m_fileModel.removeItems({path});
+                            safeThis->removeFromSelection({path});
+                            if (refreshTrash) safeThis->refreshTrashMetrics();
+                            emit safeThis->operationSuccess("Deleted with elevated privileges");
+                        }
+                    }, Qt::QueuedConnection);
+                } else {
+                    QString err = p.readAllStandardError().trimmed();
+                    if (err.isEmpty()) err = "Authentication cancelled or failed";
+                    QMetaObject::invokeMethod(safeThis, [safeThis, err]() {
+                        if (safeThis) emit safeThis->operationError(err);
+                    }, Qt::QueuedConnection);
+                }
+            });
+            return;
+        }
+        emit operationError(errMsg);
+    }
 }
-
 void AppController::deleteItems(const QStringList &paths)
 {
     if (paths.isEmpty()) return;
+    const bool refreshTrash = isTrashPath(m_currentPath);
     QPointer<AppController> safeThis(this);
-    ThreadPool::instance().submit([safeThis, paths]() {
+    ThreadPool::instance().submit([safeThis, paths, refreshTrash]() {
         bool allSuccess = true;
         QString lastError;
         for (const QString &path : paths) {
@@ -1307,10 +1539,11 @@ void AppController::deleteItems(const QStringList &paths)
             if (!res.success) { allSuccess = false; lastError = QString::fromStdString(res.message); }
         }
         if (safeThis) {
-            QMetaObject::invokeMethod(safeThis, [safeThis, allSuccess, lastError, paths]() {
+            QMetaObject::invokeMethod(safeThis, [safeThis, allSuccess, lastError, paths, refreshTrash]() {
                 if (safeThis) {
                     safeThis->m_fileModel.removeItems(paths);
                     safeThis->removeFromSelection(paths);
+                    if (refreshTrash) safeThis->refreshTrashMetrics();
                     if (allSuccess) emit safeThis->operationSuccess("Deleted multiple items");
                     else emit safeThis->operationError("Some items could not be deleted: " + lastError);
                 }
@@ -1328,6 +1561,7 @@ void AppController::copyItem(const QString &path)
         m_clipboardPaths.append(path);
     }
     m_isCutOp = false;
+    refreshClipboardMetadata();
     emit clipboardChanged();
     if (!m_clipboardPaths.isEmpty()) emit operationSuccess(QString("Copied %1 items").arg(m_clipboardPaths.size()));
 }
@@ -1341,6 +1575,7 @@ void AppController::cutItem(const QString &path)
         m_clipboardPaths.append(path);
     }
     m_isCutOp = true;
+    refreshClipboardMetadata();
     emit clipboardChanged();
     if (!m_clipboardPaths.isEmpty()) emit operationSuccess(QString("Cut %1 items").arg(m_clipboardPaths.size()));
 }
@@ -1348,7 +1583,72 @@ void AppController::cutItem(const QString &path)
 void AppController::clearClipboard()
 {
     m_clipboardPaths.clear();
+    m_isCutOp = false;
+    refreshClipboardMetadata();
     emit clipboardChanged();
+}
+
+void AppController::refreshClipboardMetadata()
+{
+    m_clipboardItemCount = m_clipboardPaths.size();
+    m_clipboardPreview.clear();
+    if (!m_clipboardPaths.isEmpty()) {
+        const QFileInfo firstInfo(m_clipboardPaths.first());
+        const QString firstName = firstInfo.fileName().isEmpty() ? m_clipboardPaths.first() : firstInfo.fileName();
+        if (m_clipboardPaths.size() == 1) m_clipboardPreview = firstName;
+        else m_clipboardPreview = QString("%1 + %2 more").arg(firstName).arg(m_clipboardPaths.size() - 1);
+    }
+
+    const auto generation = ++m_clipboardMetricsGeneration;
+    if (m_clipboardPaths.isEmpty()) {
+        m_clipboardTotalSize = 0;
+        m_clipboardSizePending = false;
+        return;
+    }
+
+    m_clipboardSizePending = true;
+    const QStringList paths = m_clipboardPaths;
+    QPointer<AppController> safeThis(this);
+    ThreadPool::instance().submit([safeThis, paths, generation]() {
+        qlonglong totalSize = 0;
+
+        for (const QString &path : paths) {
+            if (!safeThis || safeThis->m_clipboardMetricsGeneration.load() != generation) return;
+
+            QFileInfo fi(path);
+            if (!fi.exists()) continue;
+            if (fi.isFile() && !fi.isSymLink()) {
+                totalSize += fi.size();
+                continue;
+            }
+
+            std::error_code ec;
+            for (auto it = fs::recursive_directory_iterator(
+                     path.toStdString(), fs::directory_options::skip_permission_denied, ec);
+                 it != fs::recursive_directory_iterator();
+                 it.increment(ec))
+            {
+                if (!safeThis || safeThis->m_clipboardMetricsGeneration.load() != generation) return;
+                if (ec) {
+                    ec.clear();
+                    continue;
+                }
+                std::error_code stEc;
+                if (!fs::is_regular_file(it->symlink_status(stEc)) || stEc) continue;
+                std::error_code szEc;
+                const auto sz = fs::file_size(it->path(), szEc);
+                if (szEc) continue;
+                totalSize += static_cast<qlonglong>(sz);
+            }
+        }
+
+        QMetaObject::invokeMethod(safeThis, [safeThis, generation, totalSize]() {
+            if (!safeThis || safeThis->m_clipboardMetricsGeneration.load() != generation) return;
+            safeThis->m_clipboardTotalSize = totalSize;
+            safeThis->m_clipboardSizePending = false;
+            emit safeThis->clipboardChanged();
+        }, Qt::QueuedConnection);
+    });
 }
 
 void AppController::pasteItem()
@@ -1365,6 +1665,8 @@ void AppController::pasteItem()
         }
         m_historyStack.push(std::make_unique<MoveCommand>(moves));
         m_clipboardPaths.clear();
+        m_isCutOp = false;
+        refreshClipboardMetadata();
         emit clipboardChanged();
         m_lastUserInitiatedOp.restart();
         QStringList removedFromCurrent;
@@ -1421,7 +1723,12 @@ void AppController::pasteItem()
                             added << dest;
                         }
                         safeThis->addEntriesForPaths(added, /*selectAdded*/ !added.isEmpty());
-                        if (isCut) { safeThis->m_clipboardPaths.clear(); emit safeThis->clipboardChanged(); }
+                        if (isCut) {
+                            safeThis->m_clipboardPaths.clear();
+                            safeThis->m_isCutOp = false;
+                            safeThis->refreshClipboardMetadata();
+                            emit safeThis->clipboardChanged();
+                        }
                         emit safeThis->operationSuccess("Paste successful");
                     } else emit safeThis->operationError("Paste failed: " + lastError);
                 }
@@ -1658,6 +1965,7 @@ void AppController::trashItems(const QStringList &paths)
                 if (safeThis) {
                     safeThis->m_fileModel.removeItems(paths);
                     safeThis->removeFromSelection(paths);
+                    safeThis->refreshTrashMetrics();
                     safeThis->m_lastUserInitiatedOp.restart();
                     emit safeThis->operationSuccess("Moved to Trash");
                 }
@@ -1728,6 +2036,7 @@ void AppController::restoreFromTrash(const QStringList &paths)
                     if (!safeThis) return;
                     safeThis->m_fileModel.removeItems(paths);
                     safeThis->removeFromSelection(paths);
+                    safeThis->refreshTrashMetrics();
                     safeThis->m_lastUserInitiatedOp.restart();
                     if (allSuccess) emit safeThis->operationSuccess("Items restored");
                     else emit safeThis->operationError("Some items could not be restored: " + lastError);
@@ -1776,6 +2085,7 @@ void AppController::emptyTrash()
             QMetaObject::invokeMethod(safeThis, [safeThis]() {
                 if (safeThis) {
                     safeThis->m_lastUserInitiatedOp.restart();
+                    safeThis->refreshTrashMetrics();
                     if (safeThis->isTrashPath(safeThis->m_currentPath)) safeThis->loadTrashInternal();
                     else safeThis->refresh();
                     emit safeThis->operationSuccess("Trash emptied");

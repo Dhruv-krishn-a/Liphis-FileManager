@@ -125,8 +125,8 @@ Menu {
         Component.onCompleted: root.compact(this)
         onTriggered: {
             if (!controller) return;
-            if (controller.selectedPaths.length > 1) controller.trashItems(controller.selectedPaths);
-            else controller.trashItems([root.targetPath]);
+            if (controller.selectedPaths.length > 1) appWindow.requestTrash(controller, controller.selectedPaths);
+            else appWindow.requestTrash(controller, [root.targetPath]);
         }
         icon.source: root.iconSource("user-trash")
     }
@@ -149,8 +149,8 @@ Menu {
         Component.onCompleted: root.compact(this)
         onTriggered: {
             if (!controller) return;
-            if (controller.selectedPaths.length > 1) controller.deleteItems(controller.selectedPaths);
-            else controller.deleteItems([root.targetPath]);
+            if (controller.selectedPaths.length > 1) appWindow.requestPermanentDelete(controller, controller.selectedPaths);
+            else appWindow.requestPermanentDelete(controller, [root.targetPath]);
         }
         icon.source: root.iconSource("user-trash")
     }

@@ -61,8 +61,16 @@ Item {
         if (n === "preferences-system") n = "settings"
         if (n === "info" || n === "dialog-information") n = "info-circle"
         if (n === "doc" || n === "text-x-generic" || n === "text-plain") n = "file-text"
+        if (n === "text-x-log") n = "file-text"
         if (n === "layout-tree") n = "list-tree"
         if (n === "star-filled") n = "star"
+        if (n === "document-open-recent") n = "history"
+        if (n === "drive-harddisk" || n === "drive-harddisk-system" || n === "drive-removable-media") n = "database"
+        if (n.indexOf("text-") === 0) n = "file-text"
+        if (n.indexOf("image-") === 0) n = "photo"
+        if (n.indexOf("audio-") === 0) n = "music"
+        if (n.indexOf("video-") === 0) n = "video"
+        if (n.indexOf("application-") === 0 || n.indexOf("model-") === 0 || n.indexOf("inode-") === 0 || n.indexOf("multipart-") === 0 || n.indexOf("package-") === 0) n = "file"
         
         return "qrc:/qt/qml/liphis/src/qml/assets/icons/" + (setName || "outline") + "/" + n + ".svg"
     }
@@ -72,29 +80,8 @@ Item {
         if (!n.length) return false
         if (n.indexOf("/") !== -1) return true // MIME type like application/pdf
 
-        var mimeLikePrefixes = [
-            "application-",
-            "audio-",
-            "font-",
-            "image-",
-            "inode-",
-            "message-",
-            "model-",
-            "multipart-",
-            "package-",
-            "text-",
-            "video-",
-            "x-content-"
-        ]
-        for (var i = 0; i < mimeLikePrefixes.length; ++i) {
-            if (n.indexOf(mimeLikePrefixes[i]) === 0)
-                return true
-        }
-
         var themeNames = {
-            "document-open-recent": true,
-            "drive-harddisk-system": true,
-            "drive-removable-media": true
+            "network-server": true
         }
         return !!themeNames[n]
     }
@@ -127,14 +114,14 @@ Item {
         
         onStatusChanged: {
             if (status === Image.Error) {
-                // First fallback: outline variant for missing filled icon.
-                if (source.toString() === root.preferredAssetSource && root.preferredSet !== "outline") {
-                    source = root.outlineAssetSource
-                    return
-                }
-                // Final fallback: system theme icon provider.
-                if (source.toString() !== root.themeSource) {
-                    source = root.themeSource
+                var finalFallback = root.outlineAssetSource
+                if (source.toString() !== finalFallback) {
+                    source = finalFallback
+                } else {
+                    var guaranteed = root.localAsset("folder", "outline")
+                    if (source.toString() !== guaranteed) {
+                        source = guaranteed
+                    }
                 }
             }
         }

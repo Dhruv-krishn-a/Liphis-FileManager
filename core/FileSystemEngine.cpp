@@ -109,7 +109,7 @@ std::vector<FileMeta> FileSystemEngine::listDirectorySync(const std::string& pat
     return results;
 }
 
-FileMeta FileSystemEngine::getFileMeta(const std::string& path)
+FileMeta FileSystemEngine::getFileMeta(const std::string& path, bool includeMime)
 {
     FileMeta m;
     fs::path p(path);
@@ -130,9 +130,11 @@ FileMeta FileSystemEngine::getFileMeta(const std::string& path)
         std::error_code sz_ec;
         m.size = fs::file_size(p, sz_ec);
         m.itemCount = 0;
-        static QMimeDatabase db;
-        std::string mimeStr = db.mimeTypeForFile(QString::fromStdString(path)).name().toStdString();
-        m.mimeType = std::make_shared<const std::string>(std::move(mimeStr));
+        if (includeMime) {
+            static QMimeDatabase db;
+            std::string mimeStr = db.mimeTypeForFile(QString::fromStdString(path)).name().toStdString();
+            m.mimeType = std::make_shared<const std::string>(std::move(mimeStr));
+        }
     }
 
     struct stat info;

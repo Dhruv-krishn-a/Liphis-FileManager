@@ -45,10 +45,14 @@ Item {
             ? "qrc:/qt/qml/liphis/src/qml/assets/folder-dark.png" 
             : "qrc:/qt/qml/liphis/src/qml/assets/folder-light.png"
     }
+    readonly property real visualScale: isCustomFolder ? 0.94 : (isDir ? 0.86 : 0.72)
+    readonly property int visualSize: Math.round(Math.min(width, height) * visualScale)
 
     Image {
         id: folderImage
-        anchors.fill: parent
+        anchors.centerIn: parent
+        width: root.visualSize
+        height: root.visualSize
         source: root.customFolderIcon
         visible: root.isCustomFolder
         fillMode: Image.PreserveAspectFit
@@ -59,7 +63,9 @@ Item {
 
     Icon {
         id: themedIcon
-        anchors.fill: parent
+        anchors.centerIn: parent
+        width: root.visualSize
+        height: root.visualSize
         name: root.resolvedIconName
         filled: false
         tint: true

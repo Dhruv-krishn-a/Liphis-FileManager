@@ -44,20 +44,20 @@ ItemDelegate {
         border.color: root.theme ? root.theme.border : "transparent"
     }
 
-    contentItem: RowLayout {
+    contentItem: Item {
         anchors.fill: parent
-        anchors.leftMargin: root.expanded ? (root.theme ? root.theme.space12 : 12) : 0
-        anchors.rightMargin: root.expanded ? (root.theme ? root.theme.space10 : 10) : 0
-        spacing: root.theme ? root.theme.space8 : 8
 
         Item {
-            Layout.fillWidth: false
-            Layout.preferredWidth: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg + 2 : 20)
-            Layout.preferredHeight: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg + 2 : 20)
+            id: iconContainer
+            width: root.expanded ? (root.theme ? root.theme.iconMd : 16) : parent.width
+            height: parent.height
+            anchors.left: parent.left
+            anchors.leftMargin: root.expanded ? (root.theme ? root.theme.space12 : 12) : 0
+
             Icon {
                 anchors.centerIn: parent
                 name: root.iconName
-                iconSize: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg : 18)
+                iconSize: root.expanded ? (root.theme ? root.theme.iconMd : 16) : (root.theme ? root.theme.iconLg : 20)
                 color: root.active ? root.theme.accent : root.theme.textSecondary
             }
         }
@@ -65,25 +65,29 @@ ItemDelegate {
         Text {
             visible: root.expanded
             text: root.text
-            Layout.fillWidth: true
-            Layout.minimumWidth: 0
+            anchors.left: iconContainer.right
+            anchors.leftMargin: root.theme ? root.theme.space8 : 8
+            anchors.right: actionBtn.visible ? actionBtn.left : parent.right
+            anchors.rightMargin: root.theme ? root.theme.space10 : 10
+            anchors.verticalCenter: parent.verticalCenter
             elide: Text.ElideRight
             color: root.active ? root.theme.accent : root.theme.textPrimary
             font.pixelSize: root.theme ? root.theme.fontBody : 12
-            verticalAlignment: Text.AlignVCenter
         }
 
         ThemedIconButton {
+            id: actionBtn
             visible: root.showAction && root.expanded
+            anchors.right: parent.right
+            anchors.rightMargin: root.theme ? root.theme.space8 : 8
+            anchors.verticalCenter: parent.verticalCenter
             theme: root.theme
             iconName: root.actionIconName
             iconSize: 12
             implicitWidth: 22
             implicitHeight: 22
             toolTip: root.actionToolTip
-            onClicked: {
-                root.actionClicked()
-            }
+            onClicked: root.actionClicked()
         }
     }
 }
