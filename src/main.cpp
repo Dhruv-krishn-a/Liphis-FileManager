@@ -84,7 +84,11 @@ int main(int argc, char **argv)
     engine.addImageProvider("thumbs", new ThumbnailImageProvider(&thumbManager));
     engine.addImageProvider("icon", iconProvider);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     engine.loadFromModule("liphis", "Main");
+#else
+    engine.load(QUrl(u"qrc:/qt/qml/liphis/src/qml/Main.qml"_ss));
+#endif
     if (engine.rootObjects().isEmpty()) return -1;
 
     // Handle new instances attempting to start

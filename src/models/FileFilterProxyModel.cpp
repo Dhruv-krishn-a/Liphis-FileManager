@@ -27,12 +27,20 @@ void FileFilterProxyModel::setSortBy(const QString &roleName, bool ascending)
 }
 
 bool FileFilterProxyModel::showHidden() const { return m_showHidden; }
+void FileFilterProxyModel::applyFilterUpdate() {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+    QSortFilterProxyModel::beginFilterChange();
+    QSortFilterProxyModel::endFilterChange();
+#else
+    invalidateFilter();
+#endif
+}
+
 void FileFilterProxyModel::setShowHidden(bool show) {
     if (m_showHidden == show) return;
     m_showHidden = show;
     emit showHiddenChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -41,8 +49,7 @@ void FileFilterProxyModel::setMinSize(qlonglong size) {
     if (m_minSize == size) return;
     m_minSize = size;
     emit minSizeChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -51,8 +58,7 @@ void FileFilterProxyModel::setMaxSize(qlonglong size) {
     if (m_maxSize == size) return;
     m_maxSize = size;
     emit maxSizeChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -61,8 +67,7 @@ void FileFilterProxyModel::setMinDate(qlonglong date) {
     if (m_minDate == date) return;
     m_minDate = date;
     emit minDateChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -71,8 +76,7 @@ void FileFilterProxyModel::setMaxDate(qlonglong date) {
     if (m_maxDate == date) return;
     m_maxDate = date;
     emit maxDateChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -81,8 +85,7 @@ void FileFilterProxyModel::setExtensionFilter(const QString &filter) {
     if (m_extensionFilter == filter) return;
     m_extensionFilter = filter;
     emit extensionFilterChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -91,8 +94,7 @@ void FileFilterProxyModel::setSearchQuery(const QString &query) {
     if (m_searchQuery == query) return;
     m_searchQuery = query;
     emit searchQueryChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     sort(0);
     emit countChanged();
 }
@@ -104,8 +106,7 @@ void FileFilterProxyModel::setTypeFilter(const QString &type) {
     if (m_typeFilter == normalized) return;
     m_typeFilter = normalized;
     emit typeFilterChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     emit countChanged();
 }
 
@@ -114,8 +115,7 @@ void FileFilterProxyModel::setExactMatch(bool exact) {
     if (m_exactMatch == exact) return;
     m_exactMatch = exact;
     emit exactMatchChanged();
-    QSortFilterProxyModel::beginFilterChange();
-    QSortFilterProxyModel::endFilterChange();
+    applyFilterUpdate();
     sort(0);
     emit countChanged();
 }
