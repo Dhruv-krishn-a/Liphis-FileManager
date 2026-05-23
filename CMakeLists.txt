@@ -174,7 +174,7 @@ install(FILES
 )
 
 install(FILES
-    src/qml/assets/logo-light.png
+    src/qml/assets/logo-dark.png
     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/512x512/apps
     RENAME liphis.png
 )

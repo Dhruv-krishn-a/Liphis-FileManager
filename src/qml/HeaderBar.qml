@@ -22,7 +22,7 @@ Rectangle {
     property string brandScrambleText: ""
     readonly property string brandStableText: "L I P H I S"
     readonly property bool narrow: width < 1260
-    readonly property bool veryNarrow: width < 1080
+    readonly property bool veryNarrow: width < 800
     readonly property bool compactSearchControls: width < 1460
 
     function focusSearchField() {
