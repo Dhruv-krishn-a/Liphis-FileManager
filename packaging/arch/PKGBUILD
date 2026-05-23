@@ -15,7 +15,7 @@ optdepends=('fd: Fast recursive file search'
             'libreoffice-fresh: Office document thumbnails')
 provides=('liphis')
 conflicts=('liphis-git')
-source=('liphis::git+file:///home/dhruv/Liphis')
+source=('liphis::git+https://github.com/Dhruv-krishn-a/Liphis-FileManager.git#branch=develop')
 sha256sums=('SKIP')
 
 pkgver() {
