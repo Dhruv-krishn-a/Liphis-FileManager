@@ -13,10 +13,11 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBGIT2 REQUIRED libgit2)
 pkg_check_modules(LIBARCHIVE REQUIRED libarchive)
 
-qt_standard_project_setup()
-
-qt_policy(SET QTP0001 NEW)
-qt_policy(SET QTP0004 NEW)
+# Replacement for qt_policy(SET QTP0001 NEW) and QTP0004
+# Standardizing project setup for Qt6
+if(COMMAND qt_standard_project_setup)
+    qt_standard_project_setup()
+endif()
 
 # =========================
 # Core Static Library
