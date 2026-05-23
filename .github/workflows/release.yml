@@ -7,40 +7,112 @@ on:
       - "v*"
 
 jobs:
-  package:
+  build-ubuntu:
+    name: Build (Ubuntu, Debian, RPM, AppImage)
     runs-on: ubuntu-22.04
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install Packaging Dependencies
+      - name: Install Dependencies
         run: |
           sudo apt update
           sudo apt install -y \
             build-essential cmake ninja-build pkg-config curl \
-            qt6-base-dev qt6-declarative-dev \
+            qt6-base-dev qt6-declarative-dev qt6-5compat-dev qt6-svg-dev \
             libarchive-dev libgit2-dev \
             rpm dpkg-dev patchelf desktop-file-utils file
 
       - name: Build All Packages
-        run: ./scripts/release-packages.sh --clean
+        run: |
+          chmod +x scripts/release-packages.sh
+          ./scripts/release-packages.sh --clean
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
 
-      - name: Upload Build Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: liphis-packages
+          name: generic-linux-packages
           path: dist/*
           if-no-files-found: error
 
-      - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+  build-arch:
+    name: Build (Arch Linux PKGBUILD)
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Install Arch Dependencies
+        run: |
+          pacman -Syu --noconfirm
+          pacman -S --noconfirm base-devel git cmake ninja qt6-base qt6-declarative qt6-5compat qt6-svg libgit2 libarchive polkit
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build Arch Package
+        run: |
+          # Arch forbids running makepkg as root
+          useradd -m builder
+          chown -R builder:builder .
+          chmod -R 777 .
+          
+          # Create the Arch package using the local files
+          cd packaging/arch
+          # Modify PKGBUILD temporarily to use local source instead of remote git
+          sed -i 's|source=(.*)|source=("liphis::git+file://'$(pwd)'/../..")|' PKGBUILD
+          
+          su builder -c "makepkg -f"
+          
+          mkdir -p ../../dist-arch
+          cp *.pkg.tar.zst ../../dist-arch/
+
+      - name: Upload Arch Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: arch-packages
+          path: dist-arch/*
+
+  create-release:
+    name: Create GitHub Release
+    needs: [build-ubuntu, build-arch]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+          merge-multiple: true
+
+      - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/*.AppImage
-            dist/*.deb
-            dist/*.rpm
-            dist/*.tar.gz
-            dist/*.zip
+            all-artifacts/*.AppImage
+            all-artifacts/*.deb
+            all-artifacts/*.rpm
+            all-artifacts/*.pkg.tar.zst
+            all-artifacts/*.tar.gz
+            all-artifacts/*.zip
+          body: |
+            ## Liphis Release ${{ github.ref_name }}
+            
+            Multi-distro release packages:
+            - **Ubuntu/Debian**: .deb
+            - **Fedora/SUSE**: .rpm
+            - **Arch Linux**: .pkg.tar.zst
+            - **Portable**: .AppImage
+            - **Generic**: .tar.gz / .zip
