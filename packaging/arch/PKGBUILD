@@ -1,6 +1,6 @@
 # Maintainer: Dhruv Krishna <dhruvkrishna1055@gmail.com>
 pkgname=liphis
-pkgver=0.1.r14.g0641453
+pkgver=0.1.r18.g8d3ebe5
 pkgrel=1
 pkgdesc="A high-performance, modern file manager built with C++20 and Qt6"
 arch=('x86_64')
