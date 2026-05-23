@@ -36,7 +36,8 @@ target_include_directories(liphis_core PUBLIC
 # =========================
 # GUI Executable
 # =========================
-qt_add_executable(liphis_app
+# We use 'liphis_bin' as the target name to avoid conflict with the 'liphis' QML module directory
+qt_add_executable(liphis_bin
     src/main.cpp
     src/AppController.cpp
     src/AppController.hpp
@@ -64,7 +65,10 @@ qt_add_executable(liphis_app
     src/CommandManager.hpp
 )
 
-target_include_directories(liphis_app PRIVATE
+# We ensure the final binary is still named 'liphis'
+set_target_properties(liphis_bin PROPERTIES OUTPUT_NAME "liphis")
+
+target_include_directories(liphis_bin PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
 )
@@ -73,8 +77,8 @@ target_include_directories(liphis_app PRIVATE
 file(GLOB_RECURSE OUTLINE_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/outline/*.svg")
 file(GLOB_RECURSE FILLED_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/filled/*.svg")
 
-qt_add_qml_module(liphis_app
-    URI liphis
+qt_add_qml_module(liphis_bin
+    URI liphis_module
     VERSION 1.0
     QML_FILES
         src/qml/AppTheme.qml
@@ -123,7 +127,7 @@ qt_add_qml_module(liphis_app
         ${FILLED_ICONS}
 )
 
-target_link_libraries(liphis_app
+target_link_libraries(liphis_bin
     PRIVATE Qt6::Core
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Concurrent
@@ -135,7 +139,7 @@ target_link_libraries(liphis_app
     PRIVATE ${LIBARCHIVE_LIBRARIES}
 )
 
-target_include_directories(liphis_app PRIVATE
+target_include_directories(liphis_bin PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${LIBGIT2_INCLUDE_DIRS}
@@ -154,8 +158,8 @@ if(BUILD_TESTS)
 endif()
 
 # Installation rules
-install(TARGETS liphis_app
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} RENAME liphis
+install(TARGETS liphis_bin
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
 install(DIRECTORY src/qml/assets/icons/
