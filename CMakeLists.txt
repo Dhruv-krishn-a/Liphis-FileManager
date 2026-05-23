@@ -36,7 +36,7 @@ target_include_directories(liphis_core PUBLIC
 # =========================
 # GUI Executable
 # =========================
-# We use 'liphis_bin' as the target name to avoid conflict with the 'liphis' QML module directory
+# Target name is 'liphis_bin' to avoid conflict with the 'liphis' module directory.
 qt_add_executable(liphis_bin
     src/main.cpp
     src/AppController.cpp
@@ -78,7 +78,7 @@ file(GLOB_RECURSE OUTLINE_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/as
 file(GLOB_RECURSE FILLED_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/filled/*.svg")
 
 qt_add_qml_module(liphis_bin
-    URI liphis_module
+    URI liphis
     VERSION 1.0
     QML_FILES
         src/qml/AppTheme.qml
