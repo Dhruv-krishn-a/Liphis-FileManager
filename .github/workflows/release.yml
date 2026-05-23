@@ -23,7 +23,8 @@ jobs:
           sudo apt update
           sudo apt install -y \
             build-essential cmake ninja-build pkg-config curl \
-            qt6-base-dev qt6-declarative-dev qt6-5compat-dev qt6-svg-dev \
+            qt6-base-dev qt6-declarative-dev \
+            libqt6svg6-dev qml6-module-qt5compat qml6-module-qtquick-shapes \
             libarchive-dev libgit2-dev \
             rpm dpkg-dev patchelf desktop-file-utils file
 
@@ -68,8 +69,8 @@ jobs:
           
           # Create the Arch package using the local files
           cd packaging/arch
-          # Modify PKGBUILD temporarily to use local source instead of remote git
-          sed -i 's|source=(.*)|source=("liphis::git+file://'$(pwd)'/../..")|' PKGBUILD
+          # Use the absolute GITHUB_WORKSPACE to ensure git doesn't complain about relative paths
+          sed -i 's|source=(.*)|source=("liphis::git+file://'${GITHUB_WORKSPACE}'")|' PKGBUILD
           
           su builder -c "makepkg -f"
           
