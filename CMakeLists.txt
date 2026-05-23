@@ -36,8 +36,8 @@ target_include_directories(liphis_core PUBLIC
 # =========================
 # GUI Executable
 # =========================
-# Use 'liphis_gui' to avoid collision with 'liphis' directory
-qt_add_executable(liphis_gui
+# Target name 'liphis_app' to avoid conflict with the 'liphis' QML module dir in build/
+qt_add_executable(liphis_app
     src/main.cpp
     src/AppController.cpp
     src/AppController.hpp
@@ -66,9 +66,9 @@ qt_add_executable(liphis_gui
 )
 
 # Force the disk filename to be 'liphis'
-set_target_properties(liphis_gui PROPERTIES OUTPUT_NAME "liphis")
+set_target_properties(liphis_app PROPERTIES OUTPUT_NAME "liphis")
 
-target_include_directories(liphis_gui PRIVATE
+target_include_directories(liphis_app PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
 )
@@ -77,10 +77,9 @@ target_include_directories(liphis_gui PRIVATE
 file(GLOB_RECURSE OUTLINE_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/outline/*.svg")
 file(GLOB_RECURSE FILLED_ICONS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/qml/assets/icons/filled/*.svg")
 
-# QML Module - Rename URI slightly to avoid the directory clash
-# We will update main.cpp to match
-qt_add_qml_module(liphis_gui
-    URI "liphis.app"
+# QML Module
+qt_add_qml_module(liphis_app
+    URI liphis
     VERSION 1.0
     QML_FILES
         src/qml/AppTheme.qml
@@ -129,7 +128,7 @@ qt_add_qml_module(liphis_gui
         ${FILLED_ICONS}
 )
 
-target_link_libraries(liphis_gui
+target_link_libraries(liphis_app
     PRIVATE Qt6::Core
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Concurrent
@@ -141,7 +140,7 @@ target_link_libraries(liphis_gui
     PRIVATE ${LIBARCHIVE_LIBRARIES}
 )
 
-target_include_directories(liphis_gui PRIVATE
+target_include_directories(liphis_app PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/models
     ${LIBGIT2_INCLUDE_DIRS}
@@ -160,7 +159,7 @@ if(BUILD_TESTS)
 endif()
 
 # Installation rules
-install(TARGETS liphis_gui
+install(TARGETS liphis_app
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
