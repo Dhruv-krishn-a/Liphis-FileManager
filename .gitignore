@@ -6,6 +6,7 @@
 
 build/
 build-*/
+build_*/
 dist/
 out/
 
@@ -20,6 +21,13 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 compile_commands.json
+install_manifest.txt
+Testing/
+_CPack_Packages/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+*.ninja
+.ninja_*
 
 # =========================
 
@@ -30,8 +38,23 @@ compile_commands.json
 *.o
 *.so
 *.a
+*.dylib
+*.dll
 *.out
 *.exe
+
+# =========================
+
+# Package artifacts
+
+# =========================
+
+*.AppImage
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+*.pkg.tar.zst
 
 # =========================
 
@@ -41,6 +64,9 @@ compile_commands.json
 
 *.qmlc
 *.jsc
+*.qmltypes
+.qt/
+qml_out/
 
 # =========================
 
@@ -69,7 +95,11 @@ compile_commands.json
 
 packaging/arch/src/
 packaging/arch/pkg/
+packaging/arch/liphis/
+packaging/arch/Liphis-FileManager/
 packaging/arch/*.pkg.tar.zst
+packaging/arch/*.pkg.tar.zst.sig
+packaging/arch/*.src.tar.gz
 
 # =========================
 
@@ -77,5 +107,7 @@ packaging/arch/*.pkg.tar.zst
 
 # =========================
 
-**pycache**/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 ProductDetails.md

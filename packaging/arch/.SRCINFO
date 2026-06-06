@@ -1,6 +1,6 @@
-pkgbase = liphis-git
+pkgbase = liphis
 	pkgdesc = A high-performance, modern file manager built with C++20 and Qt6
-	pkgver = 0.1.r56.g33dc09b
+	pkgver = 0.1.r24.gb257e4d
 	pkgrel = 1
 	url = https://github.com/Dhruv-krishn-a/Liphis-FileManager
 	arch = x86_64
@@ -22,8 +22,8 @@ pkgbase = liphis-git
 	optdepends = poppler: PDF thumbnails
 	optdepends = libreoffice-fresh: Office document thumbnails
 	provides = liphis
-	conflicts = liphis
-	source = git+https://github.com/Dhruv-krishn-a/Liphis-FileManager.git#branch=develop
+	conflicts = liphis-git
+	source = liphis::git+https://github.com/Dhruv-krishn-a/Liphis-FileManager.git#branch=develop
 	sha256sums = SKIP
 
-pkgname = liphis-git
+pkgname = liphis

@@ -25,7 +25,7 @@ jobs:
             build-essential cmake ninja-build pkg-config curl \
             qt6-base-dev qt6-declarative-dev \
             libqt6core5compat6-dev libqt6svg6-dev qml6-module-qtquick-shapes \
-            libarchive-dev libgit2-dev libgl1-mesa-dev \
+            libarchive-dev libgit2-dev libgl1-mesa-dev libvulkan-dev libxkbcommon-dev \
             rpm dpkg-dev patchelf desktop-file-utils file
 
       - name: Build All Packages
@@ -68,10 +68,12 @@ jobs:
           chmod -R 777 .
           
           cd packaging/arch
-          # Use the absolute GITHUB_WORKSPACE to test the current checkout
-          sed -i "s|source=(.*)|source=('liphis::git+file://\${GITHUB_WORKSPACE}')|" PKGBUILD
-          # Clean up any existing source clones
-          rm -rf liphis/ src/ pkg/
+          workspace="${GITHUB_WORKSPACE:?GITHUB_WORKSPACE is not set}"
+          commit="${GITHUB_SHA:?GITHUB_SHA is not set}"
+          source_url="file://${workspace}#commit=${commit}"
+          sed -i "s|^source=.*|source=('liphis::git+${source_url}')|" PKGBUILD
+          # Clean up makepkg source/build outputs before simulating a fresh CI package.
+          rm -rf liphis/ src/ pkg/ build_arch/ *.pkg.tar.zst
           
           # Force build directory name to 'build_arch' using environment variable
           su builder -c "BUILDDIR=$(pwd)/build_arch makepkg -fc --noconfirm"

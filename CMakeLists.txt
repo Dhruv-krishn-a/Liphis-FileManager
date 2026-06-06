@@ -19,6 +19,15 @@ if(COMMAND qt_standard_project_setup)
     qt_standard_project_setup()
 endif()
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+if(COMMAND qt_policy)
+    qt_policy(SET QTP0001 NEW)
+    qt_policy(SET QTP0004 NEW)
+endif()
+
 # =========================
 # Core Static Library
 # =========================
