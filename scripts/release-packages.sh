@@ -88,6 +88,19 @@ elif [[ "${ARCH}" == "x86_64" ]]; then
   ln -sf "${LINUXDEPLOY}" "${LINUXDEPLOY_BIN}"
   ln -sf "${QT_PLUGIN}" "${QT_PLUGIN_BIN}"
 
+  if command -v qmake6 >/dev/null 2>&1; then
+    ln -sf "$(command -v qmake6)" "${TOOLS_DIR}/qmake"
+    export QMAKE="${TOOLS_DIR}/qmake"
+    export QT_QMAKE="${QMAKE}"
+    export QT_SELECT=qt6
+  elif command -v qmake >/dev/null 2>&1; then
+    export QMAKE="$(command -v qmake)"
+    export QT_QMAKE="${QMAKE}"
+  else
+    echo "AppImage generation requires qmake6 or qmake for linuxdeploy-plugin-qt." >&2
+    exit 1
+  fi
+
   export QML_SOURCES_PATHS="${ROOT_DIR}/src/qml"
   export APPIMAGE_EXTRACT_AND_RUN=1
   export PATH="${TOOLS_DIR}:${PATH}"
